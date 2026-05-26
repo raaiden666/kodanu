@@ -1,0 +1,16 @@
+[workspace]
+members = [
+    "bin",
+    "crates/engine",
+    "crates/window",
+]
+
+resolver = "3"
+
+[workspace.dependencies]
+winit = { version = "0.30.13" }
+wgpu = { version = "29.0.3" }
+anyhow = { version = "1.0.102" }
+pollster = { version = "0.4.0" }
+env_logger = { version = "0.11.10" }
+log = { version = "0.4.30" }

@@ -1,0 +1,6 @@
+*text=auto eol=lf
+
+*.rs text=auto eol=lf
+*.toml text=auto eol=lf
+*.lock text=auto eol=lf
+*.md text eol=lf
