@@ -1,12 +1,11 @@
 [package]
-name = "engine"
+name = "graphics"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+wgpu = { workspace = true }
 winit = { workspace = true }
-pollster = { workspace = true }
-anyhow = { workspace = true }
+log = { workspace = true }
 
 window = { package = "window", path = "../window" }
-graphics = { package = "graphics", path = "../graphics" }

@@ -8,4 +8,4 @@ anyhow = { workspace = true }
 env_logger = { workspace = true }
 
 window = { package = "window", path = "../crates/window" }
-app = { package = "engine", path = "../crates/engine" }
+engine = { package = "engine", path = "../crates/engine" }

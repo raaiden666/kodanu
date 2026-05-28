@@ -1,17 +1,21 @@
 use winit::{dpi::PhysicalSize, window::WindowAttributes};
 
+const DEFAULT_TITLE_STR: &str = "REngine";
+const DEFAULT_WIDTH: u32 = 800;
+const DEFAULT_HEIGHT: u32 = 600;
+
 pub struct NativeWindowConfig {
-    pub title: String,
-    pub width: u32,
-    pub height: u32,
+    title: String,
+    width: u32,
+    height: u32,
 }
 
 impl Default for NativeWindowConfig {
     fn default() -> Self {
         Self {
-            title: "Engine".into(),
-            width: 1240,
-            height: 720,
+            title: DEFAULT_TITLE_STR.into(),
+            width: DEFAULT_WIDTH,
+            height: DEFAULT_HEIGHT,
         }
     }
 }
@@ -32,5 +36,17 @@ impl NativeWindowConfig {
         self.width = width.max(1);
         self.height = height.max(1);
         self
+    }
+
+    pub fn title(&self) -> &str {
+        &self.title
+    }
+
+    pub fn width(&self) -> u32 {
+        self.width
+    }
+
+    pub fn height(&self) -> u32 {
+        self.height
     }
 }

@@ -1,29 +1,35 @@
 use std::sync::Arc;
 
+use wgpu::{Instance, Surface};
+
 use winit::{dpi::PhysicalSize, window::Window};
 
+const FAILED_TO_CREATE_SURFACE: &str = "Failed to create surface";
+
 pub struct NativeWindow {
-    window: Arc<Window>,
+    raw_window: Arc<Window>,
 }
 
 impl NativeWindow {
-    pub fn new(window: Arc<Window>) -> Self {
-        Self { window }
+    pub fn new(raw_window: Arc<Window>) -> Self {
+        Self { raw_window }
     }
 
     pub fn size(&self) -> PhysicalSize<u32> {
-        self.window.inner_size()
+        self.raw_window.inner_size()
+    }
+
+    pub fn scale_factor(&self) -> f64 {
+        self.raw_window.scale_factor()
     }
 
     pub fn request_redraw(&self) {
-        self.window.request_redraw();
+        self.raw_window.request_redraw();
     }
 
-    pub fn raw(&self) -> &Window {
-        &self.window
-    }
-
-    pub fn arc(&self) -> Arc<Window> {
-        Arc::clone(&self.window)
+    pub fn create_surface(&self, instance: &Instance) -> Surface<'static> {
+        instance
+            .create_surface(self.raw_window.clone())
+            .expect(FAILED_TO_CREATE_SURFACE)
     }
 }

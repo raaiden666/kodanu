@@ -457,6 +457,7 @@ name = "engine"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "graphics",
  "pollster",
  "window",
  "winit",
@@ -656,6 +657,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fdf242682df893b86f33a73828fb09ca4b2d3bb6cc95249707fc684d27484b91"
 dependencies = [
  "bitflags 2.11.1",
+]
+
+[[package]]
+name = "graphics"
+version = "0.1.0"
+dependencies = [
+ "log",
+ "wgpu",
+ "window",
+ "winit",
 ]
 
 [[package]]
