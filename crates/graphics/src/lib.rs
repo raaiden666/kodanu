@@ -1,1 +1,3 @@
-pub mod rendering;
+pub mod gpu;
+pub mod render;
+pub mod res;

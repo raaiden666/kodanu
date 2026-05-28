@@ -1,3 +1,11 @@
+use crate::res::{
+    FAILED_TO_CREATE_ADAPTER, FAILED_TO_CREATE_DEVICE, RENDER_ENCODER_LABEL, RENDER_PASS_LABEL,
+};
+
+use crate::{gpu::GraphicsDevice, gpu::SurfaceContext, render::RenderResult};
+
+use window::native::NativeWindow;
+
 use std::{iter::once, sync::Arc};
 
 use wgpu::{
@@ -8,15 +16,7 @@ use wgpu::{
     TextureViewDescriptor,
 };
 
-use window::native::NativeWindow;
-
 use winit::dpi::PhysicalSize;
-
-use crate::{rendering::GraphicsDevice, rendering::RenderResult, rendering::SurfaceContext};
-
-use crate::rendering::render_errors::{
-    FAILED_TO_CREATE_ADAPTER, FAILED_TO_CREATE_DEVICE, RENDER_ENCODER_LABEL, RENDER_PASS_LABEL,
-};
 
 pub struct Renderer {
     graphics_device: Arc<GraphicsDevice>,
@@ -49,12 +49,6 @@ impl Renderer {
             })
             .await
             .expect(FAILED_TO_CREATE_ADAPTER);
-
-        let adapter_info = adapter.get_info();
-
-        println!("GPU: {:?}", adapter_info.name);
-        println!("Backend: {:?}", adapter_info.backend);
-        println!("Driver: {:?}", adapter_info.driver_info);
 
         let (device, queue) = adapter
             .request_device(&DeviceDescriptor::default())
@@ -131,24 +125,24 @@ impl Renderer {
                     label: Some(RENDER_ENCODER_LABEL),
                 });
 
-        {
-            let _render_pass = encoder.begin_render_pass(&RenderPassDescriptor {
-                label: Some(RENDER_PASS_LABEL),
-                color_attachments: &[Some(RenderPassColorAttachment {
-                    view: &view,
-                    resolve_target: None,
-                    ops: Operations {
-                        load: LoadOp::Clear(Color::RED),
-                        store: StoreOp::Store,
-                    },
-                    depth_slice: None,
-                })],
-                depth_stencil_attachment: None,
-                occlusion_query_set: None,
-                timestamp_writes: None,
-                multiview_mask: None,
-            });
-        }
+        let mut _render_pass = encoder.begin_render_pass(&RenderPassDescriptor {
+            label: Some(RENDER_PASS_LABEL),
+            color_attachments: &[Some(RenderPassColorAttachment {
+                view: &view,
+                resolve_target: None,
+                ops: Operations {
+                    load: LoadOp::Clear(Color::RED),
+                    store: StoreOp::Store,
+                },
+                depth_slice: None,
+            })],
+            depth_stencil_attachment: None,
+            occlusion_query_set: None,
+            timestamp_writes: None,
+            multiview_mask: None,
+        });
+
+        drop(_render_pass);
 
         self.graphics_device.queue().submit(once(encoder.finish()));
     }

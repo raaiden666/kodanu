@@ -1,8 +1,12 @@
+use crate::res::{FAILED_TO_CREATE_WINDOW, WGPU_VALIDATION_ERROR};
+
+use graphics::{render::RenderResult, render::Renderer};
+
+use window::{config::NativeWindowConfig, native::NativeWindow};
+
 use std::{panic, sync::Arc};
 
 use pollster::block_on;
-
-use window::{config::NativeWindowConfig, native::NativeWindow};
 
 use anyhow::{Ok, Result};
 
@@ -13,11 +17,7 @@ use winit::{
     window::WindowId,
 };
 
-use graphics::{rendering::RenderResult, rendering::Renderer};
-
-use crate::app_errors::{FAILED_TO_CREATE_WINDOW, WGPU_VALIDATION_ERROR};
-
-pub struct App {
+pub struct REngine {
     window: Option<NativeWindow>,
     renderer: Option<Renderer>,
     config: NativeWindowConfig,
@@ -27,7 +27,7 @@ pub fn create_event_loop() -> Result<EventLoop<()>> {
     Ok(EventLoop::new()?)
 }
 
-impl App {
+impl REngine {
     pub fn new(config: NativeWindowConfig) -> Self {
         Self {
             window: None,
@@ -64,7 +64,7 @@ impl App {
     }
 }
 
-impl ApplicationHandler for App {
+impl ApplicationHandler for REngine {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         let raw_window = event_loop
             .create_window(self.config.to_attributes())

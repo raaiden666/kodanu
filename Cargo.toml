@@ -1,7 +1,7 @@
 [workspace]
 members = [
     "bin",
-    "crates/engine",
+    "crates/app",
     "crates/graphics",
     "crates/window",
 ]

@@ -1,21 +1,21 @@
-use engine::*;
+use app::engine::{REngine, create_event_loop};
 
-use env_logger::init;
+use window::config::NativeWindowConfig;
 
 use anyhow::{Ok, Result};
 
-use window::config::NativeWindowConfig;
+use env_logger::init;
 
 fn main() -> Result<()> {
     init();
 
     let window_config = NativeWindowConfig::default();
 
-    let mut app = App::new(window_config);
+    let mut rengine = REngine::new(window_config);
 
     let event_loop = create_event_loop()?;
 
-    event_loop.run_app(&mut app)?;
+    event_loop.run_app(&mut rengine)?;
 
     Ok(())
 }

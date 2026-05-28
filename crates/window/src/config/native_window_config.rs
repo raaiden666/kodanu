@@ -1,8 +1,8 @@
-use winit::{dpi::PhysicalSize, window::WindowAttributes};
-
 use crate::config::default_config_value::{
     DEFAULT_HEIGHT, DEFAULT_MIN_HEIGHT, DEFAULT_MIN_WIDTH, DEFAULT_TITLE_STR, DEFAULT_WIDTH,
 };
+
+use winit::{dpi::PhysicalSize, window::WindowAttributes};
 
 pub struct NativeWindowConfig {
     title: String,
@@ -47,17 +47,5 @@ impl NativeWindowConfig {
         self.min_width = min_width.max(1);
         self.min_height = min_height.max(1);
         self
-    }
-
-    pub fn title(&self) -> &str {
-        &self.title
-    }
-
-    pub fn width(&self) -> u32 {
-        self.width
-    }
-
-    pub fn height(&self) -> u32 {
-        self.height
     }
 }
