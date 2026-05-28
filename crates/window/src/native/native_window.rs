@@ -4,7 +4,7 @@ use wgpu::{Instance, Surface};
 
 use winit::{dpi::PhysicalSize, window::Window};
 
-const FAILED_TO_CREATE_SURFACE: &str = "Failed to create surface";
+use crate::native::native_window_errors::FAILED_TO_CREATE_SURFACE;
 
 pub struct NativeWindow {
     raw_window: Arc<Window>,
@@ -29,7 +29,7 @@ impl NativeWindow {
 
     pub fn create_surface(&self, instance: &Instance) -> Surface<'static> {
         instance
-            .create_surface(self.raw_window.clone())
+            .create_surface(Arc::clone(&self.raw_window))
             .expect(FAILED_TO_CREATE_SURFACE)
     }
 }

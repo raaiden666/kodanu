@@ -2,7 +2,7 @@ use std::{panic, sync::Arc};
 
 use pollster::block_on;
 
-use window::{NativeWindow, NativeWindowConfig};
+use window::{config::NativeWindowConfig, native::NativeWindow};
 
 use anyhow::{Ok, Result};
 
@@ -13,9 +13,9 @@ use winit::{
     window::WindowId,
 };
 
-use graphics::{RenderResult, Renderer};
+use graphics::{rendering::RenderResult, rendering::Renderer};
 
-const WGPU_VALIDATION_ERROR: &str = "wgpu validation error";
+use crate::app_errors::{FAILED_TO_CREATE_WINDOW, WGPU_VALIDATION_ERROR};
 
 pub struct App {
     window: Option<NativeWindow>,
@@ -68,7 +68,7 @@ impl ApplicationHandler for App {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         let raw_window = event_loop
             .create_window(self.config.to_attributes())
-            .expect("Failed to create native window");
+            .expect(FAILED_TO_CREATE_WINDOW);
 
         let window = NativeWindow::new(Arc::new(raw_window));
         let renderer = block_on(Renderer::new(&window));

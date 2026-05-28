@@ -8,16 +8,15 @@ use wgpu::{
     TextureViewDescriptor,
 };
 
-use window::NativeWindow;
+use window::native::NativeWindow;
 
 use winit::dpi::PhysicalSize;
 
-use crate::{GraphicsDevice, RenderResult, SurfaceContext};
+use crate::{rendering::GraphicsDevice, rendering::RenderResult, rendering::SurfaceContext};
 
-const FAILED_TO_CREATE_ADAPTER: &str = "Failed to create adapter";
-const FAILED_TO_CREATE_DEVICE: &str = "Failed to create device";
-const RENDER_PASS_LABEL: &str = "Render Pass";
-const RENDER_ENCODER_LABEL: &str = "Render Encoder";
+use crate::rendering::render_errors::{
+    FAILED_TO_CREATE_ADAPTER, FAILED_TO_CREATE_DEVICE, RENDER_ENCODER_LABEL, RENDER_PASS_LABEL,
+};
 
 pub struct Renderer {
     graphics_device: Arc<GraphicsDevice>,
