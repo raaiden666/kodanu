@@ -1,3 +1,5 @@
+use crate::gpu::SurfaceFrame;
+
 use wgpu::{CurrentSurfaceTexture, Device, Surface, SurfaceConfiguration};
 
 use winit::dpi::PhysicalSize;
@@ -49,7 +51,15 @@ impl SurfaceContext {
         self.surface.configure(device, &self.config);
     }
 
-    pub fn acquire_frame(&self) -> CurrentSurfaceTexture {
-        self.surface.get_current_texture()
+    pub fn acquire_frame(&self) -> SurfaceFrame {
+        match self.surface.get_current_texture() {
+            CurrentSurfaceTexture::Success(frame) => SurfaceFrame::Ready(frame),
+            CurrentSurfaceTexture::Suboptimal(frame) => SurfaceFrame::Suboptimal(frame),
+            CurrentSurfaceTexture::Timeout => SurfaceFrame::Timeout,
+            CurrentSurfaceTexture::Occluded => SurfaceFrame::Occluded,
+            CurrentSurfaceTexture::Outdated => SurfaceFrame::Outdated,
+            CurrentSurfaceTexture::Lost => SurfaceFrame::Lost,
+            CurrentSurfaceTexture::Validation => SurfaceFrame::Validation,
+        }
     }
 }

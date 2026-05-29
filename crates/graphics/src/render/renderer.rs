@@ -1,61 +1,40 @@
-use crate::res::{
-    FAILED_TO_CREATE_ADAPTER, FAILED_TO_CREATE_DEVICE, RENDER_ENCODER_LABEL, RENDER_PASS_LABEL,
-};
+use crate::res::{RENDER_ENCODER_LABEL, RENDER_PASS_LABEL};
 
 use crate::{gpu::GraphicsDevice, gpu::SurfaceContext, render::RenderResult};
 
+use crate::render::setup::{
+    create_adapter, create_device, create_instance, create_surface_configuration,
+};
+
+use crate::gpu::SurfaceFrame;
+
 use window::native::NativeWindow;
 
-use std::{iter::once, sync::Arc};
-
 use wgpu::{
-    BackendOptions, Backends, Color, CommandEncoderDescriptor, CurrentSurfaceTexture,
-    DeviceDescriptor, Instance, InstanceDescriptor, InstanceFlags, LoadOp, MemoryBudgetThresholds,
-    Operations, PowerPreference, PresentMode, RenderPassColorAttachment, RenderPassDescriptor,
-    RequestAdapterOptions, StoreOp, SurfaceConfiguration, SurfaceTexture, TextureUsages,
-    TextureViewDescriptor,
+    Color, CommandEncoderDescriptor, LoadOp, Operations, RenderPassColorAttachment,
+    RenderPassDescriptor, StoreOp, SurfaceTexture, TextureViewDescriptor,
 };
+
+use std::iter::once;
 
 use winit::dpi::PhysicalSize;
 
 pub struct Renderer {
-    graphics_device: Arc<GraphicsDevice>,
+    graphics_device: GraphicsDevice,
     surface_context: SurfaceContext,
 }
 
 impl Renderer {
     pub async fn new(window: &NativeWindow) -> Self {
-        let instance = Instance::new({
-            InstanceDescriptor {
-                backends: Backends::VULKAN | Backends::METAL,
-                flags: if cfg!(debug_assertions) {
-                    InstanceFlags::default()
-                } else {
-                    InstanceFlags::empty()
-                },
-                memory_budget_thresholds: MemoryBudgetThresholds::default(),
-                backend_options: BackendOptions::default(),
-                display: None,
-            }
-        });
+        let instance = create_instance();
 
         let surface = window.create_surface(&instance);
 
-        let adapter = instance
-            .request_adapter(&RequestAdapterOptions {
-                power_preference: PowerPreference::HighPerformance,
-                compatible_surface: Some(&surface),
-                force_fallback_adapter: false,
-            })
-            .await
-            .expect(FAILED_TO_CREATE_ADAPTER);
+        let adapter = create_adapter(&instance, &surface).await;
 
-        let (device, queue) = adapter
-            .request_device(&DeviceDescriptor::default())
-            .await
-            .expect(FAILED_TO_CREATE_DEVICE);
+        let (device, queue) = create_device(&adapter).await;
 
-        let graphics_device = Arc::new(GraphicsDevice::new(device, queue));
+        let graphics_device = GraphicsDevice::new(device, queue);
 
         let capabilities = surface.get_capabilities(&adapter);
 
@@ -63,16 +42,7 @@ impl Renderer {
 
         let size = window.size();
 
-        let config = SurfaceConfiguration {
-            usage: TextureUsages::RENDER_ATTACHMENT,
-            format: format,
-            width: size.width,
-            height: size.height,
-            present_mode: PresentMode::Fifo,
-            alpha_mode: capabilities.alpha_modes[0],
-            view_formats: vec![format],
-            desired_maximum_frame_latency: 2,
-        };
+        let config = create_surface_configuration(size, format, capabilities.alpha_modes[0]);
 
         surface.configure(&graphics_device.device(), &config);
 
@@ -85,37 +55,23 @@ impl Renderer {
     }
 
     pub fn render(&self) -> RenderResult {
-        let frame = match self.surface_context.acquire_frame() {
-            CurrentSurfaceTexture::Success(frame) => frame,
-            CurrentSurfaceTexture::Suboptimal(frame) => {
-                self.render_frame(&frame);
-                frame.present();
-                return RenderResult::Suboptimal;
-            }
-            CurrentSurfaceTexture::Timeout => {
-                return RenderResult::Timeout;
-            }
-            CurrentSurfaceTexture::Occluded => {
-                return RenderResult::Occluded;
-            }
-            CurrentSurfaceTexture::Outdated => {
-                return RenderResult::Outdated;
-            }
-            CurrentSurfaceTexture::Lost => {
-                return RenderResult::Lost;
-            }
-            CurrentSurfaceTexture::Validation => {
-                return RenderResult::Validation;
-            }
+        let (frame, result) = match self.surface_context.acquire_frame() {
+            SurfaceFrame::Ready(frame) => (frame, RenderResult::Success),
+            SurfaceFrame::Suboptimal(frame) => (frame, RenderResult::Suboptimal),
+            SurfaceFrame::Timeout => return RenderResult::Timeout,
+            SurfaceFrame::Occluded => return RenderResult::Occluded,
+            SurfaceFrame::Outdated => return RenderResult::Outdated,
+            SurfaceFrame::Lost => return RenderResult::Lost,
+            SurfaceFrame::Validation => return RenderResult::Validation,
         };
 
         self.render_frame(&frame);
         frame.present();
 
-        return RenderResult::Success;
+        result
     }
 
-    pub fn render_frame(&self, frame: &SurfaceTexture) {
+    fn render_frame(&self, frame: &SurfaceTexture) {
         let view = frame.texture.create_view(&TextureViewDescriptor::default());
 
         let mut encoder =
@@ -125,34 +81,34 @@ impl Renderer {
                     label: Some(RENDER_ENCODER_LABEL),
                 });
 
-        let mut _render_pass = encoder.begin_render_pass(&RenderPassDescriptor {
-            label: Some(RENDER_PASS_LABEL),
-            color_attachments: &[Some(RenderPassColorAttachment {
-                view: &view,
-                resolve_target: None,
-                ops: Operations {
-                    load: LoadOp::Clear(Color::RED),
-                    store: StoreOp::Store,
-                },
-                depth_slice: None,
-            })],
-            depth_stencil_attachment: None,
-            occlusion_query_set: None,
-            timestamp_writes: None,
-            multiview_mask: None,
-        });
-
-        drop(_render_pass);
+        {
+            let mut _render_pass = encoder.begin_render_pass(&RenderPassDescriptor {
+                label: Some(RENDER_PASS_LABEL),
+                color_attachments: &[Some(RenderPassColorAttachment {
+                    view: &view,
+                    resolve_target: None,
+                    ops: Operations {
+                        load: LoadOp::Clear(Color::RED),
+                        store: StoreOp::Store,
+                    },
+                    depth_slice: None,
+                })],
+                depth_stencil_attachment: None,
+                occlusion_query_set: None,
+                timestamp_writes: None,
+                multiview_mask: None,
+            });
+        }
 
         self.graphics_device.queue().submit(once(encoder.finish()));
     }
 
-    pub fn resize(&mut self) {
+    pub fn reconfigure_surface(&mut self) {
         self.surface_context
             .configure(&self.graphics_device.device());
     }
 
-    pub fn surface_size(&mut self) -> PhysicalSize<u32> {
+    pub fn surface_size(&self) -> PhysicalSize<u32> {
         self.surface_context.size()
     }
 

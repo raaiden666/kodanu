@@ -1,4 +1,4 @@
-use crate::native::native_window_errors::FAILED_TO_CREATE_SURFACE;
+use crate::res::FAILED_TO_CREATE_SURFACE;
 
 use std::sync::Arc;
 

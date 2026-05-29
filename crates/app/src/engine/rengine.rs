@@ -1,6 +1,6 @@
 use crate::res::{FAILED_TO_CREATE_WINDOW, WGPU_VALIDATION_ERROR};
 
-use graphics::{render::RenderResult, render::Renderer};
+use graphics::render::Renderer;
 
 use window::{config::NativeWindowConfig, native::NativeWindow};
 
@@ -23,12 +23,8 @@ pub struct REngine {
     config: NativeWindowConfig,
 }
 
-pub fn create_event_loop() -> Result<EventLoop<()>> {
-    Ok(EventLoop::new()?)
-}
-
 impl REngine {
-    pub fn new(config: NativeWindowConfig) -> Self {
+    fn new(config: NativeWindowConfig) -> Self {
         Self {
             window: None,
             renderer: None,
@@ -36,30 +32,31 @@ impl REngine {
         }
     }
 
-    pub fn render(&mut self) {
+    pub fn run(config: NativeWindowConfig) -> Result<()> {
+        let mut rengine = REngine::new(config);
+        let event_loop = EventLoop::new().unwrap();
+        event_loop.run_app(&mut rengine)?;
+        Ok(())
+    }
+
+    fn recover_surface(renderer: &mut Renderer) {
+        let size = renderer.surface_size();
+        renderer.surface_resize(size);
+    }
+
+    fn render(&mut self) {
         let Some(renderer) = &mut self.renderer else {
             return;
         };
 
-        match renderer.render() {
-            RenderResult::Success => {}
-            RenderResult::Suboptimal => {
-                let size = renderer.surface_size();
-                renderer.surface_resize(size);
-            }
-            RenderResult::Timeout => {}
-            RenderResult::Occluded => {}
-            RenderResult::Outdated => {
-                let size = renderer.surface_size();
-                renderer.surface_resize(size);
-            }
-            RenderResult::Lost => {
-                let size = renderer.surface_size();
-                renderer.surface_resize(size);
-            }
-            RenderResult::Validation => {
-                panic!("{}", WGPU_VALIDATION_ERROR)
-            }
+        let result = renderer.render();
+
+        if result.requires_surface_recovery() {
+            Self::recover_surface(renderer);
+        }
+
+        if result.is_fatal() {
+            panic!("{}", WGPU_VALIDATION_ERROR)
         }
     }
 }

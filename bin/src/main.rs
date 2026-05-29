@@ -1,4 +1,4 @@
-use app::engine::{REngine, create_event_loop};
+use app::engine::REngine;
 
 use window::config::NativeWindowConfig;
 
@@ -9,13 +9,7 @@ use env_logger::init;
 fn main() -> Result<()> {
     init();
 
-    let window_config = NativeWindowConfig::default();
-
-    let mut rengine = REngine::new(window_config);
-
-    let event_loop = create_event_loop()?;
-
-    event_loop.run_app(&mut rengine)?;
+    REngine::run(NativeWindowConfig::default())?;
 
     Ok(())
 }

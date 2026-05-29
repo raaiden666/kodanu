@@ -1,4 +1,4 @@
-use crate::config::default_config_value::{
+use crate::res::{
     DEFAULT_HEIGHT, DEFAULT_MIN_HEIGHT, DEFAULT_MIN_WIDTH, DEFAULT_TITLE_STR, DEFAULT_WIDTH,
 };
 

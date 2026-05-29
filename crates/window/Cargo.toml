@@ -6,5 +6,3 @@ edition = "2024"
 [dependencies]
 winit = { workspace = true }
 wgpu = { workspace = true }
-anyhow = { workspace = true }
-pollster = { workspace = true }
