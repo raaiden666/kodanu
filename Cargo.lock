@@ -664,6 +664,7 @@ name = "graphics"
 version = "0.1.0"
 dependencies = [
  "log",
+ "primitives",
  "wgpu",
  "window",
  "winit",
@@ -1432,6 +1433,13 @@ name = "presser"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e8cf8e6a8aa66ce33f63993ffc4ea4271eb5b0530a9002db8455ea6050c77bfa"
+
+[[package]]
+name = "primitives"
+version = "0.1.0"
+dependencies = [
+ "winit",
+]
 
 [[package]]
 name = "proc-macro-crate"
@@ -2333,6 +2341,7 @@ dependencies = [
 name = "window"
 version = "0.1.0"
 dependencies = [
+ "primitives",
  "wgpu",
  "winit",
 ]

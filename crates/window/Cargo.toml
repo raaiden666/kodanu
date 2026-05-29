@@ -6,3 +6,5 @@ edition = "2024"
 [dependencies]
 winit = { workspace = true }
 wgpu = { workspace = true }
+
+primitives = { package = "primitives", path = "../primitives" }

@@ -9,3 +9,4 @@ winit = { workspace = true }
 log = { workspace = true }
 
 window = { package = "window", path = "../window" }
+primitives = { package = "primitives", path = "../primitives" }

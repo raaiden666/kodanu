@@ -1,13 +1,13 @@
 use crate::res::{DEVICE_LABEL, FAILED_TO_CREATE_ADAPTER, FAILED_TO_CREATE_DEVICE};
 
+use primitives::winit::SizeU32;
+
 use wgpu::{
     Adapter, BackendOptions, Backends, CompositeAlphaMode, Device, DeviceDescriptor,
     ExperimentalFeatures, Features, Instance, InstanceDescriptor, InstanceFlags, Limits,
     MemoryBudgetThresholds, MemoryHints, PowerPreference, PresentMode, Queue,
     RequestAdapterOptions, Surface, SurfaceConfiguration, TextureFormat, TextureUsages, Trace,
 };
-
-use winit::dpi::PhysicalSize;
 
 pub(crate) fn create_instance() -> Instance {
     Instance::new({
@@ -47,7 +47,7 @@ pub(crate) async fn create_device(adapter: &Adapter) -> (Device, Queue) {
 }
 
 pub(crate) fn create_surface_configuration(
-    size: PhysicalSize<u32>,
+    size: SizeU32,
     format: TextureFormat,
     alpha_mode: CompositeAlphaMode,
 ) -> SurfaceConfiguration {

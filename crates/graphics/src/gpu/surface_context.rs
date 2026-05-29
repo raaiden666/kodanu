@@ -1,21 +1,17 @@
 use crate::gpu::SurfaceFrame;
 
-use wgpu::{CurrentSurfaceTexture, Device, Surface, SurfaceConfiguration};
+use primitives::winit::SizeU32;
 
-use winit::dpi::PhysicalSize;
+use wgpu::{CurrentSurfaceTexture, Device, Surface, SurfaceConfiguration};
 
 pub struct SurfaceContext {
     surface: Surface<'static>,
     config: SurfaceConfiguration,
-    size: PhysicalSize<u32>,
+    size: SizeU32,
 }
 
 impl SurfaceContext {
-    pub fn new(
-        surface: Surface<'static>,
-        config: SurfaceConfiguration,
-        size: PhysicalSize<u32>,
-    ) -> Self {
+    pub fn new(surface: Surface<'static>, config: SurfaceConfiguration, size: SizeU32) -> Self {
         Self {
             surface,
             config,
@@ -31,7 +27,7 @@ impl SurfaceContext {
         &self.config
     }
 
-    pub fn size(&self) -> PhysicalSize<u32> {
+    pub fn size(&self) -> SizeU32 {
         self.size
     }
 
@@ -39,7 +35,7 @@ impl SurfaceContext {
         self.surface.configure(device, &self.config);
     }
 
-    pub fn resize(&mut self, device: &Device, size: PhysicalSize<u32>) {
+    pub fn resize(&mut self, device: &Device, size: SizeU32) {
         if size.width == 0 || size.height == 0 {
             return;
         }

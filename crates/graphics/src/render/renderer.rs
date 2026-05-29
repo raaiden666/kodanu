@@ -10,14 +10,14 @@ use crate::gpu::SurfaceFrame;
 
 use window::native::NativeWindow;
 
+use primitives::winit::SizeU32;
+
 use wgpu::{
     Color, CommandEncoderDescriptor, LoadOp, Operations, RenderPassColorAttachment,
     RenderPassDescriptor, StoreOp, SurfaceTexture, TextureViewDescriptor,
 };
 
 use std::iter::once;
-
-use winit::dpi::PhysicalSize;
 
 pub struct Renderer {
     graphics_device: GraphicsDevice,
@@ -40,7 +40,7 @@ impl Renderer {
 
         let format = capabilities.formats[0];
 
-        let size = window.size();
+        let size = window.size().into();
 
         let config = create_surface_configuration(size, format, capabilities.alpha_modes[0]);
 
@@ -108,12 +108,12 @@ impl Renderer {
             .configure(&self.graphics_device.device());
     }
 
-    pub fn surface_size(&self) -> PhysicalSize<u32> {
-        self.surface_context.size()
+    pub fn surface_size(&self) -> SizeU32 {
+        self.surface_context.size().into()
     }
 
-    pub fn surface_resize(&mut self, size: PhysicalSize<u32>) {
+    pub fn surface_resize(&mut self, size: SizeU32) {
         self.surface_context
-            .resize(&self.graphics_device.device(), size);
+            .resize(&self.graphics_device.device(), size.into());
     }
 }
