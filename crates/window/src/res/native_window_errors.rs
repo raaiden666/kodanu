@@ -1,1 +1,1 @@
-pub const FAILED_TO_CREATE_SURFACE: &str = "Failed to create surface";
+pub(crate) const FAILED_TO_CREATE_SURFACE: &str = "Failed to create surface";

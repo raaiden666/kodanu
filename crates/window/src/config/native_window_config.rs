@@ -30,8 +30,8 @@ impl NativeWindowConfig {
     pub fn to_attributes(&self) -> WindowAttributes {
         WindowAttributes::default()
             .with_title(&self.title)
-            .with_inner_size(SizeU32::new(self.width, self.height))
-            .with_min_inner_size(SizeU32::new(self.min_width, self.min_height))
+            .with_inner_size(SizeU32::clamped(self.width, self.height))
+            .with_min_inner_size(SizeU32::clamped(self.min_width, self.min_height))
     }
 
     pub fn with_title(mut self, title: impl Into<String>) -> Self {

@@ -1,13 +1,22 @@
-use wgpu::{Device, Queue};
+use wgpu::{Adapter, Device, Queue};
 
 pub struct GraphicsDevice {
+    adapter: Adapter,
     device: Device,
     queue: Queue,
 }
 
 impl GraphicsDevice {
-    pub fn new(device: Device, queue: Queue) -> Self {
-        Self { device, queue }
+    pub fn new(adapter: Adapter, device: Device, queue: Queue) -> Self {
+        Self {
+            adapter,
+            device,
+            queue,
+        }
+    }
+
+    pub fn adapter(&self) -> &Adapter {
+        &self.adapter
     }
 
     pub fn device(&self) -> &Device {

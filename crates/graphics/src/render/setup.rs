@@ -1,4 +1,9 @@
-use crate::res::{DEVICE_LABEL, FAILED_TO_CREATE_ADAPTER, FAILED_TO_CREATE_DEVICE};
+use crate::{
+    gpu::{GraphicsDevice, SurfaceContext},
+    res::{DEVICE_LABEL, FAILED_TO_CREATE_ADAPTER, FAILED_TO_CREATE_DEVICE},
+};
+
+use window::native::NativeWindow;
 
 use primitives::winit::SizeU32;
 
@@ -12,7 +17,7 @@ use wgpu::{
 pub(crate) fn create_instance() -> Instance {
     Instance::new({
         InstanceDescriptor {
-            backends: Backends::VULKAN | Backends::METAL,
+            backends: Backends::VULKAN | Backends::METAL | Backends::DX12,
             flags: InstanceFlags::default(),
             memory_budget_thresholds: MemoryBudgetThresholds::default(),
             backend_options: BackendOptions::default(),
@@ -61,4 +66,43 @@ pub(crate) fn create_surface_configuration(
         view_formats: vec![format],
         desired_maximum_frame_latency: 2,
     }
+}
+
+pub(crate) async fn create_graphics_device(
+    window: &NativeWindow,
+) -> (GraphicsDevice, Surface<'static>) {
+    let instance = create_instance();
+
+    let surface = window.create_surface(&instance);
+
+    let adapter = create_adapter(&instance, &surface).await;
+
+    let (device, queue) = create_device(&adapter).await;
+
+    let graphics_device = GraphicsDevice::new(adapter, device, queue);
+
+    (graphics_device, surface)
+}
+
+pub(crate) fn create_surface_context(
+    window: &NativeWindow,
+    graphics_device: &GraphicsDevice,
+    surface: Surface<'static>,
+) -> SurfaceContext {
+    let capabilities = surface.get_capabilities(graphics_device.adapter());
+
+    let format = capabilities
+        .formats
+        .iter()
+        .copied()
+        .find(TextureFormat::is_srgb)
+        .unwrap_or(capabilities.formats[0]);
+
+    let size = window.size();
+
+    let config = create_surface_configuration(size, format, capabilities.alpha_modes[0]);
+
+    surface.configure(graphics_device.device(), &config);
+
+    SurfaceContext::new(surface, config, size)
 }

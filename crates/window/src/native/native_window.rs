@@ -1,10 +1,12 @@
 use crate::res::FAILED_TO_CREATE_SURFACE;
 
+use primitives::winit::SizeU32;
+
 use std::sync::Arc;
 
 use wgpu::{Instance, Surface};
 
-use winit::{dpi::PhysicalSize, window::Window};
+use winit::window::Window;
 
 pub struct NativeWindow {
     raw_window: Arc<Window>,
@@ -15,8 +17,8 @@ impl NativeWindow {
         Self { raw_window }
     }
 
-    pub fn size(&self) -> PhysicalSize<u32> {
-        self.raw_window.inner_size()
+    pub fn size(&self) -> SizeU32 {
+        self.raw_window.inner_size().into()
     }
 
     pub fn request_redraw(&self) {

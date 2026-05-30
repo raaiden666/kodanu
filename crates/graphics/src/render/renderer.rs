@@ -1,12 +1,11 @@
-use crate::res::{RENDER_ENCODER_LABEL, RENDER_PASS_LABEL};
-
-use crate::{gpu::GraphicsDevice, gpu::SurfaceContext, render::RenderResult};
-
-use crate::render::setup::{
-    create_adapter, create_device, create_instance, create_surface_configuration,
+use crate::{
+    gpu::GraphicsDevice,
+    gpu::SurfaceContext,
+    gpu::SurfaceFrame,
+    render::RenderResult,
+    render::setup::{create_graphics_device, create_surface_context},
+    res::{RENDER_ENCODER_LABEL, RENDER_PASS_LABEL},
 };
-
-use crate::gpu::SurfaceFrame;
 
 use window::native::NativeWindow;
 
@@ -26,27 +25,9 @@ pub struct Renderer {
 
 impl Renderer {
     pub async fn new(window: &NativeWindow) -> Self {
-        let instance = create_instance();
+        let (graphics_device, surface) = create_graphics_device(window).await;
 
-        let surface = window.create_surface(&instance);
-
-        let adapter = create_adapter(&instance, &surface).await;
-
-        let (device, queue) = create_device(&adapter).await;
-
-        let graphics_device = GraphicsDevice::new(device, queue);
-
-        let capabilities = surface.get_capabilities(&adapter);
-
-        let format = capabilities.formats[0];
-
-        let size = window.size().into();
-
-        let config = create_surface_configuration(size, format, capabilities.alpha_modes[0]);
-
-        surface.configure(&graphics_device.device(), &config);
-
-        let surface_context = SurfaceContext::new(surface, config, size);
+        let surface_context = create_surface_context(window, &graphics_device, surface);
 
         Self {
             graphics_device,
@@ -105,15 +86,15 @@ impl Renderer {
 
     pub fn reconfigure_surface(&mut self) {
         self.surface_context
-            .configure(&self.graphics_device.device());
+            .configure(self.graphics_device.device());
     }
 
     pub fn surface_size(&self) -> SizeU32 {
-        self.surface_context.size().into()
+        self.surface_context.size()
     }
 
     pub fn surface_resize(&mut self, size: SizeU32) {
         self.surface_context
-            .resize(&self.graphics_device.device(), size.into());
+            .resize(self.graphics_device.device(), size);
     }
 }

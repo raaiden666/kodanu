@@ -142,6 +142,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "graphics",
+ "input",
  "pollster",
  "window",
  "winit",
@@ -193,6 +194,7 @@ dependencies = [
  "anyhow",
  "app",
  "env_logger",
+ "input",
  "window",
 ]
 
@@ -663,11 +665,9 @@ dependencies = [
 name = "graphics"
 version = "0.1.0"
 dependencies = [
- "log",
  "primitives",
  "wgpu",
  "window",
- "winit",
 ]
 
 [[package]]
@@ -728,6 +728,14 @@ checksum = "d466e9454f08e4a911e14806c24e16fba1b4c121d1ea474396f396069cf949d9"
 dependencies = [
  "equivalent",
  "hashbrown 0.17.1",
+]
+
+[[package]]
+name = "input"
+version = "0.1.0"
+dependencies = [
+ "primitives",
+ "winit",
 ]
 
 [[package]]

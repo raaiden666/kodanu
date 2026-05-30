@@ -9,3 +9,4 @@ env_logger = { workspace = true }
 
 window = { package = "window", path = "../crates/window" }
 app = { package = "app", path = "../crates/app" }
+input = { package = "input", path = "../crates/input" }

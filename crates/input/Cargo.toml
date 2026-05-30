@@ -1,10 +1,9 @@
 [package]
-name = "graphics"
+name = "input"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-wgpu = { workspace = true }
+winit = { workspace = true }
 
-window = { package = "window", path = "../window" }
 primitives = { package = "primitives", path = "../primitives" }

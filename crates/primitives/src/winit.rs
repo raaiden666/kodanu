@@ -1,3 +1,5 @@
-mod size_u32;
+mod size;
+mod vec2;
 
-pub use crate::winit::size_u32::*;
+pub use crate::winit::size::*;
+pub use crate::winit::vec2::*;

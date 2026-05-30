@@ -2,6 +2,10 @@ use crate::res::{FAILED_TO_CREATE_NATIVE_WINDOW, WGPU_VALIDATION_ERROR};
 
 use graphics::render::Renderer;
 
+use input::winit::{
+    InputState, handle_cursor_move, handle_keyboard_input, handle_mouse_input, handle_mouse_wheel,
+};
+
 use window::{config::NativeWindowConfig, native::NativeWindow};
 
 use std::{panic, sync::Arc};
@@ -21,28 +25,25 @@ pub struct REngine {
     window: Option<NativeWindow>,
     renderer: Option<Renderer>,
     config: NativeWindowConfig,
+    input: InputState,
 }
 
 impl REngine {
-    pub fn run(config: NativeWindowConfig) -> Result<()> {
+    pub fn run(config: NativeWindowConfig, input: InputState) -> Result<()> {
         let event_loop = EventLoop::new()?;
-        let mut rengine = REngine::new(config);
+        let mut rengine = REngine::new(config, input);
 
         event_loop.run_app(&mut rengine)?;
         Ok(())
     }
 
-    fn new(config: NativeWindowConfig) -> Self {
+    fn new(config: NativeWindowConfig, input: InputState) -> Self {
         Self {
             window: None,
             renderer: None,
             config: config,
+            input: input,
         }
-    }
-
-    fn recover_surface(renderer: &mut Renderer) {
-        let size = renderer.surface_size();
-        renderer.surface_resize(size);
     }
 
     fn render(&mut self) {
@@ -51,9 +52,10 @@ impl REngine {
         };
 
         let result = renderer.render();
+        let size = renderer.surface_size();
 
         if result.requires_surface_recovery() {
-            Self::recover_surface(renderer);
+            renderer.surface_resize(size);
         }
 
         if result.is_fatal() {
@@ -98,6 +100,19 @@ impl ApplicationHandler for REngine {
                 if let Some(renderer) = &mut self.renderer {
                     renderer.surface_resize(size.into());
                 }
+            }
+            WindowEvent::KeyboardInput { event, .. } => {
+                handle_keyboard_input(event, &mut self.input);
+            }
+
+            WindowEvent::MouseInput { state, button, .. } => {
+                handle_mouse_input(state, button, &mut self.input);
+            }
+            WindowEvent::CursorMoved { position, .. } => {
+                handle_cursor_move(position.into(), &mut self.input);
+            }
+            WindowEvent::MouseWheel { delta, .. } => {
+                handle_mouse_wheel(delta, &mut self.input);
             }
             _ => {}
         }
