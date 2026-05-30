@@ -1,5 +1,3 @@
-use crate::res::{JUST_PRESSED_CAPACITY, JUST_RELEASED_CAPACITY, PRESSED_CAPACITY};
-
 use std::{collections::HashSet, hash::Hash};
 
 pub struct ButtonState<T>
@@ -16,10 +14,12 @@ where
     T: Eq + Hash + Copy,
 {
     pub fn new() -> Self {
+        const INITIAL_CAPACITY: usize = 128;
+
         Self {
-            pressed: HashSet::with_capacity(PRESSED_CAPACITY),
-            just_pressed: HashSet::with_capacity(JUST_PRESSED_CAPACITY),
-            just_released: HashSet::with_capacity(JUST_RELEASED_CAPACITY),
+            pressed: HashSet::with_capacity(INITIAL_CAPACITY),
+            just_pressed: HashSet::with_capacity(INITIAL_CAPACITY),
+            just_released: HashSet::with_capacity(INITIAL_CAPACITY),
         }
     }
 

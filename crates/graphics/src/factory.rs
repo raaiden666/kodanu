@@ -1,11 +1,8 @@
-use crate::{
-    gpu::{GraphicsDevice, SurfaceContext},
-    res::{DEVICE_LABEL, FAILED_TO_CREATE_ADAPTER, FAILED_TO_CREATE_DEVICE},
-};
+use crate::{GraphicsDevice, RenderSurface};
 
-use window::native::NativeWindow;
+use window::Window;
 
-use primitives::winit::SizeU32;
+use types::Size;
 
 use wgpu::{
     Adapter, BackendOptions, Backends, CompositeAlphaMode, Device, DeviceDescriptor,
@@ -27,6 +24,8 @@ pub(crate) fn create_instance() -> Instance {
 }
 
 pub(crate) async fn create_adapter(instance: &Instance, surface: &Surface<'_>) -> Adapter {
+    const FAILED_TO_CREATE_ADAPTER: &str = "Failed to create adapter";
+
     instance
         .request_adapter(&RequestAdapterOptions {
             power_preference: PowerPreference::HighPerformance,
@@ -38,6 +37,9 @@ pub(crate) async fn create_adapter(instance: &Instance, surface: &Surface<'_>) -
 }
 
 pub(crate) async fn create_device(adapter: &Adapter) -> (Device, Queue) {
+    const FAILED_TO_CREATE_DEVICE: &str = "Failed to create device";
+    const DEVICE_LABEL: &str = "Device";
+
     adapter
         .request_device(&DeviceDescriptor {
             label: Some(DEVICE_LABEL),
@@ -52,7 +54,7 @@ pub(crate) async fn create_device(adapter: &Adapter) -> (Device, Queue) {
 }
 
 pub(crate) fn create_surface_configuration(
-    size: SizeU32,
+    size: Size<u32>,
     format: TextureFormat,
     alpha_mode: CompositeAlphaMode,
 ) -> SurfaceConfiguration {
@@ -68,9 +70,7 @@ pub(crate) fn create_surface_configuration(
     }
 }
 
-pub(crate) async fn create_graphics_device(
-    window: &NativeWindow,
-) -> (GraphicsDevice, Surface<'static>) {
+pub(crate) async fn create_graphics_device(window: &Window) -> (GraphicsDevice, Surface<'static>) {
     let instance = create_instance();
 
     let surface = window.create_surface(&instance);
@@ -85,10 +85,10 @@ pub(crate) async fn create_graphics_device(
 }
 
 pub(crate) fn create_surface_context(
-    window: &NativeWindow,
+    window: &Window,
     graphics_device: &GraphicsDevice,
     surface: Surface<'static>,
-) -> SurfaceContext {
+) -> RenderSurface {
     let capabilities = surface.get_capabilities(graphics_device.adapter());
 
     let format = capabilities
@@ -104,5 +104,5 @@ pub(crate) fn create_surface_context(
 
     surface.configure(graphics_device.device(), &config);
 
-    SurfaceContext::new(surface, config, size)
+    RenderSurface::new(surface, config, size)
 }

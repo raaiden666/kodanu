@@ -1,23 +1,21 @@
-use crate::res::FAILED_TO_CREATE_SURFACE;
-
-use primitives::winit::SizeU32;
+use types::Size;
 
 use std::sync::Arc;
 
 use wgpu::{Instance, Surface};
 
-use winit::window::Window;
+use winit::window::Window as WinitWindow;
 
-pub struct NativeWindow {
-    raw_window: Arc<Window>,
+pub struct Window {
+    raw_window: Arc<WinitWindow>,
 }
 
-impl NativeWindow {
-    pub fn new(raw_window: Arc<Window>) -> Self {
+impl Window {
+    pub fn new(raw_window: Arc<WinitWindow>) -> Self {
         Self { raw_window }
     }
 
-    pub fn size(&self) -> SizeU32 {
+    pub fn size(&self) -> Size<u32> {
         self.raw_window.inner_size().into()
     }
 
@@ -26,6 +24,8 @@ impl NativeWindow {
     }
 
     pub fn create_surface(&self, instance: &Instance) -> Surface<'static> {
+        const FAILED_TO_CREATE_SURFACE: &str = "Failed to create surface";
+
         instance
             .create_surface(Arc::clone(&self.raw_window))
             .expect(FAILED_TO_CREATE_SURFACE)

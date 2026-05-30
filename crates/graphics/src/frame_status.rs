@@ -1,4 +1,4 @@
-pub enum RenderResult {
+pub enum FrameStatus {
     Success,
     Suboptimal,
     Timeout,
@@ -8,11 +8,11 @@ pub enum RenderResult {
     Validation,
 }
 
-impl RenderResult {
+impl FrameStatus {
     pub fn requires_surface_recovery(&self) -> bool {
         matches!(
             self,
-            RenderResult::Suboptimal | RenderResult::Outdated | RenderResult::Lost
+            FrameStatus::Suboptimal | FrameStatus::Outdated | FrameStatus::Lost
         )
     }
 

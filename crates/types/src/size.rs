@@ -1,7 +1,5 @@
 use winit::dpi::{PhysicalSize, Size as WinitSize};
 
-pub type SizeU32 = Size<u32>;
-
 #[derive(Debug, Clone, Copy)]
 pub struct Size<T> {
     pub width: T,

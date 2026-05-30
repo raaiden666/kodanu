@@ -1,4 +1,4 @@
-use crate::{winit::KeyCode, winit::MouseButton};
+use crate::{KeyCode, MouseButton};
 
 use winit::{event::MouseButton as WinitMouseButton, keyboard::KeyCode as WinitKeyCode};
 

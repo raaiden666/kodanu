@@ -1,15 +1,11 @@
 use crate::{
-    gpu::GraphicsDevice,
-    gpu::SurfaceContext,
-    gpu::SurfaceFrame,
-    render::RenderResult,
-    render::setup::{create_graphics_device, create_surface_context},
-    res::{RENDER_ENCODER_LABEL, RENDER_PASS_LABEL},
+    FrameStatus, GraphicsDevice, GraphicsPipeline, RenderSurface, SurfaceFrame,
+    factory::{create_graphics_device, create_surface_context},
 };
 
-use window::native::NativeWindow;
+use window::Window;
 
-use primitives::winit::SizeU32;
+use types::Size;
 
 use wgpu::{
     Color, CommandEncoderDescriptor, LoadOp, Operations, RenderPassColorAttachment,
@@ -20,39 +16,47 @@ use std::iter::once;
 
 pub struct Renderer {
     graphics_device: GraphicsDevice,
-    surface_context: SurfaceContext,
+    surface_context: RenderSurface,
+    graphics_pipeline: GraphicsPipeline,
 }
 
 impl Renderer {
-    pub async fn new(window: &NativeWindow) -> Self {
+    pub async fn new(window: &Window) -> Self {
         let (graphics_device, surface) = create_graphics_device(window).await;
 
         let surface_context = create_surface_context(window, &graphics_device, surface);
 
+        let graphics_pipeline =
+            GraphicsPipeline::new(graphics_device.device(), surface_context.config().format);
+
         Self {
             graphics_device,
             surface_context,
+            graphics_pipeline,
         }
     }
 
-    pub fn render(&self) -> RenderResult {
+    pub fn render(&self) -> FrameStatus {
         let (frame, result) = match self.surface_context.acquire_frame() {
-            SurfaceFrame::Ready(frame) => (frame, RenderResult::Success),
-            SurfaceFrame::Suboptimal(frame) => (frame, RenderResult::Suboptimal),
-            SurfaceFrame::Timeout => return RenderResult::Timeout,
-            SurfaceFrame::Occluded => return RenderResult::Occluded,
-            SurfaceFrame::Outdated => return RenderResult::Outdated,
-            SurfaceFrame::Lost => return RenderResult::Lost,
-            SurfaceFrame::Validation => return RenderResult::Validation,
+            SurfaceFrame::Ready(frame) => (frame, FrameStatus::Success),
+            SurfaceFrame::Suboptimal(frame) => (frame, FrameStatus::Suboptimal),
+            SurfaceFrame::Timeout => return FrameStatus::Timeout,
+            SurfaceFrame::Occluded => return FrameStatus::Occluded,
+            SurfaceFrame::Outdated => return FrameStatus::Outdated,
+            SurfaceFrame::Lost => return FrameStatus::Lost,
+            SurfaceFrame::Validation => return FrameStatus::Validation,
         };
 
-        self.render_frame(&frame);
+        self.draw_frame(&frame);
         frame.present();
 
         result
     }
 
-    fn render_frame(&self, frame: &SurfaceTexture) {
+    fn draw_frame(&self, frame: &SurfaceTexture) {
+        const RENDER_ENCODER_LABEL: &str = "Render Encoder";
+        const RENDER_PASS_LABEL: &str = "Render Pass";
+
         let view = frame.texture.create_view(&TextureViewDescriptor::default());
 
         let mut encoder =
@@ -63,7 +67,7 @@ impl Renderer {
                 });
 
         {
-            let mut _render_pass = encoder.begin_render_pass(&RenderPassDescriptor {
+            let mut render_pass = encoder.begin_render_pass(&RenderPassDescriptor {
                 label: Some(RENDER_PASS_LABEL),
                 color_attachments: &[Some(RenderPassColorAttachment {
                     view: &view,
@@ -79,6 +83,9 @@ impl Renderer {
                 timestamp_writes: None,
                 multiview_mask: None,
             });
+
+            render_pass.set_pipeline(&self.graphics_pipeline.raw());
+            render_pass.draw(0..3, 0..1);
         }
 
         self.graphics_device.queue().submit(once(encoder.finish()));
@@ -89,11 +96,11 @@ impl Renderer {
             .configure(self.graphics_device.device());
     }
 
-    pub fn surface_size(&self) -> SizeU32 {
+    pub fn surface_size(&self) -> Size<u32> {
         self.surface_context.size()
     }
 
-    pub fn surface_resize(&mut self, size: SizeU32) {
+    pub fn surface_resize(&mut self, size: Size<u32>) {
         self.surface_context
             .resize(self.graphics_device.device(), size);
     }

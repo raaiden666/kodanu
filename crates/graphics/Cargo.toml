@@ -7,4 +7,4 @@ edition = "2024"
 wgpu = { workspace = true }
 
 window = { package = "window", path = "../window" }
-primitives = { package = "primitives", path = "../primitives" }
+types = { package = "types", path = "../types" }

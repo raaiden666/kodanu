@@ -1,16 +1,16 @@
-use app::engine::REngine;
+use app::App;
 
-use window::config::NativeWindowConfig;
+use window::WindowConfig;
 
-use input::winit::InputState;
+use input::Input;
 
 use anyhow::{Ok, Result};
 
 fn main() -> Result<()> {
-    let window_config = NativeWindowConfig::default();
-    let window_input = InputState::default();
+    let window_config = WindowConfig::default();
+    let input = Input::default();
 
-    REngine::run(window_config, window_input)?;
+    App::run(window_config, input)?;
 
     Ok(())
 }

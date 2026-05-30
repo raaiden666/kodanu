@@ -6,4 +6,4 @@ edition = "2024"
 [dependencies]
 winit = { workspace = true }
 
-primitives = { package = "primitives", path = "../primitives" }
+types = { package = "types", path = "../types" }

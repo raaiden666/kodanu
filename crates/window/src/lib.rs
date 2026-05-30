@@ -1,4 +1,5 @@
-pub(crate) mod res;
+mod window;
+mod window_config;
 
-pub mod config;
-pub mod native;
+pub use window::*;
+pub use window_config::*;

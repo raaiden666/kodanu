@@ -665,7 +665,7 @@ dependencies = [
 name = "graphics"
 version = "0.1.0"
 dependencies = [
- "primitives",
+ "types",
  "wgpu",
  "window",
 ]
@@ -734,7 +734,7 @@ dependencies = [
 name = "input"
 version = "0.1.0"
 dependencies = [
- "primitives",
+ "types",
  "winit",
 ]
 
@@ -1443,13 +1443,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e8cf8e6a8aa66ce33f63993ffc4ea4271eb5b0530a9002db8455ea6050c77bfa"
 
 [[package]]
-name = "primitives"
-version = "0.1.0"
-dependencies = [
- "winit",
-]
-
-[[package]]
 name = "proc-macro-crate"
 version = "3.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1936,6 +1929,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d2df906b07856748fa3f6e0ad0cbaa047052d4a7dd609e231c4f72cee8c36f31"
 
 [[package]]
+name = "types"
+version = "0.1.0"
+dependencies = [
+ "winit",
+]
+
+[[package]]
 name = "unicode-ident"
 version = "1.0.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2349,7 +2349,7 @@ dependencies = [
 name = "window"
 version = "0.1.0"
 dependencies = [
- "primitives",
+ "types",
  "wgpu",
  "winit",
 ]

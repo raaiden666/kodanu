@@ -1,28 +1,28 @@
-use primitives::winit::Vec2f64;
+use crate::{KeyCode, MouseButton, button_state::ButtonState};
 
-use crate::winit::{KeyCode, MouseButton, button_state::ButtonState};
+use types::Vec2;
 
-pub struct InputState {
+pub struct Input {
     keyboard: ButtonState<KeyCode>,
     mouse: ButtonState<MouseButton>,
 
-    mouse_position: Vec2f64,
+    mouse_position: Vec2<f64>,
     mouse_wheel_delta: f32,
 }
 
-impl Default for InputState {
+impl Default for Input {
     fn default() -> Self {
         Self {
             keyboard: ButtonState::new(),
             mouse: ButtonState::new(),
 
-            mouse_position: Vec2f64::new(0.0, 0.0),
+            mouse_position: Vec2::new(0.0, 0.0),
             mouse_wheel_delta: 0.0,
         }
     }
 }
 
-impl InputState {
+impl Input {
     pub fn begin_frame(&mut self) {
         self.keyboard.begin_frame();
         self.mouse.begin_frame();
@@ -70,11 +70,11 @@ impl InputState {
         self.mouse.is_just_released(button)
     }
 
-    pub fn set_mouse_position(&mut self, position: Vec2f64) {
+    pub fn set_mouse_position(&mut self, position: Vec2<f64>) {
         self.mouse_position = position;
     }
 
-    pub fn get_mouse_position(&self) -> Vec2f64 {
+    pub fn get_mouse_position(&self) -> Vec2<f64> {
         self.mouse_position
     }
 

@@ -7,4 +7,4 @@ edition = "2024"
 winit = { workspace = true }
 wgpu = { workspace = true }
 
-primitives = { package = "primitives", path = "../primitives" }
+types = { package = "types", path = "../types" }

@@ -1,12 +1,10 @@
-use crate::res::{FAILED_TO_CREATE_NATIVE_WINDOW, WGPU_VALIDATION_ERROR};
-
-use graphics::render::Renderer;
-
-use input::winit::{
-    InputState, handle_cursor_move, handle_keyboard_input, handle_mouse_input, handle_mouse_wheel,
+use input::{
+    Input, handle_cursor_move, handle_keyboard_input, handle_mouse_input, handle_mouse_wheel,
 };
 
-use window::{config::NativeWindowConfig, native::NativeWindow};
+use graphics::Renderer;
+
+use window::{Window, WindowConfig};
 
 use std::{panic, sync::Arc};
 
@@ -21,23 +19,23 @@ use winit::{
     window::WindowId,
 };
 
-pub struct REngine {
-    window: Option<NativeWindow>,
+pub struct App {
+    window: Option<Window>,
     renderer: Option<Renderer>,
-    config: NativeWindowConfig,
-    input: InputState,
+    config: WindowConfig,
+    input: Input,
 }
 
-impl REngine {
-    pub fn run(config: NativeWindowConfig, input: InputState) -> Result<()> {
+impl App {
+    pub fn run(config: WindowConfig, input: Input) -> Result<()> {
         let event_loop = EventLoop::new()?;
-        let mut rengine = REngine::new(config, input);
+        let mut app = App::new(config, input);
 
-        event_loop.run_app(&mut rengine)?;
+        event_loop.run_app(&mut app)?;
         Ok(())
     }
 
-    fn new(config: NativeWindowConfig, input: InputState) -> Self {
+    fn new(config: WindowConfig, input: Input) -> Self {
         Self {
             window: None,
             renderer: None,
@@ -47,6 +45,8 @@ impl REngine {
     }
 
     fn render(&mut self) {
+        const WGPU_VALIDATION_ERROR: &str = "Wgpu validation error";
+
         let Some(renderer) = &mut self.renderer else {
             return;
         };
@@ -62,15 +62,22 @@ impl REngine {
             panic!("{}", WGPU_VALIDATION_ERROR)
         }
     }
+
+    fn frame(&mut self) {
+        self.render();
+        self.input.begin_frame();
+    }
 }
 
-impl ApplicationHandler for REngine {
+impl ApplicationHandler for App {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
+        const FAILED_TO_CREATE_NATIVE_WINDOW: &str = "Failed to create native window";
+
         let raw_window = event_loop
             .create_window(self.config.to_attributes())
             .expect(FAILED_TO_CREATE_NATIVE_WINDOW);
 
-        let window = NativeWindow::new(Arc::new(raw_window));
+        let window = Window::new(Arc::new(raw_window));
         let renderer = block_on(Renderer::new(&window));
 
         window.request_redraw();
@@ -90,7 +97,7 @@ impl ApplicationHandler for REngine {
                 event_loop.exit();
             }
             WindowEvent::RedrawRequested => {
-                self.render();
+                self.frame();
 
                 if let Some(window) = &self.window {
                     window.request_redraw();

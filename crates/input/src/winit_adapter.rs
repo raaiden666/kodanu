@@ -1,13 +1,13 @@
-use crate::winit::{InputState, map_key_code, map_mouse_button};
+use crate::{Input, map_key_code, map_mouse_button};
 
-use primitives::winit::Vec2f64;
+use types::Vec2;
 
 use winit::{
     event::{ElementState, KeyEvent, MouseButton, MouseScrollDelta},
     keyboard::PhysicalKey,
 };
 
-pub fn handle_keyboard_input(event: KeyEvent, input: &mut InputState) {
+pub fn handle_keyboard_input(event: KeyEvent, input: &mut Input) {
     let PhysicalKey::Code(key_code) = event.physical_key else {
         return;
     };
@@ -26,7 +26,7 @@ pub fn handle_keyboard_input(event: KeyEvent, input: &mut InputState) {
     }
 }
 
-pub fn handle_mouse_input(state: ElementState, button: MouseButton, input: &mut InputState) {
+pub fn handle_mouse_input(state: ElementState, button: MouseButton, input: &mut Input) {
     let Some(button) = map_mouse_button(button) else {
         return;
     };
@@ -41,11 +41,11 @@ pub fn handle_mouse_input(state: ElementState, button: MouseButton, input: &mut 
     }
 }
 
-pub fn handle_cursor_move(position: Vec2f64, input: &mut InputState) {
+pub fn handle_cursor_move(position: Vec2<f64>, input: &mut Input) {
     input.set_mouse_position(position);
 }
 
-pub fn handle_mouse_wheel(delta: MouseScrollDelta, input: &mut InputState) {
+pub fn handle_mouse_wheel(delta: MouseScrollDelta, input: &mut Input) {
     match delta {
         MouseScrollDelta::LineDelta(_, y) => {
             input.add_mouse_wheel_delta(y);
