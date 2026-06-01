@@ -2,7 +2,7 @@ use input::{
     Input, handle_cursor_move, handle_keyboard_input, handle_mouse_input, handle_mouse_wheel,
 };
 
-use graphics::Renderer;
+use graphics::renderer::Renderer;
 
 use window::{Window, WindowConfig};
 
@@ -19,28 +19,32 @@ use winit::{
     window::WindowId,
 };
 
+use crate::Time;
+
 pub struct App {
     window: Option<Window>,
     renderer: Option<Renderer>,
     config: WindowConfig,
     input: Input,
+    time: Time,
 }
 
 impl App {
-    pub fn run(config: WindowConfig, input: Input) -> Result<()> {
+    pub fn run(config: WindowConfig, input: Input, time: Time) -> Result<()> {
         let event_loop = EventLoop::new()?;
-        let mut app = App::new(config, input);
+        let mut app = App::new(config, input, time);
 
         event_loop.run_app(&mut app)?;
         Ok(())
     }
 
-    fn new(config: WindowConfig, input: Input) -> Self {
+    fn new(config: WindowConfig, input: Input, time: Time) -> Self {
         Self {
             window: None,
             renderer: None,
             config: config,
             input: input,
+            time: time,
         }
     }
 
@@ -63,7 +67,13 @@ impl App {
         }
     }
 
-    fn frame(&mut self) {
+    fn frame(&mut self, event_loop: &ActiveEventLoop) {
+        self.time.update();
+
+        if self.input.is_key_pressed(input::KeyCode::Escape) {
+            event_loop.exit();
+        };
+
         self.render();
         self.input.begin_frame();
     }
@@ -97,7 +107,7 @@ impl ApplicationHandler for App {
                 event_loop.exit();
             }
             WindowEvent::RedrawRequested => {
-                self.frame();
+                self.frame(event_loop);
 
                 if let Some(window) = &self.window {
                     window.request_redraw();
@@ -111,7 +121,6 @@ impl ApplicationHandler for App {
             WindowEvent::KeyboardInput { event, .. } => {
                 handle_keyboard_input(event, &mut self.input);
             }
-
             WindowEvent::MouseInput { state, button, .. } => {
                 handle_mouse_input(state, button, &mut self.input);
             }

@@ -607,6 +607,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "glam"
+version = "0.33.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8fb167719045debebe9f532320accc7b5c993c5a3b813f5696a11d5ca7bdc57b"
+dependencies = [
+ "bytemuck",
+]
+
+[[package]]
 name = "glow"
 version = "0.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -665,6 +674,8 @@ dependencies = [
 name = "graphics"
 version = "0.1.0"
 dependencies = [
+ "bytemuck",
+ "glam",
  "types",
  "wgpu",
  "window",
@@ -1630,6 +1641,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "93fc1dc3aaa9bfed95e02e6eadabb4baf7e3078b0bd1b4d7b6b0b68378900502"
 dependencies = [
  "winapi-util",
+]
+
+[[package]]
+name = "scene"
+version = "0.1.0"
+dependencies = [
+ "glam",
 ]
 
 [[package]]

@@ -3,7 +3,7 @@ members = [
     "bin",
     "crates/app",
     "crates/graphics",
-    "crates/input",
+    "crates/input", "crates/scene",
     "crates/types",
     "crates/window",
 ]
@@ -17,3 +17,5 @@ anyhow = { version = "1.0.102" }
 pollster = { version = "0.4.0" }
 env_logger = { version = "0.11.10" }
 log = { version = "0.4.30" }
+bytemuck = { version = "1.25.0", features = ["derive"] }
+glam = { version = "0.33.0", features = ["bytemuck"] }

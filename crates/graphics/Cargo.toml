@@ -5,6 +5,8 @@ edition = "2024"
 
 [dependencies]
 wgpu = { workspace = true }
+bytemuck = { workspace = true }
+glam = { workspace = true }
 
 window = { package = "window", path = "../window" }
 types = { package = "types", path = "../types" }

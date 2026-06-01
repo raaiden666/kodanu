@@ -1,4 +1,4 @@
-use crate::{GraphicsDevice, RenderSurface};
+use crate::gpu::{GraphicsDevice, RenderSurface};
 
 use window::Window;
 
@@ -11,7 +11,7 @@ use wgpu::{
     RequestAdapterOptions, Surface, SurfaceConfiguration, TextureFormat, TextureUsages, Trace,
 };
 
-pub(crate) fn create_instance() -> Instance {
+pub fn create_instance() -> Instance {
     Instance::new({
         InstanceDescriptor {
             backends: Backends::VULKAN | Backends::METAL | Backends::DX12,
@@ -23,20 +23,20 @@ pub(crate) fn create_instance() -> Instance {
     })
 }
 
-pub(crate) async fn create_adapter(instance: &Instance, surface: &Surface<'_>) -> Adapter {
+pub async fn create_adapter(instance: &Instance, surface: &Surface<'_>) -> Adapter {
     const FAILED_TO_CREATE_ADAPTER: &str = "Failed to create adapter";
 
     instance
         .request_adapter(&RequestAdapterOptions {
             power_preference: PowerPreference::HighPerformance,
-            compatible_surface: Some(&surface),
+            compatible_surface: Some(surface),
             force_fallback_adapter: false,
         })
         .await
         .expect(FAILED_TO_CREATE_ADAPTER)
 }
 
-pub(crate) async fn create_device(adapter: &Adapter) -> (Device, Queue) {
+pub async fn create_device(adapter: &Adapter) -> (Device, Queue) {
     const FAILED_TO_CREATE_DEVICE: &str = "Failed to create device";
     const DEVICE_LABEL: &str = "Device";
 
@@ -53,7 +53,7 @@ pub(crate) async fn create_device(adapter: &Adapter) -> (Device, Queue) {
         .expect(FAILED_TO_CREATE_DEVICE)
 }
 
-pub(crate) fn create_surface_configuration(
+pub fn create_surface_configuration(
     size: Size<u32>,
     format: TextureFormat,
     alpha_mode: CompositeAlphaMode,
@@ -70,7 +70,7 @@ pub(crate) fn create_surface_configuration(
     }
 }
 
-pub(crate) async fn create_graphics_device(window: &Window) -> (GraphicsDevice, Surface<'static>) {
+pub async fn create_graphics_device(window: &Window) -> (GraphicsDevice, Surface<'static>) {
     let instance = create_instance();
 
     let surface = window.create_surface(&instance);
@@ -84,7 +84,7 @@ pub(crate) async fn create_graphics_device(window: &Window) -> (GraphicsDevice, 
     (graphics_device, surface)
 }
 
-pub(crate) fn create_surface_context(
+pub fn create_surface_context(
     window: &Window,
     graphics_device: &GraphicsDevice,
     surface: Surface<'static>,

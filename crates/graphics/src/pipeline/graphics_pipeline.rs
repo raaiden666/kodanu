@@ -11,20 +11,20 @@ pub struct GraphicsPipeline {
 impl GraphicsPipeline {
     pub fn new(device: &Device, format: TextureFormat) -> Self {
         let shader = device.create_shader_module(ShaderModuleDescriptor {
-            label: Some("Double Shdaer"),
+            label: Some("Double Shader"),
             source: ShaderSource::Wgsl(
-                include_str!("../../../resources/shaders/wgsl/double.wgsl").into(),
+                include_str!("../../../../resources/shaders/wgsl/double.wgsl").into(),
             ),
         });
 
         let layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
-            label: Some("Layout"),
+            label: Some("Render Pipeline Layout"),
             bind_group_layouts: &[],
             immediate_size: 0,
         });
 
         let pipeline = device.create_render_pipeline(&RenderPipelineDescriptor {
-            label: Some("Pipeline"),
+            label: Some("Render Pipeline"),
             layout: Some(&layout),
             vertex: VertexState {
                 module: &shader,

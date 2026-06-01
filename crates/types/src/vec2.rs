@@ -13,7 +13,7 @@ impl<T> Vec2<T> {
 }
 
 impl From<PhysicalPosition<f64>> for Vec2<f64> {
-    fn from(position: PhysicalPosition<f64>) -> Self {
-        Self::new(position.x, position.y)
+    fn from(pos: PhysicalPosition<f64>) -> Self {
+        Self::new(pos.x, pos.y)
     }
 }

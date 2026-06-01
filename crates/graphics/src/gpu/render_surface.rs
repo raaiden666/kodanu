@@ -1,4 +1,4 @@
-use crate::SurfaceFrame;
+use crate::gpu::SurfaceFrame;
 
 use types::Size;
 
