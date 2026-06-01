@@ -14,10 +14,8 @@ pub struct Mesh {
 
 impl Mesh {
     pub fn new(device: &Device, verticies: &[Vertex]) -> Self {
-        const VERTEX_BUFFER_LABEL: &str = "Vertex buffer";
-
         let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
-            label: Some(VERTEX_BUFFER_LABEL),
+            label: Some("Vertex buffer"),
             contents: cast_slice(verticies),
             usage: BufferUsages::VERTEX,
         });

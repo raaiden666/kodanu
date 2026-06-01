@@ -24,8 +24,6 @@ pub fn create_instance() -> Instance {
 }
 
 pub async fn create_adapter(instance: &Instance, surface: &Surface<'_>) -> Adapter {
-    const FAILED_TO_CREATE_ADAPTER: &str = "Failed to create adapter";
-
     instance
         .request_adapter(&RequestAdapterOptions {
             power_preference: PowerPreference::HighPerformance,
@@ -33,16 +31,13 @@ pub async fn create_adapter(instance: &Instance, surface: &Surface<'_>) -> Adapt
             force_fallback_adapter: false,
         })
         .await
-        .expect(FAILED_TO_CREATE_ADAPTER)
+        .expect("Failed to create adapter")
 }
 
 pub async fn create_device(adapter: &Adapter) -> (Device, Queue) {
-    const FAILED_TO_CREATE_DEVICE: &str = "Failed to create device";
-    const DEVICE_LABEL: &str = "Device";
-
     adapter
         .request_device(&DeviceDescriptor {
-            label: Some(DEVICE_LABEL),
+            label: Some("Device"),
             memory_hints: MemoryHints::Performance,
             required_features: Features::empty(),
             experimental_features: ExperimentalFeatures::disabled(),
@@ -50,7 +45,7 @@ pub async fn create_device(adapter: &Adapter) -> (Device, Queue) {
             trace: Trace::Off,
         })
         .await
-        .expect(FAILED_TO_CREATE_DEVICE)
+        .expect("Failed to create device")
 }
 
 pub fn create_surface_configuration(

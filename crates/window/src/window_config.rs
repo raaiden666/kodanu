@@ -10,22 +10,24 @@ pub struct WindowConfig {
     min_height: u32,
 }
 
+impl WindowConfig {
+    pub const DEFAULT_TITLE_STR: &str = "REngine";
+
+    pub const DEFAULT_WIDTH: u32 = 1280;
+    pub const DEFAULT_HEIGHT: u32 = 720;
+
+    pub const DEFAULT_MIN_WIDTH: u32 = 800;
+    pub const DEFAULT_MIN_HEIGHT: u32 = 600;
+}
+
 impl Default for WindowConfig {
     fn default() -> Self {
-        const DEFAULT_TITLE_STR: &str = "REngine";
-
-        const DEFAULT_WIDTH: u32 = 1280;
-        const DEFAULT_HEIGHT: u32 = 720;
-
-        const DEFAULT_MIN_WIDTH: u32 = 800;
-        const DEFAULT_MIN_HEIGHT: u32 = 600;
-
         Self {
-            title: DEFAULT_TITLE_STR.into(),
-            width: DEFAULT_WIDTH,
-            height: DEFAULT_HEIGHT,
-            min_width: DEFAULT_MIN_WIDTH,
-            min_height: DEFAULT_MIN_HEIGHT,
+            title: Self::DEFAULT_TITLE_STR.into(),
+            width: Self::DEFAULT_WIDTH,
+            height: Self::DEFAULT_HEIGHT,
+            min_width: Self::DEFAULT_MIN_WIDTH,
+            min_height: Self::DEFAULT_MIN_HEIGHT,
         }
     }
 }

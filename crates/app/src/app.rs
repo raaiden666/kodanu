@@ -49,8 +49,6 @@ impl App {
     }
 
     fn render(&mut self) {
-        const WGPU_VALIDATION_ERROR: &str = "Wgpu validation error";
-
         let Some(renderer) = &mut self.renderer else {
             return;
         };
@@ -63,7 +61,7 @@ impl App {
         }
 
         if result.is_fatal() {
-            panic!("{}", WGPU_VALIDATION_ERROR)
+            panic!("{}", "Wgpu validation error")
         }
     }
 
@@ -81,11 +79,9 @@ impl App {
 
 impl ApplicationHandler for App {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        const FAILED_TO_CREATE_NATIVE_WINDOW: &str = "Failed to create native window";
-
         let raw_window = event_loop
             .create_window(self.config.to_attributes())
-            .expect(FAILED_TO_CREATE_NATIVE_WINDOW);
+            .expect("Failed to create native window");
 
         let window = Window::new(Arc::new(raw_window));
         let renderer = block_on(Renderer::new(&window));

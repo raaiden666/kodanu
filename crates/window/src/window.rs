@@ -24,10 +24,8 @@ impl Window {
     }
 
     pub fn create_surface(&self, instance: &Instance) -> Surface<'static> {
-        const FAILED_TO_CREATE_SURFACE: &str = "Failed to create surface";
-
         instance
             .create_surface(Arc::clone(&self.raw_window))
-            .expect(FAILED_TO_CREATE_SURFACE)
+            .expect("Failed to create surface")
     }
 }

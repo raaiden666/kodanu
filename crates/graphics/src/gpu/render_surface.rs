@@ -1,8 +1,8 @@
 use crate::gpu::SurfaceFrame;
 
-use types::Size;
-
 use wgpu::{CurrentSurfaceTexture, Device, Surface, SurfaceConfiguration, TextureFormat};
+
+use types::Size;
 
 pub struct RenderSurface {
     surface: Surface<'static>,

@@ -14,12 +14,10 @@ where
     T: Eq + Hash + Copy,
 {
     pub fn new() -> Self {
-        const INITIAL_CAPACITY: usize = 128;
-
         Self {
-            pressed: HashSet::with_capacity(INITIAL_CAPACITY),
-            just_pressed: HashSet::with_capacity(INITIAL_CAPACITY),
-            just_released: HashSet::with_capacity(INITIAL_CAPACITY),
+            pressed: HashSet::with_capacity(128),
+            just_pressed: HashSet::with_capacity(128),
+            just_released: HashSet::with_capacity(128),
         }
     }
 

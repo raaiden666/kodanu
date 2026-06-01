@@ -5,16 +5,16 @@ use crate::{
     setup::{create_graphics_device, create_surface_context},
 };
 
-use window::Window;
-
-use types::Size;
-
 use wgpu::{
     Color, CommandEncoderDescriptor, LoadOp, Operations, RenderPassColorAttachment,
     RenderPassDescriptor, StoreOp, SurfaceTexture, TextureViewDescriptor,
 };
 
 use std::iter::once;
+
+use window::Window;
+
+use types::Size;
 
 pub struct Renderer {
     graphics_device: GraphicsDevice,
@@ -56,21 +56,18 @@ impl Renderer {
     }
 
     fn draw_frame(&self, frame: &SurfaceTexture) {
-        const RENDER_ENCODER_LABEL: &str = "Render Encoder";
-        const RENDER_PASS_LABEL: &str = "Render Pass";
-
         let view = frame.texture.create_view(&TextureViewDescriptor::default());
 
         let mut encoder =
             self.graphics_device
                 .device()
                 .create_command_encoder(&CommandEncoderDescriptor {
-                    label: Some(RENDER_ENCODER_LABEL),
+                    label: Some("Render Encoder"),
                 });
 
         {
             let mut render_pass = encoder.begin_render_pass(&RenderPassDescriptor {
-                label: Some(RENDER_PASS_LABEL),
+                label: Some("Render Pass"),
                 color_attachments: &[Some(RenderPassColorAttachment {
                     view: &view,
                     resolve_target: None,
