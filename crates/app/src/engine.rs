@@ -1,4 +1,4 @@
-use crate::Time;
+use time::Time;
 
 use {graphics::Renderer, input::Input, math::DVec2, window::Window};
 

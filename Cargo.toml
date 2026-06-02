@@ -6,6 +6,7 @@ members = [
     "crates/input",
     "crates/math",
     "crates/scene",
+    "crates/time",
     "crates/window",
 ]
 
