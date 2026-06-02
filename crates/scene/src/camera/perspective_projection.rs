@@ -16,7 +16,9 @@ impl PerspectiveProjection {
             far,
         }
     }
+}
 
+impl PerspectiveProjection {
     pub fn matrix(&self) -> Mat4 {
         Mat4::perspective_rh(self.fov, self.aspect_ratio, self.near, self.far)
     }

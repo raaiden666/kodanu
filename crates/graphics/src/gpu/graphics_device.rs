@@ -14,7 +14,9 @@ impl GraphicsDevice {
             queue,
         }
     }
+}
 
+impl GraphicsDevice {
     pub fn adapter(&self) -> &Adapter {
         &self.adapter
     }

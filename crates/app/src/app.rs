@@ -45,7 +45,9 @@ impl App {
             time: time,
         }
     }
+}
 
+impl App {
     fn render(&mut self) {
         let Some(renderer) = &mut self.renderer else {
             return;

@@ -14,7 +14,9 @@ impl Camera {
             projection,
         }
     }
+}
 
+impl Camera {
     pub fn transform(&self) -> &Transform {
         &self.transform
     }

@@ -18,7 +18,7 @@ use types::Size;
 
 pub struct Renderer {
     graphics_device: GraphicsDevice,
-    surface_context: RenderSurface,
+    render_surface: RenderSurface,
     graphics_pipeline: GraphicsPipeline,
 }
 
@@ -33,13 +33,15 @@ impl Renderer {
 
         Self {
             graphics_device,
-            surface_context,
+            render_surface: surface_context,
             graphics_pipeline,
         }
     }
+}
 
+impl Renderer {
     pub fn render(&self) -> FrameStatus {
-        let (frame, result) = match self.surface_context.acquire_frame() {
+        let (frame, result) = match self.render_surface.acquire_frame() {
             SurfaceFrame::Ready(frame) => (frame, FrameStatus::Success),
             SurfaceFrame::Suboptimal(frame) => (frame, FrameStatus::Suboptimal),
             SurfaceFrame::Timeout => return FrameStatus::Timeout,
@@ -91,16 +93,15 @@ impl Renderer {
     }
 
     pub fn reconfigure_surface(&mut self) {
-        self.surface_context
-            .configure(self.graphics_device.device());
+        self.render_surface.configure(self.graphics_device.device());
     }
 
     pub fn surface_size(&self) -> Size<u32> {
-        self.surface_context.size()
+        self.render_surface.size()
     }
 
     pub fn surface_resize(&mut self, size: Size<u32>) {
-        self.surface_context
+        self.render_surface
             .resize(self.graphics_device.device(), size);
     }
 }

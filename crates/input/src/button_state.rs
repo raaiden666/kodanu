@@ -20,7 +20,12 @@ where
             just_released: HashSet::with_capacity(128),
         }
     }
+}
 
+impl<T> ButtonState<T>
+where
+    T: Eq + Hash + Copy,
+{
     pub fn begin_frame(&mut self) {
         self.just_pressed.clear();
         self.just_released.clear();

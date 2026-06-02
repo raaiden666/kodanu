@@ -14,7 +14,9 @@ impl Transform {
             scale,
         }
     }
+}
 
+impl Transform {
     pub fn position(&self) -> Vec3 {
         self.position
     }

@@ -14,7 +14,9 @@ impl Window {
     pub fn new(raw_window: Arc<WinitWindow>) -> Self {
         Self { raw_window }
     }
+}
 
+impl Window {
     pub fn size(&self) -> Size<u32> {
         self.raw_window.inner_size().into()
     }

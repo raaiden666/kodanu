@@ -18,7 +18,9 @@ impl RenderSurface {
             size,
         }
     }
+}
 
+impl RenderSurface {
     pub fn surface(&self) -> &Surface<'static> {
         &self.surface
     }

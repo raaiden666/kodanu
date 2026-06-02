@@ -25,7 +25,9 @@ impl Mesh {
             vertex_count: verticies.len() as u32,
         }
     }
+}
 
+impl Mesh {
     pub fn vertex_buffer(&self) -> &Buffer {
         &self.vertex_buffer
     }
