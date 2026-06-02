@@ -93,7 +93,7 @@ impl Input {
 }
 
 impl Input {
-    pub fn handle_keyboard_input(&mut self, event: KeyEvent) {
+    pub fn handle_keyboard_input(&mut self, event: &KeyEvent) {
         let PhysicalKey::Code(key_code) = event.physical_key else {
             return;
         };

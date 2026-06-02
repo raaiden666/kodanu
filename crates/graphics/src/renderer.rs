@@ -2,6 +2,4 @@ mod frame_status;
 mod mesh_renderer;
 mod renderer;
 
-pub use frame_status::FrameStatus;
-pub use mesh_renderer::MeshRenderer;
-pub use renderer::Renderer;
+pub use {frame_status::FrameStatus, mesh_renderer::MeshRenderer, renderer::Renderer};

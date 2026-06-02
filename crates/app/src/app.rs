@@ -1,17 +1,11 @@
-use crate::Time;
+use crate::Engine;
 
-use input::Input;
-
-use graphics::renderer::Renderer;
-
-use math::DVec2;
-use window::{Window, WindowConfig};
-
-use std::{panic, sync::Arc};
-
-use pollster::block_on;
-
-use anyhow::{Ok, Result};
+use {
+    anyhow::{Ok, Result},
+    pollster::block_on,
+    std::sync::Arc,
+    window::{Window, WindowConfig},
+};
 
 use winit::{
     application::ApplicationHandler,
@@ -22,59 +16,26 @@ use winit::{
 
 pub struct App {
     window: Option<Window>,
-    renderer: Option<Renderer>,
+    engine: Option<Engine>,
     config: WindowConfig,
-    input: Input,
-    time: Time,
 }
 
 impl App {
-    pub fn run(config: WindowConfig, input: Input, time: Time) -> Result<()> {
+    pub fn run(window_config: WindowConfig) -> Result<()> {
         let event_loop = EventLoop::new()?;
-        let mut app = App::new(config, input, time);
+        let mut app = Self::new(window_config);
 
         event_loop.run_app(&mut app)?;
+
         Ok(())
     }
 
-    fn new(config: WindowConfig, input: Input, time: Time) -> Self {
+    fn new(config: WindowConfig) -> Self {
         Self {
             window: None,
-            renderer: None,
+            engine: None,
             config: config,
-            input: input,
-            time: time,
         }
-    }
-}
-
-impl App {
-    fn render(&mut self) {
-        let Some(renderer) = &mut self.renderer else {
-            return;
-        };
-
-        let result = renderer.render();
-        let size = renderer.surface_size();
-
-        if result.requires_surface_recovery() {
-            renderer.surface_resize(size);
-        }
-
-        if result.is_fatal() {
-            panic!("{}", "Wgpu validation error")
-        }
-    }
-
-    fn frame(&mut self, event_loop: &ActiveEventLoop) {
-        self.time.update();
-
-        if self.input.is_key_pressed(input::KeyCode::Escape) {
-            event_loop.exit();
-        };
-
-        self.render();
-        self.input.begin_frame();
     }
 }
 
@@ -85,12 +46,12 @@ impl ApplicationHandler for App {
             .expect("Failed to create native window");
 
         let window = Window::new(Arc::new(raw_window));
-        let renderer = block_on(Renderer::new(&window));
+        let engine = block_on(Engine::new(&window));
 
         window.request_redraw();
 
         self.window = Some(window);
-        self.renderer = Some(renderer);
+        self.engine = Some(engine);
     }
 
     fn window_event(
@@ -99,36 +60,24 @@ impl ApplicationHandler for App {
         _window_id: WindowId,
         event: WindowEvent,
     ) {
-        match event {
+        let Some(engine) = &mut self.engine else {
+            return;
+        };
+
+        match &event {
             WindowEvent::CloseRequested => {
                 event_loop.exit();
             }
             WindowEvent::RedrawRequested => {
-                self.frame(event_loop);
+                engine.frame();
 
                 if let Some(window) = &self.window {
                     window.request_redraw();
                 }
             }
-            WindowEvent::Resized(size) => {
-                if let Some(renderer) = &mut self.renderer {
-                    renderer.surface_resize(size.into());
-                }
+            _ => {
+                engine.handle_window_event(&event);
             }
-            WindowEvent::KeyboardInput { event, .. } => {
-                self.input.handle_keyboard_input(event);
-            }
-            WindowEvent::MouseInput { state, button, .. } => {
-                self.input.handle_mouse_input(state, button);
-            }
-            WindowEvent::CursorMoved { position, .. } => {
-                self.input
-                    .handle_cursor_move(DVec2::new(position.x, position.y));
-            }
-            WindowEvent::MouseWheel { delta, .. } => {
-                self.input.handle_mouse_wheel(delta);
-            }
-            _ => {}
         }
     }
 }

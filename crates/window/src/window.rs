@@ -1,8 +1,8 @@
-use math::Size;
-
-use std::sync::Arc;
-
-use wgpu::{Instance, Surface};
+use {
+    math::Size,
+    std::sync::Arc,
+    wgpu::{Instance, Surface},
+};
 
 use winit::window::Window as WinitWindow;
 

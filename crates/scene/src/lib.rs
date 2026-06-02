@@ -1,2 +1,5 @@
-pub mod camera;
-pub mod transform;
+mod camera;
+mod transform;
+
+pub use camera::Camera;
+pub use transform::Transform;
