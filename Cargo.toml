@@ -3,8 +3,9 @@ members = [
     "bin",
     "crates/app",
     "crates/graphics",
-    "crates/input", "crates/scene",
-    "crates/types",
+    "crates/input",
+    "crates/math",
+    "crates/scene",
     "crates/window",
 ]
 

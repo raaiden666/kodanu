@@ -7,4 +7,4 @@ edition = "2024"
 winit = { workspace = true }
 wgpu = { workspace = true }
 
-types = { package = "types", path = "../types" }
+math = { package = "math", path = "../math" }

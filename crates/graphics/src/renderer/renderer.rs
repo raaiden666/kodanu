@@ -14,7 +14,7 @@ use std::iter::once;
 
 use window::Window;
 
-use types::Size;
+use math::Size;
 
 pub struct Renderer {
     graphics_device: GraphicsDevice,

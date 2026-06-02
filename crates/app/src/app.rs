@@ -4,6 +4,7 @@ use input::Input;
 
 use graphics::renderer::Renderer;
 
+use math::DVec2;
 use window::{Window, WindowConfig};
 
 use std::{panic, sync::Arc};
@@ -121,7 +122,8 @@ impl ApplicationHandler for App {
                 self.input.handle_mouse_input(state, button);
             }
             WindowEvent::CursorMoved { position, .. } => {
-                self.input.handle_cursor_move(position.into());
+                self.input
+                    .handle_cursor_move(DVec2::new(position.x, position.y));
             }
             WindowEvent::MouseWheel { delta, .. } => {
                 self.input.handle_mouse_wheel(delta);

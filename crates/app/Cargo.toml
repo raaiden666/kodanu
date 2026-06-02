@@ -11,3 +11,4 @@ anyhow = { workspace = true }
 window = { package = "window", path = "../window" }
 graphics = { package = "graphics", path = "../graphics" }
 input = { package = "input", path = "../input" }
+math = { package = "math", path = "../math" }

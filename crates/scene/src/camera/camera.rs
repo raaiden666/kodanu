@@ -1,6 +1,6 @@
 use crate::{camera::Projection, transform::Transform};
 
-use glam::Mat4;
+use math::Mat4;
 
 pub struct Camera {
     transform: Transform,

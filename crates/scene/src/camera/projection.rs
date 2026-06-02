@@ -1,6 +1,6 @@
 use crate::camera::PerspectiveProjection;
 
-use glam::Mat4;
+use math::Mat4;
 
 pub enum Projection {
     Perspective(PerspectiveProjection),

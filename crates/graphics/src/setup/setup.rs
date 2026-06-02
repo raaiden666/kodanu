@@ -2,7 +2,7 @@ use crate::gpu::{GraphicsDevice, RenderSurface};
 
 use window::Window;
 
-use types::Size;
+use math::Size;
 
 use wgpu::{
     Adapter, BackendOptions, Backends, CompositeAlphaMode, Device, DeviceDescriptor,

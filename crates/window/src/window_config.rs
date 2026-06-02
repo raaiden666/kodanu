@@ -1,4 +1,4 @@
-use types::Size;
+use math::Size;
 
 use winit::window::WindowAttributes;
 

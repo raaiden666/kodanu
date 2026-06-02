@@ -2,7 +2,7 @@ use wgpu::{VertexAttribute, VertexBufferLayout, VertexStepMode, vertex_attr_arra
 
 use bytemuck::{Pod, Zeroable};
 
-use glam::Vec3;
+use math::Vec3;
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy, Pod, Zeroable)]

@@ -1,6 +1,6 @@
 use crate::{KeyCode, MouseButton, button_state::ButtonState, map_key_code, map_mouse_button};
 
-use types::Vec2;
+use math::DVec2;
 
 use winit::{
     event::{ElementState, KeyEvent, MouseButton as WinitMouseButton, MouseScrollDelta},
@@ -11,7 +11,7 @@ pub struct Input {
     keyboard: ButtonState<KeyCode>,
     mouse: ButtonState<MouseButton>,
 
-    mouse_position: Vec2<f64>,
+    mouse_position: DVec2,
     mouse_wheel_delta: f32,
 }
 
@@ -21,7 +21,7 @@ impl Default for Input {
             keyboard: ButtonState::new(),
             mouse: ButtonState::new(),
 
-            mouse_position: Vec2::new(0.0, 0.0),
+            mouse_position: DVec2::new(0.0, 0.0),
             mouse_wheel_delta: 0.0,
         }
     }
@@ -75,11 +75,11 @@ impl Input {
         self.mouse.is_just_released(button)
     }
 
-    pub fn set_mouse_position(&mut self, position: Vec2<f64>) {
+    pub fn set_mouse_position(&mut self, position: DVec2) {
         self.mouse_position = position;
     }
 
-    pub fn get_mouse_position(&self) -> Vec2<f64> {
+    pub fn get_mouse_position(&self) -> DVec2 {
         self.mouse_position
     }
 
@@ -127,7 +127,7 @@ impl Input {
         }
     }
 
-    pub fn handle_cursor_move(&mut self, position: Vec2<f64>) {
+    pub fn handle_cursor_move(&mut self, position: DVec2) {
         self.set_mouse_position(position);
     }
 

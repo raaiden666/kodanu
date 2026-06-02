@@ -1,4 +1,4 @@
-use glam::Mat4;
+use math::Mat4;
 
 pub struct PerspectiveProjection {
     fov: f32,
