@@ -1,6 +1,6 @@
-use input::{
-    Input, handle_cursor_move, handle_keyboard_input, handle_mouse_input, handle_mouse_wheel,
-};
+use crate::Time;
+
+use input::Input;
 
 use graphics::renderer::Renderer;
 
@@ -18,8 +18,6 @@ use winit::{
     event_loop::{ActiveEventLoop, EventLoop},
     window::WindowId,
 };
-
-use crate::Time;
 
 pub struct App {
     window: Option<Window>,
@@ -115,16 +113,16 @@ impl ApplicationHandler for App {
                 }
             }
             WindowEvent::KeyboardInput { event, .. } => {
-                handle_keyboard_input(event, &mut self.input);
+                self.input.handle_keyboard_input(event);
             }
             WindowEvent::MouseInput { state, button, .. } => {
-                handle_mouse_input(state, button, &mut self.input);
+                self.input.handle_mouse_input(state, button);
             }
             WindowEvent::CursorMoved { position, .. } => {
-                handle_cursor_move(position.into(), &mut self.input);
+                self.input.handle_cursor_move(position.into());
             }
             WindowEvent::MouseWheel { delta, .. } => {
-                handle_mouse_wheel(delta, &mut self.input);
+                self.input.handle_mouse_wheel(delta);
             }
             _ => {}
         }
