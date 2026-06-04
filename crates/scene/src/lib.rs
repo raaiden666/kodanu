@@ -1,5 +1,3 @@
-mod camera;
-mod transform;
+mod scene;
 
-pub use camera::Camera;
-pub use transform::Transform;
+pub use scene::Scene;

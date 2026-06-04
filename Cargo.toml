@@ -2,6 +2,7 @@
 members = [
     "bin",
     "crates/app",
+    "crates/components",
     "crates/editor",
     "crates/graphics",
     "crates/input",
@@ -27,11 +28,14 @@ bytemuck = { version = "1.25.0", features = ["derive"] }
 
 glam = { version = "0.33.0", features = ["bytemuck"] }
 
+hecs = { version = "0.11.0" }
+
 app = { package = "app", path = "crates/app" }
 graphics = { package = "graphics", path = "crates/graphics" }
 input = { package = "input", path = "crates/input" }
 math = { package = "math", path = "crates/math" }
 scene = { package = "scene", path = "crates/scene" }
+components = { package = "components", path = "crates/components" }
 time = { package = "time", path = "crates/time" }
 window = { package = "window", path = "crates/window" }
 editor = { package = "editor", path = "crates/editor" }

@@ -1,7 +1,7 @@
 use {
+    components::{Camera, Transform},
     input::{Input, KeyCode},
     math::Vec3,
-    scene::{Camera, Transform},
     time::Time,
 };
 

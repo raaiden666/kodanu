@@ -301,6 +301,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "components"
+version = "0.1.0"
+dependencies = [
+ "graphics",
+ "math",
+]
+
+[[package]]
 name = "concurrent-queue"
 version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -417,9 +425,9 @@ checksum = "d8b14ccef22fc6f5a8f4d7d768562a182c04ce9a3b3157b91390b52ddfdf1a76"
 name = "editor"
 version = "0.1.0"
 dependencies = [
+ "components",
  "input",
  "math",
- "scene",
  "time",
 ]
 
@@ -610,7 +618,6 @@ name = "graphics"
 version = "0.1.0"
 dependencies = [
  "bytemuck",
- "editor",
  "math",
  "wgpu",
  "window",
@@ -653,6 +660,17 @@ name = "hashbrown"
 version = "0.17.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ed5909b6e89a2db4456e54cd5f673791d7eca6732202bbf2a9cc504fe2f9b84a"
+
+[[package]]
+name = "hecs"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f3a2d85ff28b1e1a1c183b6ca9ec1a6b97e7937fb989988a74d9db39760a07b8"
+dependencies = [
+ "foldhash 0.2.0",
+ "hashbrown 0.16.1",
+ "spin",
+]
 
 [[package]]
 name = "hermit-abi"
@@ -1566,7 +1584,7 @@ dependencies = [
 name = "scene"
 version = "0.1.0"
 dependencies = [
- "math",
+ "hecs",
 ]
 
 [[package]]
@@ -1715,6 +1733,12 @@ checksum = "dd538fb6910ac1099850255cf94a94df6551fbdd602454387d0adb2d1ca6dead"
 dependencies = [
  "serde",
 ]
+
+[[package]]
+name = "spin"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d5fe4ccb98d9c292d56fec89a5e07da7fc4cf0dc11e156b41793132775d3e591"
 
 [[package]]
 name = "spirv"
