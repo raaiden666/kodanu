@@ -2,7 +2,7 @@ use crate::{
     gpu::{GraphicsDevice, RenderSurface, SurfaceFrame},
     pipeline::GraphicsPipeline,
     renderer::FrameStatus,
-    setup::{create_graphics_device, create_surface_context},
+    setup::{create_device_and_surface, create_render_surface},
 };
 
 use wgpu::{
@@ -10,11 +10,7 @@ use wgpu::{
     RenderPassDescriptor, StoreOp, SurfaceTexture, TextureViewDescriptor,
 };
 
-use std::iter::once;
-
-use window::Window;
-
-use math::Size;
+use {math::Size, std::iter::once, window::Window};
 
 pub struct Renderer {
     graphics_device: GraphicsDevice,
@@ -24,16 +20,16 @@ pub struct Renderer {
 
 impl Renderer {
     pub async fn new(window: &Window) -> Self {
-        let (graphics_device, surface) = create_graphics_device(window).await;
+        let (graphics_device, surface) = create_device_and_surface(window).await;
 
-        let surface_context = create_surface_context(window, &graphics_device, surface);
+        let render_surface = create_render_surface(window, &graphics_device, surface);
 
         let graphics_pipeline =
-            GraphicsPipeline::new(graphics_device.device(), surface_context.config().format);
+            GraphicsPipeline::new(graphics_device.device(), render_surface.config().format);
 
         Self {
             graphics_device,
-            render_surface: surface_context,
+            render_surface,
             graphics_pipeline,
         }
     }

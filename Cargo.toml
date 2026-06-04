@@ -15,9 +15,21 @@ resolver = "3"
 [workspace.dependencies]
 winit = { version = "0.30.13" }
 wgpu = { version = "29.0.3" }
+
 anyhow = { version = "1.0.102" }
 pollster = { version = "0.4.0" }
-env_logger = { version = "0.11.10" }
-log = { version = "0.4.30" }
+
+tracing = { version = "0.1.44" }
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
+
 bytemuck = { version = "1.25.0", features = ["derive"] }
+
 glam = { version = "0.33.0", features = ["bytemuck"] }
+
+app = { package = "app", path = "crates/app" }
+graphics = { package = "graphics", path = "crates/graphics" }
+input = { package = "input", path = "crates/input" }
+math = { package = "math", path = "crates/math" }
+scene = { package = "scene", path = "crates/scene" }
+time = { package = "time", path = "crates/time" }
+window = { package = "window", path = "crates/window" }

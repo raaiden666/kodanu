@@ -6,4 +6,4 @@ edition = "2024"
 [dependencies]
 winit = { workspace = true }
 
-math = { package = "math", path = "../math" }
+math = { workspace = true }

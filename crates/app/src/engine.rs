@@ -1,8 +1,12 @@
-use time::Time;
+use {
+    graphics::Renderer,
+    input::{Input, KeyCode},
+    math::DVec2,
+    time::Time,
+    window::Window,
+};
 
-use {graphics::Renderer, input::Input, math::DVec2, window::Window};
-
-use winit::event::WindowEvent;
+use winit::{event::WindowEvent, event_loop::ActiveEventLoop};
 
 pub struct Engine {
     renderer: Renderer,
@@ -21,10 +25,12 @@ impl Engine {
 }
 
 impl Engine {
-    pub fn frame(&mut self) {
+    pub fn frame(&mut self, event_loop: &ActiveEventLoop) {
         self.time.update();
 
         self.render();
+
+        self.should_close(event_loop);
 
         self.input.begin_frame();
     }
@@ -63,6 +69,12 @@ impl Engine {
 
         if result.is_fatal() {
             panic!("Wgpu validation error");
+        }
+    }
+
+    fn should_close(&self, event_loop: &ActiveEventLoop) {
+        if self.input.is_key_just_pressed(KeyCode::Escape) {
+            event_loop.exit();
         }
     }
 }

@@ -5,7 +5,8 @@ edition = "2024"
 
 [dependencies]
 anyhow = { workspace = true }
+tracing-subscriber = { workspace = true }
 
-window = { package = "window", path = "../crates/window" }
-app = { package = "app", path = "../crates/app" }
-input = { package = "input", path = "../crates/input" }
+window = { workspace = true }
+app = { workspace = true }
+input = { workspace = true }

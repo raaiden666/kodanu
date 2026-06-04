@@ -7,5 +7,5 @@ edition = "2024"
 wgpu = { workspace = true }
 bytemuck = { workspace = true }
 
-window = { package = "window", path = "../window" }
-math = { package = "math", path = "../math" }
+window = { workspace = true }
+math = { workspace = true }

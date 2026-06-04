@@ -63,7 +63,7 @@ pub fn create_surface_configuration(
     }
 }
 
-pub async fn create_graphics_device(window: &Window) -> (GraphicsDevice, Surface<'static>) {
+pub async fn create_device_and_surface(window: &Window) -> (GraphicsDevice, Surface<'static>) {
     let instance = create_instance();
 
     let surface = window.create_surface(&instance);
@@ -77,7 +77,7 @@ pub async fn create_graphics_device(window: &Window) -> (GraphicsDevice, Surface
     (graphics_device, surface)
 }
 
-pub fn create_surface_context(
+pub fn create_render_surface(
     window: &Window,
     graphics_device: &GraphicsDevice,
     surface: Surface<'static>,

@@ -7,4 +7,4 @@ edition = "2024"
 winit = { workspace = true }
 wgpu = { workspace = true }
 
-math = { package = "math", path = "../math" }
+math = { workspace = true }

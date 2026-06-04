@@ -7,9 +7,10 @@ edition = "2024"
 winit = { workspace = true }
 pollster = { workspace = true }
 anyhow = { workspace = true }
+tracing = { workspace = true }
 
-window = { package = "window", path = "../window" }
-graphics = { package = "graphics", path = "../graphics" }
-input = { package = "input", path = "../input" }
-math = { package = "math", path = "../math" }
-time = { package = "time", path = "../time" }
+window = { workspace = true }
+graphics = { workspace = true }
+input = { workspace = true }
+math = { workspace = true }
+time = { workspace = true }

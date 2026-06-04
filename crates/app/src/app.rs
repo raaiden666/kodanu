@@ -4,6 +4,7 @@ use {
     anyhow::{Ok, Result},
     pollster::block_on,
     std::sync::Arc,
+    tracing::info,
     window::{Window, WindowConfig},
 };
 
@@ -24,6 +25,8 @@ impl App {
     pub fn run(window_config: WindowConfig) -> Result<()> {
         let event_loop = EventLoop::new()?;
         let mut app = Self::new(window_config);
+
+        info!(target: "App::Run()", "App started");
 
         event_loop.run_app(&mut app)?;
 
@@ -52,6 +55,8 @@ impl ApplicationHandler for App {
 
         self.window = Some(window);
         self.engine = Some(engine);
+
+        info!(target: "App::Resumed()", "App resumed");
     }
 
     fn window_event(
@@ -64,16 +69,20 @@ impl ApplicationHandler for App {
             return;
         };
 
+        let Some(window) = &self.window else {
+            return;
+        };
+
         match &event {
             WindowEvent::CloseRequested => {
+                info!(target: "App::WindowEvent()", "App closed");
+
                 event_loop.exit();
             }
             WindowEvent::RedrawRequested => {
-                engine.frame();
+                engine.frame(event_loop);
 
-                if let Some(window) = &self.window {
-                    window.request_redraw();
-                }
+                window.request_redraw();
             }
             _ => {
                 engine.handle_window_event(&event);
