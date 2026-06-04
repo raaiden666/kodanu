@@ -9,3 +9,4 @@ bytemuck = { workspace = true }
 
 window = { workspace = true }
 math = { workspace = true }
+editor = { workspace = true }
