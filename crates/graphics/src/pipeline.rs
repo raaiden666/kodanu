@@ -1,4 +1,3 @@
 mod graphics_pipeline;
-mod shader;
 
-pub use {graphics_pipeline::GraphicsPipeline, shader::Shader};
+pub use graphics_pipeline::GraphicsPipeline;

@@ -1,4 +1,5 @@
 use crate::{
+    Mesh, Vertex,
     gpu::{GraphicsDevice, RenderSurface, SurfaceFrame},
     pipeline::GraphicsPipeline,
     renderer::FrameStatus,
@@ -6,7 +7,7 @@ use crate::{
 };
 
 use wgpu::{
-    Color, CommandEncoderDescriptor, LoadOp, Operations, RenderPassColorAttachment,
+    Color, CommandEncoderDescriptor, LoadOp, Operations, RenderPass, RenderPassColorAttachment,
     RenderPassDescriptor, StoreOp, SurfaceTexture, TextureViewDescriptor,
 };
 
@@ -16,6 +17,8 @@ pub struct Renderer {
     graphics_device: GraphicsDevice,
     render_surface: RenderSurface,
     graphics_pipeline: GraphicsPipeline,
+
+    test_mesh: Mesh,
 }
 
 impl Renderer {
@@ -27,10 +30,26 @@ impl Renderer {
         let graphics_pipeline =
             GraphicsPipeline::new(graphics_device.device(), render_surface.config().format);
 
+        let test_mesh = Mesh::new(
+            graphics_device.device(),
+            &[
+                Vertex {
+                    position: [0.0, 0.5, 0.0],
+                },
+                Vertex {
+                    position: [0.5, -0.5, 0.0],
+                },
+                Vertex {
+                    position: [-0.5, -0.5, 0.0],
+                },
+            ],
+        );
+
         Self {
             graphics_device,
             render_surface,
             graphics_pipeline,
+            test_mesh,
         }
     }
 }
@@ -82,10 +101,16 @@ impl Renderer {
             });
 
             render_pass.set_pipeline(self.graphics_pipeline.raw());
-            render_pass.draw(0..3, 0..1);
+
+            self.draw_mesh(&self.test_mesh, &mut render_pass);
         }
 
         self.graphics_device.queue().submit(once(encoder.finish()));
+    }
+
+    pub fn draw_mesh(&self, mesh: &Mesh, render_pass: &mut RenderPass) {
+        render_pass.set_vertex_buffer(0, mesh.vertex_buffer().slice(..));
+        render_pass.draw(0..mesh.vertex_count(), 0..1);
     }
 
     pub fn reconfigure_surface(&mut self) {

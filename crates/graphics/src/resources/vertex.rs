@@ -1,27 +1,23 @@
-use wgpu::{VertexAttribute, VertexBufferLayout, VertexStepMode, vertex_attr_array};
+use wgpu::{BufferAddress, VertexAttribute, VertexBufferLayout, VertexFormat, VertexStepMode};
 
 use bytemuck::{Pod, Zeroable};
-
-use math::Vec3;
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy, Pod, Zeroable)]
 pub struct Vertex {
-    pub position: Vec3,
-    pub color: Vec3,
+    pub position: [f32; 3],
 }
 
 impl Vertex {
     pub fn layout() -> VertexBufferLayout<'static> {
-        const ATTRIBUTES: [VertexAttribute; 2] = vertex_attr_array![
-           0 => Float32x3,
-           1 => Float32x3
-        ];
-
         VertexBufferLayout {
-            attributes: &ATTRIBUTES,
-            array_stride: size_of::<Vertex>() as u64,
+            array_stride: size_of::<Vertex>() as BufferAddress,
             step_mode: VertexStepMode::Vertex,
+            attributes: &[VertexAttribute {
+                format: VertexFormat::Float32x3,
+                offset: 0,
+                shader_location: 0,
+            }],
         }
     }
 }

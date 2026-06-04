@@ -1,6 +1,6 @@
-use crate::resources::Vertex;
+use crate::Vertex;
 
-use bytemuck::checked::cast_slice;
+use bytemuck::cast_slice;
 
 use wgpu::{
     Buffer, BufferUsages, Device,
@@ -15,7 +15,7 @@ pub struct Mesh {
 impl Mesh {
     pub fn new(device: &Device, verticies: &[Vertex]) -> Self {
         let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
-            label: Some("Vertex buffer"),
+            label: Some("Vertex Buffer"),
             contents: cast_slice(verticies),
             usage: BufferUsages::VERTEX,
         });
