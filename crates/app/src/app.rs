@@ -1,4 +1,4 @@
-use crate::Engine;
+use crate::{Editor, Engine};
 
 use {
     anyhow::{Ok, Result},
@@ -8,6 +8,7 @@ use {
     window::{Window, WindowConfig},
 };
 
+use input::KeyCode;
 use winit::{
     application::ApplicationHandler,
     event::WindowEvent,
@@ -18,6 +19,7 @@ use winit::{
 pub struct App {
     window: Option<Window>,
     engine: Option<Engine>,
+    editor: Editor,
     config: WindowConfig,
 }
 
@@ -37,6 +39,7 @@ impl App {
         Self {
             window: None,
             engine: None,
+            editor: Editor::default(),
             config: config,
         }
     }
@@ -65,28 +68,43 @@ impl ApplicationHandler for App {
         _window_id: WindowId,
         event: WindowEvent,
     ) {
+        match &event {
+            WindowEvent::CloseRequested => {
+                event_loop.exit();
+            }
+            WindowEvent::RedrawRequested => {
+                self.frame(event_loop);
+
+                if let Some(window) = &self.window {
+                    window.request_redraw();
+                };
+            }
+            _ => {
+                if let Some(engine) = &mut self.engine {
+                    engine.handle_window_event(&event);
+                }
+            }
+        }
+    }
+}
+
+impl App {
+    fn frame(&mut self, event_loop: &ActiveEventLoop) {
         let Some(engine) = &mut self.engine else {
             return;
         };
 
-        let Some(window) = &self.window else {
-            return;
-        };
+        engine.time_update();
 
-        match &event {
-            WindowEvent::CloseRequested => {
-                info!(target: "App::WindowEvent()", "App closed");
+        self.editor.update(engine.input(), engine.time());
 
-                event_loop.exit();
-            }
-            WindowEvent::RedrawRequested => {
-                engine.frame(event_loop);
-
-                window.request_redraw();
-            }
-            _ => {
-                engine.handle_window_event(&event);
-            }
+        if engine.input().is_key_just_pressed(KeyCode::Escape) {
+            info!(target: "App::Frame()", "App closed");
+            event_loop.exit();
         }
+
+        engine.render();
+
+        engine.begin_frame();
     }
 }

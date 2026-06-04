@@ -2,6 +2,7 @@
 members = [
     "bin",
     "crates/app",
+    "crates/editor",
     "crates/graphics",
     "crates/input",
     "crates/math",
@@ -33,3 +34,4 @@ math = { package = "math", path = "crates/math" }
 scene = { package = "scene", path = "crates/scene" }
 time = { package = "time", path = "crates/time" }
 window = { package = "window", path = "crates/window" }
+editor = { package = "editor", path = "crates/editor" }

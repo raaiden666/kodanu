@@ -28,11 +28,11 @@ impl Time {
         self.last_frame_time = now;
     }
 
-    pub fn delta_time(&self) -> Duration {
-        self.delta_time
+    pub fn delta_time(&self) -> f32 {
+        self.delta_time.as_secs_f32()
     }
 
-    pub fn elapsed_time(&self) -> Duration {
-        self.elapsed_time
+    pub fn elapsed_time(&self) -> f32 {
+        self.elapsed_time.as_secs_f32()
     }
 }

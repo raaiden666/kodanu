@@ -1,3 +1,5 @@
+use math::Mat4;
+
 use crate::camera::Projection;
 
 pub struct Camera {
@@ -19,6 +21,10 @@ impl Camera {
 impl Camera {
     pub fn projection(&self) -> &Projection {
         &self.projection
+    }
+
+    pub fn projection_matrix(&self) -> Mat4 {
+        self.projection.matrix()
     }
 
     pub fn set_aspect_ratio(&mut self, aspect_ratio: f32) {

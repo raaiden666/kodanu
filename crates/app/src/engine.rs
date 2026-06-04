@@ -1,12 +1,6 @@
-use {
-    graphics::Renderer,
-    input::{Input, KeyCode},
-    math::DVec2,
-    time::Time,
-    window::Window,
-};
+use {graphics::Renderer, input::Input, math::DVec2, time::Time, window::Window};
 
-use winit::{event::WindowEvent, event_loop::ActiveEventLoop};
+use winit::event::WindowEvent;
 
 pub struct Engine {
     renderer: Renderer,
@@ -25,16 +19,6 @@ impl Engine {
 }
 
 impl Engine {
-    pub fn frame(&mut self, event_loop: &ActiveEventLoop) {
-        self.time.update();
-
-        self.render();
-
-        self.should_close(event_loop);
-
-        self.input.begin_frame();
-    }
-
     pub fn handle_window_event(&mut self, event: &WindowEvent) {
         match event {
             WindowEvent::Resized(size) => {
@@ -59,7 +43,7 @@ impl Engine {
 }
 
 impl Engine {
-    fn render(&mut self) {
+    pub fn render(&mut self) {
         let result = self.renderer.render();
         let size = self.renderer.surface_size();
 
@@ -72,9 +56,19 @@ impl Engine {
         }
     }
 
-    fn should_close(&self, event_loop: &ActiveEventLoop) {
-        if self.input.is_key_just_pressed(KeyCode::Escape) {
-            event_loop.exit();
-        }
+    pub fn time_update(&mut self) {
+        self.time.update();
+    }
+
+    pub fn begin_frame(&mut self) {
+        self.input.begin_frame();
+    }
+
+    pub fn time(&self) -> &Time {
+        &self.time
+    }
+
+    pub fn input(&self) -> &Input {
+        &self.input
     }
 }

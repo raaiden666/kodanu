@@ -79,7 +79,7 @@ impl Input {
         self.mouse_position = position;
     }
 
-    pub fn get_mouse_position(&self) -> DVec2 {
+    pub fn mouse_position(&self) -> DVec2 {
         self.mouse_position
     }
 
@@ -87,7 +87,7 @@ impl Input {
         self.mouse_wheel_delta += wheel;
     }
 
-    pub fn get_mouse_wheel_delta(&self) -> f32 {
+    pub fn mouse_wheel_delta(&self) -> f32 {
         self.mouse_wheel_delta
     }
 }
