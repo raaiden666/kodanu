@@ -1,39 +1,29 @@
-use crate::{camera::Projection, transform::Transform};
-
-use math::Mat4;
+use crate::camera::Projection;
 
 pub struct Camera {
-    transform: Transform,
     projection: Projection,
 }
 
-impl Camera {
-    pub fn new(transform: Transform, projection: Projection) -> Self {
-        Self {
-            transform,
-            projection,
-        }
+impl Default for Camera {
+    fn default() -> Self {
+        Self::new(Projection::default())
     }
 }
 
 impl Camera {
-    pub fn transform(&self) -> &Transform {
-        &self.transform
+    pub fn new(projection: Projection) -> Self {
+        Self { projection }
     }
+}
 
+impl Camera {
     pub fn projection(&self) -> &Projection {
         &self.projection
     }
 
-    pub fn view_matrix(&self) -> Mat4 {
-        self.transform.matrix().inverse()
-    }
-
-    pub fn projection_matrix(&self) -> Mat4 {
-        self.projection.matrix()
-    }
-
-    pub fn view_projection_matrix(&self) -> Mat4 {
-        self.projection_matrix() * self.view_matrix()
+    pub fn set_aspect_ratio(&mut self, aspect_ratio: f32) {
+        match &mut self.projection {
+            Projection::Perspective(projection) => projection.set_aspect_ratio(aspect_ratio),
+        }
     }
 }

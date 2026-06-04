@@ -6,6 +6,12 @@ pub struct Transform {
     scale: Vec3,
 }
 
+impl Default for Transform {
+    fn default() -> Self {
+        Self::new(Vec3::ZERO, Quat::IDENTITY, Vec3::ONE)
+    }
+}
+
 impl Transform {
     pub fn new(position: Vec3, rotation: Quat, scale: Vec3) -> Self {
         Self {
@@ -29,7 +35,43 @@ impl Transform {
         self.scale
     }
 
+    pub fn set_position(&mut self, position: Vec3) {
+        self.position = position;
+    }
+
+    pub fn set_rotation(&mut self, rotation: Quat) {
+        self.rotation = rotation;
+    }
+
+    pub fn set_scale(&mut self, scale: Vec3) {
+        self.scale = scale;
+    }
+
     pub fn matrix(&self) -> Mat4 {
-        Mat4::from_rotation_translation(self.rotation, self.position)
+        Mat4::from_scale_rotation_translation(self.scale, self.rotation, self.position)
+    }
+}
+
+impl Transform {
+    pub fn forward(&self) -> Vec3 {
+        self.rotation * Vec3::NEG_Z
+    }
+
+    pub fn right(&self) -> Vec3 {
+        self.rotation * Vec3::X
+    }
+
+    pub fn up(&self) -> Vec3 {
+        self.rotation * Vec3::Y
+    }
+}
+
+impl Transform {
+    pub fn translate(&mut self, translation: Vec3) {
+        self.position += translation;
+    }
+
+    pub fn rotate(&mut self, rotation: Quat) {
+        self.rotation *= rotation;
     }
 }
