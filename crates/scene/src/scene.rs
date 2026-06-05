@@ -1,4 +1,4 @@
-use hecs::World;
+use ecs::World;
 
 pub struct Scene {
     world: World,

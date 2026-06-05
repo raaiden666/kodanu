@@ -3,6 +3,7 @@ members = [
     "bin",
     "crates/app",
     "crates/components",
+    "crates/ecs",
     "crates/editor",
     "crates/graphics",
     "crates/input",
@@ -39,3 +40,4 @@ components = { package = "components", path = "crates/components" }
 time = { package = "time", path = "crates/time" }
 window = { package = "window", path = "crates/window" }
 editor = { package = "editor", path = "crates/editor" }
+ecs = { package = "ecs", path = "crates/ecs" }
