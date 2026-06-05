@@ -57,24 +57,24 @@ impl SceneCamera {
     pub fn update(&mut self, input: &Input, time: &Time) {
         let mut direction = Vec3::ZERO;
 
-        if input.is_key_pressed(KeyCode::W) {
+        if input.key_pressed(KeyCode::W) {
             direction += self.transform.forward();
         }
-        if input.is_key_pressed(KeyCode::S) {
+        if input.key_pressed(KeyCode::S) {
             direction -= self.transform.forward();
         }
 
-        if input.is_key_pressed(KeyCode::A) {
+        if input.key_pressed(KeyCode::A) {
             direction -= self.transform.right();
         }
-        if input.is_key_pressed(KeyCode::D) {
+        if input.key_pressed(KeyCode::D) {
             direction += self.transform.right();
         }
 
-        if input.is_key_pressed(KeyCode::Space) {
+        if input.key_pressed(KeyCode::Space) {
             direction += self.transform.up();
         }
-        if input.is_key_pressed(KeyCode::LeftCtrl) {
+        if input.key_pressed(KeyCode::LeftCtrl) {
             direction -= self.transform.up();
         }
 

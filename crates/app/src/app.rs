@@ -70,6 +70,7 @@ impl ApplicationHandler for App {
     ) {
         match &event {
             WindowEvent::CloseRequested => {
+                info!("App::Window_Event(), CloseRequested");
                 event_loop.exit();
             }
             WindowEvent::RedrawRequested => {
@@ -98,7 +99,7 @@ impl App {
 
         self.editor.update(engine.input(), engine.time());
 
-        if engine.input().is_key_just_pressed(KeyCode::Escape) {
+        if engine.input().key_just_pressed(KeyCode::Escape) {
             info!(target: "App::Frame()", "App closed");
             event_loop.exit();
         }

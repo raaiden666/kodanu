@@ -1,15 +1,15 @@
-use crate::{KeyCode, MouseButton, button_state::ButtonState, map_key_code, map_mouse_button};
+use crate::{KeyCode, MouseKey, button_state::ButtonState, map_key_code, map_mouse_button};
 
 use math::{DVec2, Vec2};
 
 use winit::{
-    event::{ElementState, KeyEvent, MouseButton as WinitMouseButton, MouseScrollDelta},
+    event::{ElementState, KeyEvent, MouseButton, MouseScrollDelta},
     keyboard::PhysicalKey,
 };
 
 pub struct Input {
     keyboard: ButtonState<KeyCode>,
-    mouse: ButtonState<MouseButton>,
+    mouse: ButtonState<MouseKey>,
 
     mouse_position: DVec2,
     mouse_wheel_delta: Vec2,
@@ -18,11 +18,11 @@ pub struct Input {
 impl Default for Input {
     fn default() -> Self {
         Self {
-            keyboard: ButtonState::new(),
-            mouse: ButtonState::new(),
+            keyboard: ButtonState::default(),
+            mouse: ButtonState::default(),
 
-            mouse_position: DVec2::new(0.0, 0.0),
-            mouse_wheel_delta: Vec2::new(0.0, 0.0),
+            mouse_position: DVec2::ZERO,
+            mouse_wheel_delta: Vec2::ZERO,
         }
     }
 }
@@ -35,46 +35,32 @@ impl Input {
         self.mouse_wheel_delta = Vec2::ZERO;
     }
 
-    pub fn press_key(&mut self, key: KeyCode) {
-        self.keyboard.press(key);
-    }
-
-    pub fn release_key(&mut self, key: KeyCode) {
-        self.keyboard.release(key);
-    }
-
-    pub fn is_key_pressed(&self, key: KeyCode) -> bool {
+    pub fn key_pressed(&self, key: KeyCode) -> bool {
         self.keyboard.is_pressed(key)
     }
 
-    pub fn is_key_just_pressed(&self, key: KeyCode) -> bool {
+    pub fn key_just_pressed(&self, key: KeyCode) -> bool {
         self.keyboard.is_just_pressed(key)
     }
 
-    pub fn is_key_just_released(&self, key: KeyCode) -> bool {
+    pub fn key_released(&self, key: KeyCode) -> bool {
         self.keyboard.is_just_released(key)
     }
 
-    pub fn press_mouse_button(&mut self, button: MouseButton) {
-        self.mouse.press(button);
-    }
-
-    pub fn release_mouse_button(&mut self, button: MouseButton) {
-        self.mouse.release(button);
-    }
-
-    pub fn is_mouse_button_pressed(&self, button: MouseButton) -> bool {
+    pub fn button_pressed(&self, button: MouseKey) -> bool {
         self.mouse.is_pressed(button)
     }
 
-    pub fn is_mouse_button_just_pressed(&self, button: MouseButton) -> bool {
+    pub fn button_just_pressed(&self, button: MouseKey) -> bool {
         self.mouse.is_just_pressed(button)
     }
 
-    pub fn is_mouse_button_just_released(&self, button: MouseButton) -> bool {
+    pub fn button_just_released(&self, button: MouseKey) -> bool {
         self.mouse.is_just_released(button)
     }
+}
 
+impl Input {
     pub fn set_mouse_position(&mut self, position: DVec2) {
         self.mouse_position = position;
     }
@@ -89,6 +75,24 @@ impl Input {
 
     pub fn mouse_wheel_delta(&self) -> Vec2 {
         self.mouse_wheel_delta
+    }
+}
+
+impl Input {
+    fn press_key(&mut self, key: KeyCode) {
+        self.keyboard.press(key);
+    }
+
+    fn release_key(&mut self, key: KeyCode) {
+        self.keyboard.release(key);
+    }
+
+    fn press_mouse_button(&mut self, button: MouseKey) {
+        self.mouse.press(button);
+    }
+
+    fn release_mouse_button(&mut self, button: MouseKey) {
+        self.mouse.release(button);
     }
 }
 
@@ -112,7 +116,7 @@ impl Input {
         }
     }
 
-    pub fn handle_mouse_input(&mut self, state: ElementState, button: WinitMouseButton) {
+    pub fn handle_mouse_input(&mut self, state: ElementState, button: MouseButton) {
         let Some(button) = map_mouse_button(button) else {
             return;
         };

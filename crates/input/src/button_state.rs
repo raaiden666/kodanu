@@ -9,11 +9,11 @@ where
     just_released: HashSet<T>,
 }
 
-impl<T> ButtonState<T>
+impl<T> Default for ButtonState<T>
 where
     T: Eq + Hash + Copy,
 {
-    pub fn new() -> Self {
+    fn default() -> Self {
         Self {
             pressed: HashSet::with_capacity(128),
             just_pressed: HashSet::with_capacity(128),

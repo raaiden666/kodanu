@@ -1,5 +1,5 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub enum MouseButton {
+pub enum MouseKey {
     Left,
     Right,
     Middle,
