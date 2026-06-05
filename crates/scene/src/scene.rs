@@ -4,8 +4,8 @@ pub struct Scene {
     world: World,
 }
 
-impl Scene {
-    pub fn new() -> Self {
+impl Default for Scene {
+    fn default() -> Self {
         Self {
             world: World::new(),
         }

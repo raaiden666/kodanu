@@ -1,6 +1,6 @@
-use math::Mat4;
+use crate::Projection;
 
-use crate::camera::Projection;
+use math::Mat4;
 
 pub struct Camera {
     projection: Projection,

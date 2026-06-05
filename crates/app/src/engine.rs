@@ -1,9 +1,10 @@
-use {graphics::Renderer, input::Input, math::DVec2, time::Time, window::Window};
+use {graphics::Renderer, input::Input, math::DVec2, scene::Scene, time::Time, window::Window};
 
 use winit::event::WindowEvent;
 
 pub struct Engine {
     renderer: Renderer,
+    scene: Scene,
     input: Input,
     time: Time,
 }
@@ -12,6 +13,7 @@ impl Engine {
     pub async fn new(window: &Window) -> Self {
         Self {
             renderer: Renderer::new(window).await,
+            scene: Scene::default(),
             input: Input::default(),
             time: Time::default(),
         }
@@ -70,5 +72,13 @@ impl Engine {
 
     pub fn input(&self) -> &Input {
         &self.input
+    }
+
+    pub fn scene(&self) -> &Scene {
+        &self.scene
+    }
+
+    pub fn scene_mut(&mut self) -> &mut Scene {
+        &mut self.scene
     }
 }

@@ -91,11 +91,13 @@ name = "app"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "components",
  "editor",
  "graphics",
  "input",
  "math",
  "pollster",
+ "scene",
  "time",
  "tracing",
  "window",

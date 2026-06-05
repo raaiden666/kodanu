@@ -2,13 +2,13 @@ use crate::{Editor, Engine};
 
 use {
     anyhow::{Ok, Result},
+    input::KeyCode,
     pollster::block_on,
     std::sync::Arc,
     tracing::info,
     window::{Window, WindowConfig},
 };
 
-use input::KeyCode;
 use winit::{
     application::ApplicationHandler,
     event::WindowEvent,
@@ -24,9 +24,9 @@ pub struct App {
 }
 
 impl App {
-    pub fn run(window_config: WindowConfig) -> Result<()> {
+    pub fn run() -> Result<()> {
         let event_loop = EventLoop::new()?;
-        let mut app = Self::new(window_config);
+        let mut app = Self::new();
 
         info!(target: "App::Run()", "App started");
 
@@ -35,12 +35,12 @@ impl App {
         Ok(())
     }
 
-    fn new(config: WindowConfig) -> Self {
+    fn new() -> Self {
         Self {
             window: None,
             engine: None,
             editor: Editor::default(),
-            config: config,
+            config: WindowConfig::default(),
         }
     }
 }

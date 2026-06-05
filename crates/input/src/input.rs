@@ -1,6 +1,6 @@
 use crate::{KeyCode, MouseButton, button_state::ButtonState, map_key_code, map_mouse_button};
 
-use math::DVec2;
+use math::{DVec2, Vec2};
 
 use winit::{
     event::{ElementState, KeyEvent, MouseButton as WinitMouseButton, MouseScrollDelta},
@@ -12,7 +12,7 @@ pub struct Input {
     mouse: ButtonState<MouseButton>,
 
     mouse_position: DVec2,
-    mouse_wheel_delta: f32,
+    mouse_wheel_delta: Vec2,
 }
 
 impl Default for Input {
@@ -22,7 +22,7 @@ impl Default for Input {
             mouse: ButtonState::new(),
 
             mouse_position: DVec2::new(0.0, 0.0),
-            mouse_wheel_delta: 0.0,
+            mouse_wheel_delta: Vec2::new(0.0, 0.0),
         }
     }
 }
@@ -32,7 +32,7 @@ impl Input {
         self.keyboard.begin_frame();
         self.mouse.begin_frame();
 
-        self.mouse_wheel_delta = 0.0;
+        self.mouse_wheel_delta = Vec2::ZERO;
     }
 
     pub fn press_key(&mut self, key: KeyCode) {
@@ -83,11 +83,11 @@ impl Input {
         self.mouse_position
     }
 
-    pub fn add_mouse_wheel_delta(&mut self, wheel: f32) {
-        self.mouse_wheel_delta += wheel;
+    pub fn add_mouse_wheel_delta(&mut self, x: f32, y: f32) {
+        self.mouse_wheel_delta += Vec2::new(x, y);
     }
 
-    pub fn mouse_wheel_delta(&self) -> f32 {
+    pub fn mouse_wheel_delta(&self) -> Vec2 {
         self.mouse_wheel_delta
     }
 }
@@ -133,11 +133,11 @@ impl Input {
 
     pub fn handle_mouse_wheel(&mut self, delta: MouseScrollDelta) {
         match delta {
-            MouseScrollDelta::LineDelta(_, y) => {
-                self.add_mouse_wheel_delta(y);
+            MouseScrollDelta::LineDelta(x, y) => {
+                self.add_mouse_wheel_delta(x, y);
             }
-            MouseScrollDelta::PixelDelta(position) => {
-                self.add_mouse_wheel_delta(position.y as f32);
+            MouseScrollDelta::PixelDelta(delta) => {
+                self.add_mouse_wheel_delta(delta.y as f32, delta.x as f32);
             }
         }
     }

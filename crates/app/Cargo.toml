@@ -15,3 +15,5 @@ input = { workspace = true }
 math = { workspace = true }
 time = { workspace = true }
 editor = { workspace = true }
+scene = { workspace = true }
+components = { workspace = true }

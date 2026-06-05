@@ -1,4 +1,4 @@
-use crate::camera::PerspectiveProjection;
+use crate::PerspectiveProjection;
 
 use math::Mat4;
 
