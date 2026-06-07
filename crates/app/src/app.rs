@@ -104,7 +104,7 @@ impl App {
             event_loop.exit();
         }
 
-        engine.render();
+        engine.render(&self.editor.collect_render_items());
 
         engine.begin_frame();
     }

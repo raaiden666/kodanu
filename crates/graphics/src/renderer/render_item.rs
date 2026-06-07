@@ -1,24 +1,26 @@
 use crate::resources::Mesh;
 
+use std::sync::Arc;
+
 use math::Mat4;
 
-pub struct RenderItem<'a> {
-    mesh: &'a Mesh,
-    transform: Mat4,
+pub struct RenderItem {
+    mesh: Arc<Mesh>,
+    model: Mat4,
 }
 
-impl<'a> RenderItem<'a> {
-    pub fn new(mesh: &'a Mesh, transform: Mat4) -> Self {
-        Self { mesh, transform }
+impl RenderItem {
+    pub fn new(mesh: Arc<Mesh>, model: Mat4) -> Self {
+        Self { mesh, model }
     }
 }
 
-impl<'a> RenderItem<'a> {
+impl RenderItem {
     pub fn mesh(&self) -> &Mesh {
-        self.mesh
+        &self.mesh
     }
 
-    pub fn transform(&self) -> Mat4 {
-        self.transform
+    pub fn model(&self) -> Mat4 {
+        self.model
     }
 }

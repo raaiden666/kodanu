@@ -1,1 +1,1 @@
-pub use hecs::World;
+pub use hecs::{DynamicBundle, Entity, World};

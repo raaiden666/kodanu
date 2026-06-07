@@ -1,8 +1,6 @@
 use crate::CameraUniform;
 
-use bytemuck::bytes_of;
-
-use math::Mat4;
+use {bytemuck::bytes_of, math::Mat4};
 
 use wgpu::{
     BindGroup, BindGroupDescriptor, BindGroupEntry, BindGroupLayout, BindGroupLayoutDescriptor,
@@ -19,18 +17,18 @@ pub struct CameraRenderer {
 
 impl CameraRenderer {
     pub fn new(device: &Device) -> Self {
-        let bing_group_layout = Self::create_bind_group_layout(device);
+        let bind_group_layout = Self::create_bind_group_layout(device);
 
         let uniform = CameraUniform::new(Mat4::IDENTITY);
 
         let buffer = Self::create_buffer(device, &uniform);
 
-        let bind_group = Self::create_bind_group(device, &buffer, &bing_group_layout);
+        let bind_group = Self::create_bind_group(device, &buffer, &bind_group_layout);
 
         Self {
             buffer,
             bind_group,
-            bind_group_layout: bing_group_layout,
+            bind_group_layout,
         }
     }
 }

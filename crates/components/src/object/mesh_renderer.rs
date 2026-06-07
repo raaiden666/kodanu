@@ -3,7 +3,7 @@ use graphics::Mesh;
 use std::sync::Arc;
 
 pub struct MeshRenderer {
-    pub mesh: Arc<Mesh>,
+    mesh: Arc<Mesh>,
 }
 
 impl MeshRenderer {
@@ -14,6 +14,10 @@ impl MeshRenderer {
     }
 
     pub fn mesh(&self) -> &Mesh {
-        &self.mesh
+        &self.mesh.as_ref()
+    }
+
+    pub fn mesh_handle(&self) -> Arc<Mesh> {
+        Arc::clone(&self.mesh)
     }
 }

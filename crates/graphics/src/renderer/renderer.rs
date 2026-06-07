@@ -1,5 +1,5 @@
 use crate::{
-    Mesh, Vertex,
+    Mesh, RenderItem,
     gpu::{GraphicsDevice, RenderSurface, SurfaceFrame},
     pipeline::GraphicsPipeline,
     renderer::FrameStatus,
@@ -17,8 +17,6 @@ pub struct Renderer {
     graphics_device: GraphicsDevice,
     render_surface: RenderSurface,
     graphics_pipeline: GraphicsPipeline,
-
-    test_mesh: Mesh,
 }
 
 impl Renderer {
@@ -30,32 +28,16 @@ impl Renderer {
         let graphics_pipeline =
             GraphicsPipeline::new(graphics_device.device(), render_surface.config().format);
 
-        let test_mesh = Mesh::new(
-            graphics_device.device(),
-            &[
-                Vertex {
-                    position: [0.0, 0.5, 0.0],
-                },
-                Vertex {
-                    position: [0.5, -0.5, 0.0],
-                },
-                Vertex {
-                    position: [-0.5, -0.5, 0.0],
-                },
-            ],
-        );
-
         Self {
             graphics_device,
             render_surface,
             graphics_pipeline,
-            test_mesh,
         }
     }
 }
 
 impl Renderer {
-    pub fn render(&self) -> FrameStatus {
+    pub fn render(&self, items: &[RenderItem]) -> FrameStatus {
         let (frame, result) = match self.render_surface.acquire_frame() {
             SurfaceFrame::Ready(frame) => (frame, FrameStatus::Success),
             SurfaceFrame::Suboptimal(frame) => (frame, FrameStatus::Suboptimal),
@@ -66,13 +48,13 @@ impl Renderer {
             SurfaceFrame::Validation => return FrameStatus::Validation,
         };
 
-        self.draw_frame(&frame);
+        self.draw_frame(&frame, items);
         frame.present();
 
         result
     }
 
-    fn draw_frame(&self, frame: &SurfaceTexture) {
+    fn draw_frame(&self, frame: &SurfaceTexture, items: &[RenderItem]) {
         let view = frame.texture.create_view(&TextureViewDescriptor::default());
 
         let mut encoder =
@@ -102,7 +84,9 @@ impl Renderer {
 
             render_pass.set_pipeline(self.graphics_pipeline.raw());
 
-            self.draw_mesh(&self.test_mesh, &mut render_pass);
+            for item in items {
+                self.draw_mesh(&item.mesh(), &mut render_pass);
+            }
         }
 
         self.graphics_device.queue().submit(once(encoder.finish()));

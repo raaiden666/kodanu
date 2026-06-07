@@ -12,7 +12,7 @@ pub struct GraphicsPipeline {
 impl GraphicsPipeline {
     pub fn new(device: &Device, format: TextureFormat) -> Self {
         let vs = device.create_shader_module(ShaderModuleDescriptor {
-            label: Some("Mesg VS"),
+            label: Some("Mesh VS"),
             source: ShaderSource::Wgsl(
                 include_str!("../../../../resources/shaders/wgsl/mesh.vert.wgsl").into(),
             ),
