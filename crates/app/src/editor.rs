@@ -1,9 +1,8 @@
 use {
     components::{MeshRenderer, Transform},
-    editor::SceneCamera,
+    editor::{Scene, SceneCamera},
     graphics::RenderItem,
     input::Input,
-    scene::Scene,
     time::Time,
 };
 

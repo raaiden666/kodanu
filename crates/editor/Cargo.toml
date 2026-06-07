@@ -3,7 +3,11 @@ name = "editor"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+path = "src/_lib.rs"
+
 [dependencies]
+ecs = { workspace = true }
 components = { workspace = true }
 input = { workspace = true }
 time = { workspace = true }
