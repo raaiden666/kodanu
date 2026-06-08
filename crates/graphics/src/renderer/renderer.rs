@@ -97,7 +97,7 @@ impl Renderer {
     pub fn draw_mesh(&self, mesh: &GpuMesh, render_pass: &mut RenderPass) {
         render_pass.set_vertex_buffer(0, mesh.vertex_buffer().slice(..));
         render_pass.set_index_buffer(mesh.index_buffer().slice(..), IndexFormat::Uint32);
-        render_pass.draw(0..mesh.index_count(), 0..1);
+        render_pass.draw_indexed(0..mesh.index_count(), 0, 0..1);
     }
 
     pub fn reconfigure_surface(&mut self) {
