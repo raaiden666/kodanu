@@ -1,0 +1,10 @@
+[package]
+name = "assets"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+path = "src/_lib.rs"
+
+[dependencies]
+bytemuck = { workspace = true }

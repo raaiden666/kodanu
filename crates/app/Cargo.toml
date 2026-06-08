@@ -19,3 +19,4 @@ math = { workspace = true }
 time = { workspace = true }
 editor = { workspace = true }
 components = { workspace = true }
+assets = { workspace = true }

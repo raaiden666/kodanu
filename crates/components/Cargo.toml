@@ -8,5 +8,5 @@ path = "src/_lib.rs"
 
 [dependencies]
 graphics = { workspace = true }
-
+assets = { workspace = true }
 math = { workspace = true }

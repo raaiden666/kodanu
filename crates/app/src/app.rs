@@ -59,6 +59,8 @@ impl ApplicationHandler for App {
         self.window = Some(window);
         self.engine = Some(engine);
 
+        self.editor.init_test_mesh();
+
         info!(target: "App::Resumed()", "App resumed");
     }
 

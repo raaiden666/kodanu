@@ -1,6 +1,4 @@
-use crate::Vertex;
-
-use bytemuck::cast_slice;
+use {assets::Mesh, bytemuck::cast_slice};
 
 use wgpu::{
     Buffer, BufferUsages, Device,
@@ -15,24 +13,24 @@ pub struct GpuMesh {
 }
 
 impl GpuMesh {
-    pub fn new(device: &Device, verticies: &[Vertex]) -> Self {
+    pub fn from_mesh(device: &Device, mesh: &Mesh) -> Self {
         let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
             label: Some("Vertex Buffer"),
-            contents: cast_slice(verticies),
+            contents: cast_slice(mesh.vertices()),
             usage: BufferUsages::VERTEX,
         });
 
         let index_buffer = device.create_buffer_init(&BufferInitDescriptor {
             label: Some("Index Buffer"),
-            contents: cast_slice(verticies),
+            contents: cast_slice(mesh.indices()),
             usage: BufferUsages::INDEX,
         });
 
         Self {
             vertex_buffer,
             index_buffer,
-            vertex_count: verticies.len() as u32,
-            index_count: verticies.len() as u32,
+            vertex_count: mesh.vertices().len() as u32,
+            index_count: mesh.indices().len() as u32,
         }
     }
 }

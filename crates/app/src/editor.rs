@@ -1,4 +1,5 @@
 use {
+    assets::Mesh,
     components::{MeshRenderer, Transform},
     editor::{Scene, SceneCamera},
     graphics::RenderItem,
@@ -46,5 +47,11 @@ impl Editor {
         }
 
         items
+    }
+
+    pub fn init_test_mesh(&mut self) {
+        self.scene
+            .world_mut()
+            .spawn((Transform::default(), MeshRenderer::new(Mesh::triangle_2d())));
     }
 }

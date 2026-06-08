@@ -1,23 +1,21 @@
-use graphics::GpuMesh;
-
-use std::sync::Arc;
+use {assets::Mesh, std::sync::Arc};
 
 pub struct MeshRenderer {
-    mesh: Arc<GpuMesh>,
+    mesh: Arc<Mesh>,
 }
 
 impl MeshRenderer {
-    pub fn new(mesh: GpuMesh) -> Self {
+    pub fn new(mesh: Mesh) -> Self {
         Self {
             mesh: Arc::new(mesh),
         }
     }
 
-    pub fn mesh(&self) -> &GpuMesh {
+    pub fn mesh(&self) -> &Mesh {
         &self.mesh.as_ref()
     }
 
-    pub fn mesh_handle(&self) -> Arc<GpuMesh> {
+    pub fn mesh_handle(&self) -> Arc<Mesh> {
         Arc::clone(&self.mesh)
     }
 }

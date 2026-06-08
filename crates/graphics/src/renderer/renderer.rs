@@ -1,5 +1,5 @@
 use crate::{
-    GpuMesh, RenderItem,
+    MeshCache, RenderItem,
     gpu::{GraphicsDevice, RenderSurface, SurfaceFrame},
     pipeline::GraphicsPipeline,
     renderer::FrameStatus,
@@ -7,9 +7,8 @@ use crate::{
 };
 
 use wgpu::{
-    Color, CommandEncoderDescriptor, IndexFormat, LoadOp, Operations, RenderPass,
-    RenderPassColorAttachment, RenderPassDescriptor, StoreOp, SurfaceTexture,
-    TextureViewDescriptor,
+    Color, CommandEncoderDescriptor, IndexFormat, LoadOp, Operations, RenderPassColorAttachment,
+    RenderPassDescriptor, StoreOp, SurfaceTexture, TextureViewDescriptor,
 };
 
 use {math::UVec2, std::iter::once, window::Window};
@@ -18,6 +17,7 @@ pub struct Renderer {
     graphics_device: GraphicsDevice,
     render_surface: RenderSurface,
     graphics_pipeline: GraphicsPipeline,
+    mesh_cache: MeshCache,
 }
 
 impl Renderer {
@@ -29,16 +29,19 @@ impl Renderer {
         let graphics_pipeline =
             GraphicsPipeline::new(graphics_device.device(), render_surface.config().format);
 
+        let mesh_cache = MeshCache::new();
+
         Self {
             graphics_device,
             render_surface,
             graphics_pipeline,
+            mesh_cache,
         }
     }
 }
 
 impl Renderer {
-    pub fn render(&self, items: &[RenderItem]) -> FrameStatus {
+    pub fn render(&mut self, items: &[RenderItem]) -> FrameStatus {
         let (frame, result) = match self.render_surface.acquire_frame() {
             SurfaceFrame::Ready(frame) => (frame, FrameStatus::Success),
             SurfaceFrame::Suboptimal(frame) => (frame, FrameStatus::Suboptimal),
@@ -54,7 +57,7 @@ impl Renderer {
         result
     }
 
-    fn draw_frame(&self, frame: SurfaceTexture, items: &[RenderItem]) {
+    fn draw_frame(&mut self, frame: SurfaceTexture, items: &[RenderItem]) {
         let view = frame.texture.create_view(&TextureViewDescriptor::default());
 
         let mut encoder =
@@ -85,19 +88,20 @@ impl Renderer {
             render_pass.set_pipeline(self.graphics_pipeline.raw());
 
             for item in items {
-                self.draw_mesh(&item.mesh(), &mut render_pass);
+                let gpu_mesh = self
+                    .mesh_cache
+                    .get_or_create(self.graphics_device.device(), &item.mesh_handle());
+
+                render_pass.set_vertex_buffer(0, gpu_mesh.vertex_buffer().slice(..));
+                render_pass
+                    .set_index_buffer(gpu_mesh.index_buffer().slice(..), IndexFormat::Uint32);
+                render_pass.draw_indexed(0..gpu_mesh.index_count(), 0, 0..1);
             }
         }
 
         self.graphics_device.queue().submit(once(encoder.finish()));
 
         frame.present();
-    }
-
-    pub fn draw_mesh(&self, mesh: &GpuMesh, render_pass: &mut RenderPass) {
-        render_pass.set_vertex_buffer(0, mesh.vertex_buffer().slice(..));
-        render_pass.set_index_buffer(mesh.index_buffer().slice(..), IndexFormat::Uint32);
-        render_pass.draw_indexed(0..mesh.index_count(), 0, 0..1);
     }
 
     pub fn reconfigure_surface(&mut self) {
