@@ -1,6 +1,6 @@
 use crate::gpu::{GraphicsDevice, RenderSurface};
 
-use {math::Size, window::Window};
+use {math::UVec2, window::Window};
 
 use wgpu::{
     Adapter, BackendOptions, Backends, CompositeAlphaMode, Device, DeviceDescriptor,
@@ -47,15 +47,15 @@ pub async fn create_device(adapter: &Adapter) -> (Device, Queue) {
 }
 
 pub fn create_surface_configuration(
-    size: Size<u32>,
+    size: UVec2,
     format: TextureFormat,
     alpha_mode: CompositeAlphaMode,
 ) -> SurfaceConfiguration {
     SurfaceConfiguration {
         usage: TextureUsages::RENDER_ATTACHMENT,
         format: format,
-        width: size.width,
-        height: size.height,
+        width: size.x,
+        height: size.y,
         present_mode: PresentMode::Fifo,
         alpha_mode: alpha_mode,
         view_formats: vec![format],

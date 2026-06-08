@@ -2,16 +2,16 @@ use crate::gpu::SurfaceFrame;
 
 use wgpu::{CurrentSurfaceTexture, Device, Surface, SurfaceConfiguration, TextureFormat};
 
-use math::Size;
+use math::UVec2;
 
 pub struct RenderSurface {
     surface: Surface<'static>,
     config: SurfaceConfiguration,
-    size: Size<u32>,
+    size: UVec2,
 }
 
 impl RenderSurface {
-    pub fn new(surface: Surface<'static>, config: SurfaceConfiguration, size: Size<u32>) -> Self {
+    pub fn new(surface: Surface<'static>, config: SurfaceConfiguration, size: UVec2) -> Self {
         Self {
             surface,
             config,
@@ -29,7 +29,7 @@ impl RenderSurface {
         &self.config
     }
 
-    pub fn size(&self) -> Size<u32> {
+    pub fn size(&self) -> UVec2 {
         self.size
     }
 
@@ -37,14 +37,14 @@ impl RenderSurface {
         self.surface.configure(device, &self.config);
     }
 
-    pub fn resize(&mut self, device: &Device, size: Size<u32>) {
-        if size.width == 0 || size.height == 0 {
+    pub fn resize(&mut self, device: &Device, size: UVec2) {
+        if size.x == 0 || size.y == 0 {
             return;
         }
 
         self.size = size;
-        self.config.width = size.width;
-        self.config.height = size.height;
+        self.config.width = size.x;
+        self.config.height = size.y;
 
         self.surface.configure(device, &self.config);
     }

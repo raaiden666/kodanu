@@ -1,7 +1,7 @@
 use {
     graphics::{RenderItem, Renderer},
     input::Input,
-    math::DVec2,
+    math::{DVec2, UVec2},
     time::Time,
     window::Window,
 };
@@ -28,7 +28,8 @@ impl Engine {
     pub fn handle_window_event(&mut self, event: &WindowEvent) {
         match event {
             WindowEvent::Resized(size) => {
-                self.renderer.surface_resize((*size).into());
+                self.renderer
+                    .surface_resize(UVec2::new(size.height, size.width));
             }
             WindowEvent::KeyboardInput { event, .. } => {
                 self.input.handle_keyboard_input(event);

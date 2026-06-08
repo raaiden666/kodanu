@@ -15,7 +15,6 @@ members = [
 resolver = "3"
 
 [workspace.dependencies]
-
 winit = { version = "0.30.13" }
 wgpu = { version = "29.0.3" }
 hecs = { version = "0.11.0" }

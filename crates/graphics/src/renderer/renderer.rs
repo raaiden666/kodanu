@@ -11,7 +11,7 @@ use wgpu::{
     RenderPassDescriptor, StoreOp, SurfaceTexture, TextureViewDescriptor,
 };
 
-use {math::Size, std::iter::once, window::Window};
+use {math::UVec2, std::iter::once, window::Window};
 
 pub struct Renderer {
     graphics_device: GraphicsDevice,
@@ -48,13 +48,12 @@ impl Renderer {
             SurfaceFrame::Validation => return FrameStatus::Validation,
         };
 
-        self.draw_frame(&frame, items);
-        frame.present();
+        self.draw_frame(frame, items);
 
         result
     }
 
-    fn draw_frame(&self, frame: &SurfaceTexture, items: &[RenderItem]) {
+    fn draw_frame(&self, frame: SurfaceTexture, items: &[RenderItem]) {
         let view = frame.texture.create_view(&TextureViewDescriptor::default());
 
         let mut encoder =
@@ -90,6 +89,8 @@ impl Renderer {
         }
 
         self.graphics_device.queue().submit(once(encoder.finish()));
+
+        frame.present();
     }
 
     pub fn draw_mesh(&self, mesh: &Mesh, render_pass: &mut RenderPass) {
@@ -101,11 +102,11 @@ impl Renderer {
         self.render_surface.configure(self.graphics_device.device());
     }
 
-    pub fn surface_size(&self) -> Size<u32> {
+    pub fn surface_size(&self) -> UVec2 {
         self.render_surface.size()
     }
 
-    pub fn surface_resize(&mut self, size: Size<u32>) {
+    pub fn surface_resize(&mut self, size: UVec2) {
         self.render_surface
             .resize(self.graphics_device.device(), size);
     }

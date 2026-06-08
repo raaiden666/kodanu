@@ -1,5 +1,5 @@
 use {
-    math::Size,
+    math::UVec2,
     std::sync::Arc,
     wgpu::{Instance, Surface},
 };
@@ -17,8 +17,10 @@ impl Window {
 }
 
 impl Window {
-    pub fn size(&self) -> Size<u32> {
-        self.raw_window.inner_size().into()
+    pub fn size(&self) -> UVec2 {
+        let size = self.raw_window.inner_size();
+
+        UVec2::new(size.height, size.width)
     }
 
     pub fn request_redraw(&self) {
