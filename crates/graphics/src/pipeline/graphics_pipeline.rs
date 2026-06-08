@@ -1,8 +1,8 @@
 use crate::create_vertex_layout;
 
 use wgpu::{
-    Device, FragmentState, PipelineLayoutDescriptor, RenderPipeline, RenderPipelineDescriptor,
-    ShaderModuleDescriptor, ShaderSource, TextureFormat, VertexState,
+    BindGroupLayout, Device, FragmentState, PipelineLayoutDescriptor, RenderPipeline,
+    RenderPipelineDescriptor, ShaderModuleDescriptor, ShaderSource, TextureFormat, VertexState,
 };
 
 pub struct GraphicsPipeline {
@@ -10,7 +10,11 @@ pub struct GraphicsPipeline {
 }
 
 impl GraphicsPipeline {
-    pub fn new(device: &Device, format: TextureFormat) -> Self {
+    pub fn new(
+        device: &Device,
+        format: TextureFormat,
+        bind_gropu_layout: &BindGroupLayout,
+    ) -> Self {
         let vs = device.create_shader_module(ShaderModuleDescriptor {
             label: Some("Mesh VS"),
             source: ShaderSource::Wgsl(
@@ -27,7 +31,7 @@ impl GraphicsPipeline {
 
         let layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label: Some("Render Pipeline Layout"),
-            bind_group_layouts: &[],
+            bind_group_layouts: &[Some(bind_gropu_layout)],
             immediate_size: 0,
         });
 

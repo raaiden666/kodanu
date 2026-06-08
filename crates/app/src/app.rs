@@ -106,6 +106,11 @@ impl App {
             event_loop.exit();
         }
 
+        if engine.input().key_pressed(KeyCode::W) {
+            self.editor
+                .rotate_all_meshes(2.5 * engine.time().delta_time());
+        }
+
         engine.render(&self.editor.collect_render_items());
 
         engine.begin_frame();

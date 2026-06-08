@@ -1,5 +1,5 @@
 use crate::{
-    MeshCache, RenderItem,
+    MeshCache, ModelBuffer, RenderItem,
     gpu::{GraphicsDevice, RenderSurface, SurfaceFrame},
     pipeline::GraphicsPipeline,
     renderer::FrameStatus,
@@ -17,6 +17,7 @@ pub struct Renderer {
     graphics_device: GraphicsDevice,
     render_surface: RenderSurface,
     graphics_pipeline: GraphicsPipeline,
+    model_buffer: ModelBuffer,
     mesh_cache: MeshCache,
 }
 
@@ -26,8 +27,13 @@ impl Renderer {
 
         let render_surface = create_render_surface(window, &graphics_device, surface);
 
-        let graphics_pipeline =
-            GraphicsPipeline::new(graphics_device.device(), render_surface.config().format);
+        let model_buffer = ModelBuffer::new(graphics_device.device());
+
+        let graphics_pipeline = GraphicsPipeline::new(
+            graphics_device.device(),
+            render_surface.config().format,
+            model_buffer.bind_group_layout(),
+        );
 
         let mesh_cache = MeshCache::new();
 
@@ -35,6 +41,7 @@ impl Renderer {
             graphics_device,
             render_surface,
             graphics_pipeline,
+            model_buffer,
             mesh_cache,
         }
     }
@@ -91,6 +98,11 @@ impl Renderer {
                 let gpu_mesh = self
                     .mesh_cache
                     .get_or_create(self.graphics_device.device(), &item.mesh_handle());
+
+                self.model_buffer
+                    .update(self.graphics_device.queue(), item.model());
+
+                render_pass.set_bind_group(0, self.model_buffer.bind_group(), &[]);
 
                 render_pass.set_vertex_buffer(0, gpu_mesh.vertex_buffer().slice(..));
                 render_pass
