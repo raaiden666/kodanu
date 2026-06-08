@@ -1,4 +1,4 @@
-mod mesh;
+mod gpu_mesh;
 mod vertex;
 
-pub use {mesh::Mesh, vertex::Vertex};
+pub use {gpu_mesh::GpuMesh, vertex::Vertex};

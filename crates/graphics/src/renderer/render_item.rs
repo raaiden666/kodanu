@@ -1,22 +1,20 @@
-use crate::resources::Mesh;
+use crate::resources::GpuMesh;
 
-use std::sync::Arc;
-
-use math::Mat4;
+use {math::Mat4, std::sync::Arc};
 
 pub struct RenderItem {
-    mesh: Arc<Mesh>,
+    mesh: Arc<GpuMesh>,
     model: Mat4,
 }
 
 impl RenderItem {
-    pub fn new(mesh: Arc<Mesh>, model: Mat4) -> Self {
+    pub fn new(mesh: Arc<GpuMesh>, model: Mat4) -> Self {
         Self { mesh, model }
     }
 }
 
 impl RenderItem {
-    pub fn mesh(&self) -> &Mesh {
+    pub fn mesh(&self) -> &GpuMesh {
         &self.mesh
     }
 
