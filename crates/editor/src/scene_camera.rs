@@ -1,7 +1,7 @@
 use {
     components::{Camera, Transform},
     input::{Input, KeyCode},
-    math::Vec3,
+    math::{Mat4, Quat, Vec3},
     time::Time,
 };
 
@@ -9,10 +9,12 @@ pub struct SceneCamera {
     camera: Camera,
     transform: Transform,
     move_speed: f32,
+    look_speed: f32,
 }
 
 impl SceneCamera {
-    pub const DEFAULT_MOVE_SPEED: f32 = 5.0;
+    pub const DEFAULT_MOVE_SPEED: f32 = 10.0;
+    pub const DEFAULT_LOOK_SPEED: f32 = 50.0_f32.to_radians();
 }
 
 impl Default for SceneCamera {
@@ -21,16 +23,18 @@ impl Default for SceneCamera {
             Camera::default(),
             Transform::default(),
             Self::DEFAULT_MOVE_SPEED,
+            Self::DEFAULT_LOOK_SPEED,
         )
     }
 }
 
 impl SceneCamera {
-    pub fn new(camera: Camera, transform: Transform, move_speed: f32) -> Self {
+    pub fn new(camera: Camera, transform: Transform, move_speed: f32, look_speed: f32) -> Self {
         Self {
             camera,
             transform,
             move_speed,
+            look_speed: look_speed.to_radians(),
         }
     }
 }
@@ -65,10 +69,12 @@ impl SceneCamera {
         }
 
         if input.key_pressed(KeyCode::A) {
-            direction -= self.transform.right();
+            self.transform
+                .rotate(Quat::from_rotation_y(self.look_speed * time.delta_time()));
         }
         if input.key_pressed(KeyCode::D) {
-            direction += self.transform.right();
+            self.transform
+                .rotate(Quat::from_rotation_y(-self.look_speed * time.delta_time()));
         }
 
         if input.key_pressed(KeyCode::Space) {
@@ -82,5 +88,9 @@ impl SceneCamera {
             self.transform
                 .translate(direction.normalize() * self.move_speed * time.delta_time());
         }
+    }
+
+    pub fn view_projection(&self) -> Mat4 {
+        self.camera.projection_matrix() * self.transform().view_matrix()
     }
 }

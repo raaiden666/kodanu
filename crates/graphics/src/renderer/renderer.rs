@@ -1,11 +1,12 @@
 use crate::{
-    MeshCache, ModelBuffer, RenderItem,
+    CameraRenderer, MeshCache, ModelBuffer, RenderItem,
     gpu::{GraphicsDevice, RenderSurface, SurfaceFrame},
     pipeline::GraphicsPipeline,
     renderer::FrameStatus,
     setup::{create_device_and_surface, create_render_surface},
 };
 
+use math::Mat4;
 use wgpu::{
     Color, CommandEncoderDescriptor, IndexFormat, LoadOp, Operations, RenderPassColorAttachment,
     RenderPassDescriptor, StoreOp, SurfaceTexture, TextureViewDescriptor,
@@ -18,6 +19,7 @@ pub struct Renderer {
     render_surface: RenderSurface,
     graphics_pipeline: GraphicsPipeline,
     model_buffer: ModelBuffer,
+    camera_renderer: CameraRenderer,
     mesh_cache: MeshCache,
 }
 
@@ -29,9 +31,12 @@ impl Renderer {
 
         let model_buffer = ModelBuffer::new(graphics_device.device());
 
+        let camera_renderer = CameraRenderer::new(graphics_device.device());
+
         let graphics_pipeline = GraphicsPipeline::new(
             graphics_device.device(),
             render_surface.config().format,
+            camera_renderer.bind_group_layout(),
             model_buffer.bind_group_layout(),
         );
 
@@ -42,13 +47,14 @@ impl Renderer {
             render_surface,
             graphics_pipeline,
             model_buffer,
+            camera_renderer,
             mesh_cache,
         }
     }
 }
 
 impl Renderer {
-    pub fn render(&mut self, items: &[RenderItem]) -> FrameStatus {
+    pub fn render(&mut self, view_projection: Mat4, items: &[RenderItem]) -> FrameStatus {
         let (frame, result) = match self.render_surface.acquire_frame() {
             SurfaceFrame::Ready(frame) => (frame, FrameStatus::Success),
             SurfaceFrame::Suboptimal(frame) => (frame, FrameStatus::Suboptimal),
@@ -58,6 +64,9 @@ impl Renderer {
             SurfaceFrame::Lost => return FrameStatus::Lost,
             SurfaceFrame::Validation => return FrameStatus::Validation,
         };
+
+        self.camera_renderer
+            .update(self.graphics_device.queue(), view_projection);
 
         self.draw_frame(frame, items);
 
@@ -94,6 +103,8 @@ impl Renderer {
 
             render_pass.set_pipeline(self.graphics_pipeline.raw());
 
+            render_pass.set_bind_group(0, self.camera_renderer.bind_group(), &[]);
+
             for item in items {
                 let gpu_mesh = self
                     .mesh_cache
@@ -102,7 +113,7 @@ impl Renderer {
                 self.model_buffer
                     .update(self.graphics_device.queue(), item.model());
 
-                render_pass.set_bind_group(0, self.model_buffer.bind_group(), &[]);
+                render_pass.set_bind_group(1, self.model_buffer.bind_group(), &[]);
 
                 render_pass.set_vertex_buffer(0, gpu_mesh.vertex_buffer().slice(..));
                 render_pass

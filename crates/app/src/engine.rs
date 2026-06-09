@@ -1,7 +1,7 @@
 use {
     graphics::{RenderItem, Renderer},
     input::Input,
-    math::{DVec2, UVec2},
+    math::{DVec2, Mat4, UVec2},
     time::Time,
     window::Window,
 };
@@ -48,8 +48,8 @@ impl Engine {
         }
     }
 
-    pub fn render(&mut self, items: &[RenderItem]) {
-        let result = self.renderer.render(items);
+    pub fn render(&mut self, view_projection: Mat4, items: &[RenderItem]) {
+        let result = self.renderer.render(view_projection, items);
         let size = self.renderer.surface_size();
 
         if result.requires_surface_recovery() {

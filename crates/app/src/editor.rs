@@ -4,7 +4,6 @@ use {
     editor::{Scene, SceneCamera},
     graphics::RenderItem,
     input::Input,
-    math::Quat,
     time::Time,
 };
 
@@ -54,13 +53,5 @@ impl Editor {
         self.scene
             .world_mut()
             .spawn((Transform::default(), MeshRenderer::new(Mesh::triangle_2d())));
-    }
-
-    pub fn rotate_all_meshes(&mut self, speed: f32) {
-        let mut query = self.scene.world_mut().query::<&mut Transform>();
-
-        for transform in query.iter() {
-            transform.rotate(Quat::from_rotation_z(speed));
-        }
     }
 }

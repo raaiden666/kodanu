@@ -13,7 +13,8 @@ impl GraphicsPipeline {
     pub fn new(
         device: &Device,
         format: TextureFormat,
-        bind_gropu_layout: &BindGroupLayout,
+        camera_bind_group_layout: &BindGroupLayout,
+        model_bind_group_layout: &BindGroupLayout,
     ) -> Self {
         let vs = device.create_shader_module(ShaderModuleDescriptor {
             label: Some("Mesh VS"),
@@ -31,7 +32,10 @@ impl GraphicsPipeline {
 
         let layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label: Some("Render Pipeline Layout"),
-            bind_group_layouts: &[Some(bind_gropu_layout)],
+            bind_group_layouts: &[
+                Some(camera_bind_group_layout),
+                Some(model_bind_group_layout),
+            ],
             immediate_size: 0,
         });
 
