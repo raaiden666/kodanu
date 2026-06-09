@@ -38,4 +38,16 @@ impl Mesh {
             vec![0, 1, 2],
         )
     }
+
+    pub fn cube_2d() -> Self {
+        Mesh::new(
+            vec![
+                Vertex::new([-0.5, -0.5, 0.0]),
+                Vertex::new([0.5, -0.5, 0.0]),
+                Vertex::new([0.5, 0.5, 0.0]),
+                Vertex::new([-0.5, 0.5, 0.0]),
+            ],
+            vec![0, 1, 2, 2, 3, 0],
+        )
+    }
 }

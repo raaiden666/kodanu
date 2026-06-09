@@ -8,7 +8,7 @@ pub struct PerspectiveProjection {
 }
 
 impl PerspectiveProjection {
-    pub const DEFAULT_FOV: f32 = 90.0_f32.to_radians();
+    pub const DEFAULT_FOV: f32 = 90.0_f32;
     pub const DEFAULT_ASPECT_RATIO: f32 = 1.0;
     pub const DEFAULT_NEAR: f32 = 0.03;
     pub const DEFAULT_FAR: f32 = 1000.0;

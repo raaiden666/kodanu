@@ -14,7 +14,5 @@ var<uniform> model_uniform: ModelUniform;
 
 @vertex
 fn vs_main(@location(0) position: vec3<f32>) -> @builtin(position) vec4<f32> {
-   return camera_uniform.view_projection
-                     * model_uniform.model
-                     * vec4<f32>(position, 1.0);
+   return camera_uniform.view_projection * model_uniform.model * vec4<f32>(position, 1.0);
 }

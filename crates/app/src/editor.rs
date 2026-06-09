@@ -45,11 +45,11 @@ impl Editor {
     pub fn init_test_mesh(&mut self) {
         self.scene_camera
             .transform_mut()
-            .set_position(Vec3::new(0.0, 0.0, 50.0));
+            .set_position(Vec3::new(0.0, 0.0, 5.0));
 
         self.scene
             .world_mut()
-            .spawn((Transform::default(), MeshRenderer::new(Mesh::triangle_2d())));
+            .spawn((Transform::default(), MeshRenderer::new(Mesh::cube_2d())));
     }
 }
 
