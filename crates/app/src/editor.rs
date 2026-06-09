@@ -4,6 +4,7 @@ use {
     editor::{Scene, SceneCamera},
     graphics::RenderItem,
     input::Input,
+    math::Vec3,
     time::Time,
 };
 
@@ -22,14 +23,6 @@ impl Default for Editor {
 }
 
 impl Editor {
-    pub fn scene(&self) -> &Scene {
-        &self.scene
-    }
-
-    pub fn scene_camera(&self) -> &SceneCamera {
-        &self.scene_camera
-    }
-
     pub fn update(&mut self, input: &Input, time: &Time) {
         self.scene_camera.update(input, time);
     }
@@ -50,8 +43,26 @@ impl Editor {
     }
 
     pub fn init_test_mesh(&mut self) {
+        self.scene_camera
+            .transform_mut()
+            .set_position(Vec3::new(0.0, 0.0, 50.0));
+
         self.scene
             .world_mut()
             .spawn((Transform::default(), MeshRenderer::new(Mesh::triangle_2d())));
+    }
+}
+
+impl Editor {
+    pub fn scene(&self) -> &Scene {
+        &self.scene
+    }
+
+    pub fn scene_camera(&self) -> &SceneCamera {
+        &self.scene_camera
+    }
+
+    pub fn scene_camera_mut(&mut self) -> &mut SceneCamera {
+        &mut self.scene_camera
     }
 }

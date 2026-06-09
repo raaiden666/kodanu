@@ -1,12 +1,10 @@
 use {
     graphics::{RenderItem, Renderer},
     input::Input,
-    math::{DVec2, Mat4, UVec2},
+    math::Mat4,
     time::Time,
     window::Window,
 };
-
-use winit::event::WindowEvent;
 
 pub struct Engine {
     renderer: Renderer,
@@ -25,29 +23,6 @@ impl Engine {
 }
 
 impl Engine {
-    pub fn handle_window_event(&mut self, event: &WindowEvent) {
-        match event {
-            WindowEvent::Resized(size) => {
-                self.renderer
-                    .surface_resize(UVec2::new(size.height, size.width));
-            }
-            WindowEvent::KeyboardInput { event, .. } => {
-                self.input.handle_keyboard_input(event);
-            }
-            WindowEvent::MouseInput { state, button, .. } => {
-                self.input.handle_mouse_input(*state, *button);
-            }
-            WindowEvent::CursorMoved { position, .. } => {
-                self.input
-                    .handle_cursor_move(DVec2::new(position.x, position.y));
-            }
-            WindowEvent::MouseWheel { delta, .. } => {
-                self.input.handle_mouse_wheel(*delta);
-            }
-            _ => {}
-        }
-    }
-
     pub fn render(&mut self, view_projection: Mat4, items: &[RenderItem]) {
         let result = self.renderer.render(view_projection, items);
         let size = self.renderer.surface_size();
@@ -77,5 +52,13 @@ impl Engine {
 
     pub fn input(&self) -> &Input {
         &self.input
+    }
+
+    pub fn input_mut(&mut self) -> &mut Input {
+        &mut self.input
+    }
+
+    pub fn renderer_mut(&mut self) -> &mut Renderer {
+        &mut self.renderer
     }
 }

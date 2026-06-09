@@ -3,6 +3,8 @@ use crate::{Editor, Engine};
 use {
     anyhow::{Ok, Result},
     input::KeyCode,
+    math::DVec2,
+    math::UVec2,
     pollster::block_on,
     std::sync::Arc,
     tracing::info,
@@ -70,6 +72,10 @@ impl ApplicationHandler for App {
         _window_id: WindowId,
         event: WindowEvent,
     ) {
+        let Some(engine) = &mut self.engine else {
+            return;
+        };
+
         match &event {
             WindowEvent::CloseRequested => {
                 info!("App::Window_Event(), CloseRequested");
@@ -82,11 +88,31 @@ impl ApplicationHandler for App {
                     window.request_redraw();
                 };
             }
-            _ => {
-                if let Some(engine) = &mut self.engine {
-                    engine.handle_window_event(&event);
-                }
+            WindowEvent::Resized(size) => {
+                engine
+                    .renderer_mut()
+                    .surface_resize(UVec2::new(size.width, size.height));
+
+                self.editor
+                    .scene_camera_mut()
+                    .camera_mut()
+                    .set_viewport_size(size.width, size.height);
             }
+            WindowEvent::KeyboardInput { event, .. } => {
+                engine.input_mut().handle_keyboard_input(event);
+            }
+            WindowEvent::MouseInput { state, button, .. } => {
+                engine.input_mut().handle_mouse_input(*state, *button);
+            }
+            WindowEvent::CursorMoved { position, .. } => {
+                engine
+                    .input_mut()
+                    .handle_cursor_move(DVec2::new(position.x, position.y));
+            }
+            WindowEvent::MouseWheel { delta, .. } => {
+                engine.input_mut().handle_mouse_wheel(*delta);
+            }
+            _ => {}
         }
     }
 }
