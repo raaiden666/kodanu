@@ -1,3 +1,3 @@
 mod mesh;
 
-pub use mesh::{Mesh, Vertex};
+pub use mesh::{Material, Mesh, Vertex};

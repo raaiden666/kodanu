@@ -7,4 +7,6 @@ edition = "2024"
 path = "src/_lib.rs"
 
 [dependencies]
+math = { workspace = true }
+
 bytemuck = { workspace = true }

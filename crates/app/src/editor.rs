@@ -1,5 +1,5 @@
 use {
-    assets::Mesh,
+    assets::{Material, Mesh},
     components::{MeshRenderer, Transform},
     editor::{Scene, SceneCamera},
     graphics::RenderItem,
@@ -35,6 +35,7 @@ impl Editor {
         for (transform, mesh_renderer) in query.iter() {
             items.push(RenderItem::new(
                 mesh_renderer.mesh_handle(),
+                mesh_renderer.material_hanlde(),
                 transform.matrix(),
             ));
         }
@@ -47,9 +48,10 @@ impl Editor {
             .transform_mut()
             .set_position(Vec3::new(0.0, 0.0, 5.0));
 
-        self.scene
-            .world_mut()
-            .spawn((Transform::default(), MeshRenderer::new(Mesh::cube_2d())));
+        self.scene.world_mut().spawn((
+            Transform::default(),
+            MeshRenderer::new(Mesh::cube_2d(), Material::red_color()),
+        ));
     }
 }
 

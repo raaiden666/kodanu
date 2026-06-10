@@ -1,13 +1,22 @@
-use {assets::Mesh, math::Mat4, std::sync::Arc};
+use {
+    assets::{Material, Mesh},
+    math::Mat4,
+    std::sync::Arc,
+};
 
 pub struct RenderItem {
     mesh: Arc<Mesh>,
+    material: Arc<Material>,
     model: Mat4,
 }
 
 impl RenderItem {
-    pub fn new(mesh: Arc<Mesh>, model: Mat4) -> Self {
-        Self { mesh, model }
+    pub fn new(mesh: Arc<Mesh>, material: Arc<Material>, model: Mat4) -> Self {
+        Self {
+            mesh,
+            material,
+            model,
+        }
     }
 }
 
@@ -22,5 +31,13 @@ impl RenderItem {
 
     pub fn model(&self) -> Mat4 {
         self.model
+    }
+
+    pub fn material(&self) -> &Material {
+        &self.material
+    }
+
+    pub fn material_handle(&self) -> Arc<Material> {
+        Arc::clone(&self.material)
     }
 }
