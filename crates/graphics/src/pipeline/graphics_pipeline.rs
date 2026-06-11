@@ -15,6 +15,7 @@ impl GraphicsPipeline {
         format: TextureFormat,
         camera_bind_group_layout: &BindGroupLayout,
         model_bind_group_layout: &BindGroupLayout,
+        material_bind_group_layout: &BindGroupLayout,
     ) -> Self {
         let vs = device.create_shader_module(ShaderModuleDescriptor {
             label: Some("Mesh VS"),
@@ -35,6 +36,7 @@ impl GraphicsPipeline {
             bind_group_layouts: &[
                 Some(camera_bind_group_layout),
                 Some(model_bind_group_layout),
+                Some(material_bind_group_layout),
             ],
             immediate_size: 0,
         });

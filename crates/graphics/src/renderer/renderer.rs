@@ -1,25 +1,28 @@
 use crate::{
-    CameraRenderer, MeshCache, ModelBuffer, RenderItem,
+    CameraRenderer, MaterialRenderer, MaterialUniform, MeshCache, ModelRenderer, ModelUniform,
+    RenderItem,
     gpu::{GraphicsDevice, RenderSurface, SurfaceFrame},
     pipeline::GraphicsPipeline,
     renderer::FrameStatus,
     setup::{create_device_and_surface, create_render_surface},
 };
 
-use math::Mat4;
 use wgpu::{
     Color, CommandEncoderDescriptor, IndexFormat, LoadOp, Operations, RenderPassColorAttachment,
     RenderPassDescriptor, StoreOp, SurfaceTexture, TextureViewDescriptor,
 };
 
-use {math::UVec2, std::iter::once, window::Window};
+use {math::Mat4, math::UVec2, std::iter::once, window::Window};
 
 pub struct Renderer {
     graphics_device: GraphicsDevice,
     render_surface: RenderSurface,
     graphics_pipeline: GraphicsPipeline,
-    model_buffer: ModelBuffer,
+
     camera_renderer: CameraRenderer,
+    model_renderer: ModelRenderer,
+    material_renderer: MaterialRenderer,
+
     mesh_cache: MeshCache,
 }
 
@@ -29,15 +32,18 @@ impl Renderer {
 
         let render_surface = create_render_surface(window, &graphics_device, surface);
 
-        let model_buffer = ModelBuffer::new(graphics_device.device());
-
         let camera_renderer = CameraRenderer::new(graphics_device.device());
+
+        let model_renderer = ModelRenderer::new(graphics_device.device());
+
+        let material_renderer = MaterialRenderer::new(graphics_device.device());
 
         let graphics_pipeline = GraphicsPipeline::new(
             graphics_device.device(),
             render_surface.config().format,
             camera_renderer.bind_group_layout(),
-            model_buffer.bind_group_layout(),
+            model_renderer.bind_group_layout(),
+            material_renderer.bind_group_layout(),
         );
 
         let mesh_cache = MeshCache::new();
@@ -46,8 +52,9 @@ impl Renderer {
             graphics_device,
             render_surface,
             graphics_pipeline,
-            model_buffer,
             camera_renderer,
+            model_renderer,
+            material_renderer,
             mesh_cache,
         }
     }
@@ -110,10 +117,19 @@ impl Renderer {
                     .mesh_cache
                     .get_or_create(self.graphics_device.device(), &item.mesh_handle());
 
-                self.model_buffer
-                    .update(self.graphics_device.queue(), item.model());
+                self.model_renderer.update(
+                    self.graphics_device.queue(),
+                    ModelUniform::new(item.model()),
+                );
 
-                render_pass.set_bind_group(1, self.model_buffer.bind_group(), &[]);
+                self.material_renderer.update(
+                    self.graphics_device.queue(),
+                    MaterialUniform::new(item.material().base_color()),
+                );
+
+                render_pass.set_bind_group(1, self.model_renderer.bind_group(), &[]);
+
+                render_pass.set_bind_group(2, self.material_renderer.bind_group(), &[]);
 
                 render_pass.set_vertex_buffer(0, gpu_mesh.vertex_buffer().slice(..));
                 render_pass

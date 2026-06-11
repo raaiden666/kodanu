@@ -13,8 +13,8 @@ pub struct SceneCamera {
 }
 
 impl SceneCamera {
-    pub const DEFAULT_MOVE_SPEED: f32 = 2.5;
-    pub const DEFAULT_LOOK_SPEED: f32 = 90.0;
+    pub const DEFAULT_MOVE_SPEED: f32 = 3.0;
+    pub const DEFAULT_LOOK_SPEED: f32 = 125.0;
 }
 
 impl Default for SceneCamera {
