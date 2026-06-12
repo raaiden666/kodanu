@@ -1,6 +1,10 @@
-*text=auto eol=lf
+* text=auto eol=lf
 
-*.rs text=auto eol=lf
-*.toml text=auto eol=lf
-*.lock text=auto eol=lf
+*.rs text eol=lf
+
+*.toml text eol=lf
 *.md text eol=lf
+
+*.wgsl text eol=lf
+
+*.sh text eol=lf
