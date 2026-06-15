@@ -52,6 +52,15 @@ impl Editor {
             Transform::default(),
             MeshRenderer::new(Mesh::cube_2d(), Material::red_color()),
         ));
+
+        let mut tranform = Transform::default();
+
+        tranform.set_position(Vec3::new(-2.0, 0.0, 0.0));
+
+        self.scene.world_mut().spawn((
+            tranform,
+            MeshRenderer::new(Mesh::cube_2d(), Material::red_color()),
+        ));
     }
 }
 

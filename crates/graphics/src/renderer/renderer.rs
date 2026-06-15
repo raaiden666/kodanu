@@ -1,5 +1,5 @@
 use crate::{
-    CameraRenderer, MaterialRenderer, MeshCache, ModelRenderer, RenderItem,
+    CameraRenderer, MaterialRenderer, MeshCache, ModelSrorageBuffer, ModelUniform, RenderItem,
     gpu::{GraphicsDevice, RenderSurface, SurfaceFrame},
     pipeline::GraphicsPipeline,
     renderer::FrameStatus,
@@ -19,7 +19,7 @@ pub struct Renderer {
     graphics_pipeline: GraphicsPipeline,
 
     camera_renderer: CameraRenderer,
-    model_renderer: ModelRenderer,
+    model_storage: ModelSrorageBuffer,
     material_renderer: MaterialRenderer,
 
     mesh_cache: MeshCache,
@@ -33,7 +33,7 @@ impl Renderer {
 
         let camera_renderer = CameraRenderer::new(graphics_device.device());
 
-        let model_renderer = ModelRenderer::new(graphics_device.device());
+        let model_storage = ModelSrorageBuffer::new(graphics_device.device(), 10_000);
 
         let material_renderer = MaterialRenderer::new(graphics_device.device());
 
@@ -41,7 +41,7 @@ impl Renderer {
             graphics_device.device(),
             render_surface.config().format,
             camera_renderer.bind_group_layout(),
-            model_renderer.bind_group_layout(),
+            model_storage.bind_group_layout(),
             material_renderer.bind_group_layout(),
         );
 
@@ -52,7 +52,7 @@ impl Renderer {
             render_surface,
             graphics_pipeline,
             camera_renderer,
-            model_renderer,
+            model_storage,
             material_renderer,
             mesh_cache,
         }
@@ -71,8 +71,16 @@ impl Renderer {
             SurfaceFrame::Validation => return FrameStatus::Validation,
         };
 
+        let models: Vec<ModelUniform> = items
+            .iter()
+            .map(|item| ModelUniform::new(item.model()))
+            .collect();
+
         self.camera_renderer
             .update(self.graphics_device.queue(), view_projection);
+
+        self.model_storage
+            .update(self.graphics_device.queue(), &models);
 
         self.draw_frame(frame, items);
 
@@ -111,25 +119,26 @@ impl Renderer {
 
             render_pass.set_bind_group(0, self.camera_renderer.bind_group(), &[]);
 
-            for item in items {
+            render_pass.set_bind_group(1, self.model_storage.bind_group(), &[]);
+
+            for (index, item) in items.iter().enumerate() {
                 let gpu_mesh = self
                     .mesh_cache
                     .get_or_create(self.graphics_device.device(), &item.mesh_handle());
 
-                self.model_renderer
-                    .update(self.graphics_device.queue(), item.model());
-
                 self.material_renderer
                     .update(self.graphics_device.queue(), item.material().base_color());
-
-                render_pass.set_bind_group(1, self.model_renderer.bind_group(), &[]);
 
                 render_pass.set_bind_group(2, self.material_renderer.bind_group(), &[]);
 
                 render_pass.set_vertex_buffer(0, gpu_mesh.vertex_buffer().slice(..));
                 render_pass
                     .set_index_buffer(gpu_mesh.index_buffer().slice(..), IndexFormat::Uint32);
-                render_pass.draw_indexed(0..gpu_mesh.index_count(), 0, 0..1);
+                render_pass.draw_indexed(
+                    0..gpu_mesh.index_count(),
+                    0,
+                    index as u32..index as u32 + 1,
+                );
             }
         }
 
