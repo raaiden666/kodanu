@@ -1,7 +1,9 @@
-mod model_renderer;
+mod gpu_material;
+mod material_cache;
 mod model_storage_buffer;
 mod model_uniform;
 
-pub use model_renderer::ModelRenderer;
-pub use model_storage_buffer::ModelSrorageBuffer;
-pub use model_uniform::ModelUniform;
+pub use {
+    gpu_material::GpuMaterial, material_cache::MaterialCache,
+    model_storage_buffer::ModelSrorageBuffer, model_uniform::ModelUniform,
+};

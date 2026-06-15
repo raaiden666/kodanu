@@ -1,6 +1,8 @@
 use crate::{
-    CameraRenderer, MaterialRenderer, MeshCache, ModelSrorageBuffer, ModelUniform, RenderItem,
+    CameraRenderer, MaterialCache, ModelSrorageBuffer, ModelUniform, RenderItem,
     gpu::{GraphicsDevice, RenderSurface, SurfaceFrame},
+    material::MaterialLayout,
+    mesh::MeshCache,
     pipeline::GraphicsPipeline,
     renderer::FrameStatus,
     setup::{create_device_and_surface, create_render_surface},
@@ -20,9 +22,11 @@ pub struct Renderer {
 
     camera_renderer: CameraRenderer,
     model_storage: ModelSrorageBuffer,
-    material_renderer: MaterialRenderer,
+
+    material_layout: MaterialLayout,
 
     mesh_cache: MeshCache,
+    material_cache: MaterialCache,
 }
 
 impl Renderer {
@@ -35,17 +39,18 @@ impl Renderer {
 
         let model_storage = ModelSrorageBuffer::new(graphics_device.device(), 10_000);
 
-        let material_renderer = MaterialRenderer::new(graphics_device.device());
+        let material_layout = MaterialLayout::new(graphics_device.device());
 
         let graphics_pipeline = GraphicsPipeline::new(
             graphics_device.device(),
             render_surface.config().format,
             camera_renderer.bind_group_layout(),
             model_storage.bind_group_layout(),
-            material_renderer.bind_group_layout(),
+            material_layout.bind_group_layout(),
         );
 
         let mesh_cache = MeshCache::new();
+        let material_cache = MaterialCache::new();
 
         Self {
             graphics_device,
@@ -53,8 +58,9 @@ impl Renderer {
             graphics_pipeline,
             camera_renderer,
             model_storage,
-            material_renderer,
+            material_layout,
             mesh_cache,
+            material_cache,
         }
     }
 }
@@ -126,10 +132,13 @@ impl Renderer {
                     .mesh_cache
                     .get_or_create(self.graphics_device.device(), &item.mesh_handle());
 
-                self.material_renderer
-                    .update(self.graphics_device.queue(), item.material().base_color());
+                let gpu_material = self.material_cache.get_or_create(
+                    self.graphics_device.device(),
+                    self.material_layout.bind_group_layout(),
+                    &item.material_handle(),
+                );
 
-                render_pass.set_bind_group(2, self.material_renderer.bind_group(), &[]);
+                render_pass.set_bind_group(2, gpu_material.bind_group(), &[]);
 
                 render_pass.set_vertex_buffer(0, gpu_mesh.vertex_buffer().slice(..));
                 render_pass

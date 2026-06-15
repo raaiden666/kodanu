@@ -1,4 +1,4 @@
-use crate::GpuMesh;
+use crate::mesh::GpuMesh;
 
 use {
     assets::Mesh,

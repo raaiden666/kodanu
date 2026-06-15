@@ -1,4 +1,4 @@
-use crate::create_vertex_layout;
+use crate::VertexLayout;
 
 use wgpu::{
     BindGroupLayout, Device, FragmentState, PipelineLayoutDescriptor, RenderPipeline,
@@ -47,7 +47,7 @@ impl GraphicsPipeline {
             vertex: VertexState {
                 module: &vs,
                 entry_point: Some("vs_main"),
-                buffers: &[create_vertex_layout()],
+                buffers: &[VertexLayout::layout()],
                 compilation_options: Default::default(),
             },
             fragment: Some(FragmentState {

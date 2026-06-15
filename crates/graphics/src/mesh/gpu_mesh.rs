@@ -8,7 +8,6 @@ use wgpu::{
 pub struct GpuMesh {
     vertex_buffer: Buffer,
     index_buffer: Buffer,
-    vertex_count: u32,
     index_count: u32,
 }
 
@@ -26,11 +25,12 @@ impl GpuMesh {
             usage: BufferUsages::INDEX,
         });
 
+        let index_count = mesh.indices().len() as u32;
+
         Self {
             vertex_buffer,
             index_buffer,
-            vertex_count: mesh.vertices().len() as u32,
-            index_count: mesh.indices().len() as u32,
+            index_count,
         }
     }
 }
@@ -38,10 +38,6 @@ impl GpuMesh {
 impl GpuMesh {
     pub fn vertex_buffer(&self) -> &Buffer {
         &self.vertex_buffer
-    }
-
-    pub fn vertex_count(&self) -> u32 {
-        self.vertex_count
     }
 
     pub fn index_buffer(&self) -> &Buffer {
