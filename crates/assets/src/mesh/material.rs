@@ -5,7 +5,7 @@ pub struct Material {
 }
 
 impl Material {
-    pub fn new(&self, base_color: Vec4) -> Self {
+    pub fn new(base_color: Vec4) -> Self {
         Self { base_color }
     }
 }

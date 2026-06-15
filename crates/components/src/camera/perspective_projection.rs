@@ -37,10 +37,24 @@ impl PerspectiveProjection {
 }
 
 impl PerspectiveProjection {
+    pub fn fov(&self) -> f32 {
+        self.fov.to_radians()
+    }
+
     pub fn aspect_ratio(&self) -> f32 {
         self.aspect_ratio
     }
 
+    pub fn near(&self) -> f32 {
+        self.near
+    }
+
+    pub fn far(&self) -> f32 {
+        self.far
+    }
+}
+
+impl PerspectiveProjection {
     pub fn set_aspect_ratio(&mut self, aspect_ratio: f32) {
         self.aspect_ratio = aspect_ratio;
     }

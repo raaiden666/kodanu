@@ -69,30 +69,30 @@ impl SceneCamera {
         {
             if input.key_pressed(KeyCode::H) {
                 self.transform.set_rotation(
-                    Quat::from_rotation_y(self.look_speed * time.delta_time())
+                    Quat::from_rotation_y(self.look_speed * time.delta())
                         * self.transform.rotation(),
                 );
             }
             if input.key_pressed(KeyCode::L) {
                 self.transform.set_rotation(
-                    Quat::from_rotation_y(-self.look_speed * time.delta_time())
+                    Quat::from_rotation_y(-self.look_speed * time.delta())
                         * self.transform.rotation(),
                 );
             }
 
             if input.key_pressed(KeyCode::Q) {
                 self.transform
-                    .rotate(Quat::from_rotation_x(self.look_speed * time.delta_time()));
+                    .rotate(Quat::from_rotation_x(self.look_speed * time.delta()));
             }
             if input.key_pressed(KeyCode::E) {
                 self.transform
-                    .rotate(Quat::from_rotation_x(-self.look_speed * time.delta_time()));
+                    .rotate(Quat::from_rotation_x(-self.look_speed * time.delta()));
             }
         }
 
         if direction.length_squared() > 0.0 {
             self.transform
-                .translate(direction.normalize() * self.move_speed * time.delta_time());
+                .translate(direction.normalize() * self.move_speed * time.delta());
         }
     }
 

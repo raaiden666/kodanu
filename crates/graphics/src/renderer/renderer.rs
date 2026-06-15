@@ -1,6 +1,5 @@
 use crate::{
-    CameraRenderer, MaterialRenderer, MaterialUniform, MeshCache, ModelRenderer, ModelUniform,
-    RenderItem,
+    CameraRenderer, MaterialRenderer, MeshCache, ModelRenderer, RenderItem,
     gpu::{GraphicsDevice, RenderSurface, SurfaceFrame},
     pipeline::GraphicsPipeline,
     renderer::FrameStatus,
@@ -8,11 +7,11 @@ use crate::{
 };
 
 use wgpu::{
-    Color, CommandEncoderDescriptor, IndexFormat, LoadOp, Operations, RenderPassColorAttachment,
-    RenderPassDescriptor, StoreOp, SurfaceTexture, TextureViewDescriptor,
+    Color, IndexFormat, LoadOp, Operations, RenderPassColorAttachment, RenderPassDescriptor,
+    StoreOp, SurfaceTexture, TextureViewDescriptor,
 };
 
-use {math::Mat4, math::UVec2, std::iter::once, window::Window};
+use {math::Mat4, math::UVec2, pollster::block_on, std::iter::once, window::Window};
 
 pub struct Renderer {
     graphics_device: GraphicsDevice,
@@ -27,8 +26,8 @@ pub struct Renderer {
 }
 
 impl Renderer {
-    pub async fn new(window: &Window) -> Self {
-        let (graphics_device, surface) = create_device_and_surface(window).await;
+    pub fn new(window: &Window) -> Self {
+        let (graphics_device, surface) = block_on(create_device_and_surface(window));
 
         let render_surface = create_render_surface(window, &graphics_device, surface);
 
@@ -83,12 +82,7 @@ impl Renderer {
     fn draw_frame(&mut self, frame: SurfaceTexture, items: &[RenderItem]) {
         let view = frame.texture.create_view(&TextureViewDescriptor::default());
 
-        let mut encoder =
-            self.graphics_device
-                .device()
-                .create_command_encoder(&CommandEncoderDescriptor {
-                    label: Some("Render Encoder"),
-                });
+        let mut encoder = self.graphics_device.create_encoder("Command Encoder");
 
         {
             let mut render_pass = encoder.begin_render_pass(&RenderPassDescriptor {
@@ -97,7 +91,12 @@ impl Renderer {
                     view: &view,
                     resolve_target: None,
                     ops: Operations {
-                        load: LoadOp::Clear(Color::BLACK),
+                        load: LoadOp::Clear(Color {
+                            r: (0.01),
+                            g: (0.01),
+                            b: (0.01),
+                            a: (1.0),
+                        }),
                         store: StoreOp::Store,
                     },
                     depth_slice: None,
@@ -108,7 +107,7 @@ impl Renderer {
                 multiview_mask: None,
             });
 
-            render_pass.set_pipeline(self.graphics_pipeline.raw());
+            render_pass.set_pipeline(self.graphics_pipeline.pipeline());
 
             render_pass.set_bind_group(0, self.camera_renderer.bind_group(), &[]);
 
@@ -117,15 +116,11 @@ impl Renderer {
                     .mesh_cache
                     .get_or_create(self.graphics_device.device(), &item.mesh_handle());
 
-                self.model_renderer.update(
-                    self.graphics_device.queue(),
-                    ModelUniform::new(item.model()),
-                );
+                self.model_renderer
+                    .update(self.graphics_device.queue(), item.model());
 
-                self.material_renderer.update(
-                    self.graphics_device.queue(),
-                    MaterialUniform::new(item.material().base_color()),
-                );
+                self.material_renderer
+                    .update(self.graphics_device.queue(), item.material().base_color());
 
                 render_pass.set_bind_group(1, self.model_renderer.bind_group(), &[]);
 

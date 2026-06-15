@@ -34,7 +34,8 @@ impl MaterialRenderer {
 }
 
 impl MaterialRenderer {
-    pub fn update(&self, queue: &Queue, uniform: MaterialUniform) {
+    pub fn update(&self, queue: &Queue, color: Vec4) {
+        let uniform = MaterialUniform::new(color);
         queue.write_buffer(&self.buffer, 0, bytes_of(&uniform));
     }
 

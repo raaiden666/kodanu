@@ -34,7 +34,8 @@ impl ModelRenderer {
 }
 
 impl ModelRenderer {
-    pub fn update(&self, queue: &Queue, uniform: ModelUniform) {
+    pub fn update(&self, queue: &Queue, model: Mat4) {
+        let uniform = ModelUniform::new(model);
         queue.write_buffer(&self.buffer, 0, bytes_of(&uniform));
     }
 

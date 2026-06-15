@@ -9,7 +9,9 @@ impl Mesh {
     pub fn new(vertices: Vec<Vertex>, indices: Vec<u32>) -> Self {
         Self { vertices, indices }
     }
+}
 
+impl Mesh {
     pub fn vertices(&self) -> &[Vertex] {
         &self.vertices
     }

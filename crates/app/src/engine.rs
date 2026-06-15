@@ -15,7 +15,7 @@ pub struct Engine {
 impl Engine {
     pub async fn new(window: &Window) -> Self {
         Self {
-            renderer: Renderer::new(window).await,
+            renderer: Renderer::new(window),
             input: Input::default(),
             time: Time::default(),
         }

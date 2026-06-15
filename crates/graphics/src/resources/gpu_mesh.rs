@@ -13,7 +13,7 @@ pub struct GpuMesh {
 }
 
 impl GpuMesh {
-    pub fn from_mesh(device: &Device, mesh: &Mesh) -> Self {
+    pub fn new(device: &Device, mesh: &Mesh) -> Self {
         let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
             label: Some("Vertex Buffer"),
             contents: cast_slice(mesh.vertices()),

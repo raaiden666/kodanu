@@ -26,7 +26,7 @@ impl MeshCache {
             return Arc::clone(gpu_mesh);
         }
 
-        let gpu_mesh = Arc::new(GpuMesh::from_mesh(device, mesh));
+        let gpu_mesh = Arc::new(GpuMesh::new(device, mesh));
 
         self.meshes.insert(key, Arc::clone(&gpu_mesh));
 

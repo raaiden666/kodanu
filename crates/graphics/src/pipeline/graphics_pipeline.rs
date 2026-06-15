@@ -65,8 +65,10 @@ impl GraphicsPipeline {
 
         Self { pipeline }
     }
+}
 
-    pub fn raw(&self) -> &RenderPipeline {
+impl GraphicsPipeline {
+    pub fn pipeline(&self) -> &RenderPipeline {
         &self.pipeline
     }
 }
