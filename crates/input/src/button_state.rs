@@ -1,6 +1,6 @@
 use std::{collections::HashSet, hash::Hash};
 
-pub struct ButtonState<T>
+pub(crate) struct ButtonState<T>
 where
     T: Eq + Hash + Copy,
 {

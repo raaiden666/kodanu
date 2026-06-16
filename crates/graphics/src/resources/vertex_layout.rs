@@ -2,7 +2,7 @@ use wgpu::{BufferAddress, VertexAttribute, VertexBufferLayout, VertexFormat, Ver
 
 use assets::Vertex;
 
-pub struct VertexLayout;
+pub(crate) struct VertexLayout;
 
 impl VertexLayout {
     pub const ATTRIBUTES: [VertexAttribute; 1] = [VertexAttribute {

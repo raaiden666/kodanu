@@ -9,7 +9,7 @@ use wgpu::{
     RequestAdapterOptions, Surface, SurfaceConfiguration, TextureFormat, TextureUsages, Trace,
 };
 
-pub fn create_instance() -> Instance {
+pub(crate) fn create_instance() -> Instance {
     Instance::new({
         InstanceDescriptor {
             backends: Backends::VULKAN | Backends::METAL | Backends::DX12,
@@ -21,7 +21,7 @@ pub fn create_instance() -> Instance {
     })
 }
 
-pub async fn create_adapter(instance: &Instance, surface: &Surface<'_>) -> Adapter {
+pub(crate) async fn create_adapter(instance: &Instance, surface: &Surface<'_>) -> Adapter {
     instance
         .request_adapter(&RequestAdapterOptions {
             power_preference: PowerPreference::HighPerformance,
@@ -32,7 +32,7 @@ pub async fn create_adapter(instance: &Instance, surface: &Surface<'_>) -> Adapt
         .expect("Failed to create adapter")
 }
 
-pub async fn create_device(adapter: &Adapter) -> (Device, Queue) {
+pub(crate) async fn create_device(adapter: &Adapter) -> (Device, Queue) {
     adapter
         .request_device(&DeviceDescriptor {
             label: Some("Device"),
@@ -46,7 +46,7 @@ pub async fn create_device(adapter: &Adapter) -> (Device, Queue) {
         .expect("Failed to create device")
 }
 
-pub fn create_surface_configuration(
+pub(crate) fn create_surface_configuration(
     size: UVec2,
     format: TextureFormat,
     alpha_mode: CompositeAlphaMode,
@@ -63,7 +63,9 @@ pub fn create_surface_configuration(
     }
 }
 
-pub async fn create_device_and_surface(window: &Window) -> (GraphicsDevice, Surface<'static>) {
+pub(crate) async fn create_device_and_surface(
+    window: &Window,
+) -> (GraphicsDevice, Surface<'static>) {
     let instance = create_instance();
 
     let surface = window.create_surface(&instance);

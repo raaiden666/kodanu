@@ -6,7 +6,7 @@ use {
     wgpu::Device,
 };
 
-pub struct MeshCache {
+pub(crate) struct MeshCache {
     meshes: HashMap<usize, Arc<GpuMesh>>,
 }
 

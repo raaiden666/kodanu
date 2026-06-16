@@ -5,9 +5,7 @@ use input::{handle_cursor_move, handle_keyboard_input, handle_mouse_input, handl
 use {
     anyhow::{Ok, Result},
     input::KeyCode,
-    math::DVec2,
-    math::UVec2,
-    pollster::block_on,
+    math::{DVec2, UVec2},
     std::sync::Arc,
     tracing::info,
     window::{Window, WindowConfig},
@@ -56,7 +54,7 @@ impl ApplicationHandler for App {
             .expect("Failed to create native window");
 
         let window = Window::new(Arc::new(raw_window));
-        let engine = block_on(Engine::new(&window));
+        let engine = Engine::new(&window);
 
         window.request_redraw();
 

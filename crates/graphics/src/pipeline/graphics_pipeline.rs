@@ -5,7 +5,7 @@ use wgpu::{
     RenderPipelineDescriptor, ShaderModuleDescriptor, ShaderSource, TextureFormat, VertexState,
 };
 
-pub struct GraphicsPipeline {
+pub(crate) struct GraphicsPipeline {
     pipeline: RenderPipeline,
 }
 

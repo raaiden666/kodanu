@@ -5,7 +5,7 @@ use {
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy, Pod, Zeroable)]
-pub struct ModelUniform {
+pub(crate) struct ModelUniform {
     model: [[f32; 4]; 4],
 }
 

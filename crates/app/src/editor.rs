@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use {
     assets::{Material, Mesh},
     components::{MeshRenderer, Transform},
@@ -8,7 +10,7 @@ use {
     time::Time,
 };
 
-pub struct Editor {
+pub(crate) struct Editor {
     scene: Scene,
     scene_camera: SceneCamera,
 }
@@ -43,7 +45,7 @@ impl Editor {
         items
     }
 
-    pub fn init_test_mesh(&mut self) {
+    pub(crate) fn init_test_mesh(&mut self) {
         self.scene_camera
             .transform_mut()
             .set_position(Vec3::new(0.0, 0.0, 5.0));

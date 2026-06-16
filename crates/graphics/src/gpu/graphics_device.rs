@@ -1,6 +1,6 @@
 use wgpu::{Adapter, CommandEncoder, CommandEncoderDescriptor, Device, Queue};
 
-pub struct GraphicsDevice {
+pub(crate) struct GraphicsDevice {
     adapter: Adapter,
     device: Device,
     queue: Queue,

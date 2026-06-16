@@ -6,14 +6,14 @@ use {
     window::Window,
 };
 
-pub struct Engine {
+pub(crate) struct Engine {
     renderer: Renderer,
     input: Input,
     time: Time,
 }
 
 impl Engine {
-    pub async fn new(window: &Window) -> Self {
+    pub fn new(window: &Window) -> Self {
         Self {
             renderer: Renderer::new(window),
             input: Input::default(),

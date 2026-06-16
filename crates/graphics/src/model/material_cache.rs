@@ -7,7 +7,7 @@ use {
     wgpu::Device,
 };
 
-pub struct MaterialCache {
+pub(crate) struct MaterialCache {
     materials: HashMap<usize, Arc<GpuMaterial>>,
 }
 

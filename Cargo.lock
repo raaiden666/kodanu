@@ -97,7 +97,6 @@ dependencies = [
  "graphics",
  "input",
  "math",
- "pollster",
  "time",
  "tracing",
  "window",
@@ -157,9 +156,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "app",
- "input",
  "tracing-subscriber",
- "window",
 ]
 
 [[package]]
@@ -315,7 +312,6 @@ name = "components"
 version = "0.1.0"
 dependencies = [
  "assets",
- "graphics",
  "math",
 ]
 
@@ -445,7 +441,6 @@ version = "0.1.0"
 dependencies = [
  "components",
  "ecs",
- "graphics",
  "input",
  "math",
  "time",
@@ -908,7 +903,6 @@ name = "math"
 version = "0.1.0"
 dependencies = [
  "glam",
- "winit",
 ]
 
 [[package]]

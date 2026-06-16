@@ -1,3 +1,3 @@
 mod graphics_pipeline;
 
-pub use graphics_pipeline::GraphicsPipeline;
+pub(crate) use graphics_pipeline::GraphicsPipeline;

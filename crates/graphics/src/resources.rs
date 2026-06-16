@@ -1,3 +1,3 @@
 mod vertex_layout;
 
-pub use vertex_layout::VertexLayout;
+pub(crate) use vertex_layout::VertexLayout;

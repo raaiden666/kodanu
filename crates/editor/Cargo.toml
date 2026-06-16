@@ -12,4 +12,3 @@ components = { workspace = true }
 input = { workspace = true }
 time = { workspace = true }
 math = { workspace = true }
-graphics = { workspace = true }

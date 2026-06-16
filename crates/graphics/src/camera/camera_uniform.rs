@@ -5,7 +5,7 @@ use {
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy, Pod, Zeroable)]
-pub struct CameraUniform {
+pub(crate) struct CameraUniform {
     view_projection: [[f32; 4]; 4],
 }
 

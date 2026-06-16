@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use crate::MaterialUniform;
 
 use wgpu::{
@@ -7,7 +8,7 @@ use wgpu::{
 
 use {assets::Material, bytemuck::bytes_of};
 
-pub struct GpuMaterial {
+pub(crate) struct GpuMaterial {
     buffer: Buffer,
     bind_group: BindGroup,
 }

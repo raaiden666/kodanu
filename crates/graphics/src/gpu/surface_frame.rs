@@ -1,6 +1,6 @@
 use wgpu::SurfaceTexture;
 
-pub enum SurfaceFrame {
+pub(crate) enum SurfaceFrame {
     Ready(SurfaceTexture),
     Suboptimal(SurfaceTexture),
     Timeout,

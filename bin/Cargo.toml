@@ -7,6 +7,4 @@ edition = "2024"
 anyhow = { workspace = true }
 tracing-subscriber = { workspace = true }
 
-window = { workspace = true }
 app = { workspace = true }
-input = { workspace = true }

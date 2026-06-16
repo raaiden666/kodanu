@@ -9,7 +9,7 @@ use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
 };
 
-pub struct CameraRenderer {
+pub(crate) struct CameraRenderer {
     buffer: Buffer,
     bind_group: BindGroup,
     bind_group_layout: BindGroupLayout,

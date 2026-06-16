@@ -3,5 +3,5 @@ mod editor;
 mod engine;
 
 pub use app::App;
-pub use editor::Editor;
-pub use engine::Engine;
+pub(crate) use editor::Editor;
+pub(crate) use engine::Engine;

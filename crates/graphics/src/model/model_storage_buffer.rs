@@ -8,7 +8,7 @@ use wgpu::{
 
 use bytemuck::cast_slice;
 
-pub struct ModelSrorageBuffer {
+pub(crate) struct ModelSrorageBuffer {
     buffer: Buffer,
     bind_group: BindGroup,
     bind_group_layout: BindGroupLayout,

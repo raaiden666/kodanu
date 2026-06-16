@@ -1,10 +1,12 @@
+#![allow(dead_code)]
+
 use crate::gpu::SurfaceFrame;
 
 use wgpu::{CurrentSurfaceTexture, Device, Surface, SurfaceConfiguration, TextureFormat};
 
 use math::UVec2;
 
-pub struct RenderSurface {
+pub(crate) struct RenderSurface {
     surface: Surface<'static>,
     config: SurfaceConfiguration,
     size: UVec2,

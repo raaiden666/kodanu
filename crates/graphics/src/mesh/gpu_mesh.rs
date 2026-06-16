@@ -5,7 +5,7 @@ use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
 };
 
-pub struct GpuMesh {
+pub(crate) struct GpuMesh {
     vertex_buffer: Buffer,
     index_buffer: Buffer,
     index_count: u32,

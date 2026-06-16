@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use {
     bytemuck::{Pod, Zeroable},
     math::Vec4,
@@ -5,7 +7,7 @@ use {
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy, Pod, Zeroable)]
-pub struct MaterialUniform {
+pub(crate) struct MaterialUniform {
     base_color: [f32; 4],
 }
 
