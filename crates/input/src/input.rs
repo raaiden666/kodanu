@@ -1,11 +1,6 @@
-use crate::{KeyCode, MouseKey, button_state::ButtonState, map_key_code, map_mouse_button};
+use crate::{KeyCode, MouseKey, button_state::ButtonState};
 
 use math::{DVec2, Vec2};
-
-use winit::{
-    event::{ElementState, KeyEvent, MouseButton, MouseScrollDelta},
-    keyboard::PhysicalKey,
-};
 
 pub struct Input {
     keyboard: ButtonState<KeyCode>,
@@ -79,70 +74,19 @@ impl Input {
 }
 
 impl Input {
-    fn press_key(&mut self, key: KeyCode) {
+    pub(crate) fn press_key(&mut self, key: KeyCode) {
         self.keyboard.press(key);
     }
 
-    fn release_key(&mut self, key: KeyCode) {
+    pub(crate) fn release_key(&mut self, key: KeyCode) {
         self.keyboard.release(key);
     }
 
-    fn press_mouse_button(&mut self, button: MouseKey) {
+    pub(crate) fn press_mouse_button(&mut self, button: MouseKey) {
         self.mouse.press(button);
     }
 
-    fn release_mouse_button(&mut self, button: MouseKey) {
+    pub(crate) fn release_mouse_button(&mut self, button: MouseKey) {
         self.mouse.release(button);
-    }
-}
-
-impl Input {
-    pub fn handle_keyboard_input(&mut self, event: &KeyEvent) {
-        let PhysicalKey::Code(key_code) = event.physical_key else {
-            return;
-        };
-
-        let Some(key_code) = map_key_code(key_code) else {
-            return;
-        };
-
-        match event.state {
-            ElementState::Pressed => {
-                self.press_key(key_code);
-            }
-            ElementState::Released => {
-                self.release_key(key_code);
-            }
-        }
-    }
-
-    pub fn handle_mouse_input(&mut self, state: ElementState, button: MouseButton) {
-        let Some(button) = map_mouse_button(button) else {
-            return;
-        };
-
-        match state {
-            ElementState::Pressed => {
-                self.press_mouse_button(button);
-            }
-            ElementState::Released => {
-                self.release_mouse_button(button);
-            }
-        }
-    }
-
-    pub fn handle_cursor_move(&mut self, position: DVec2) {
-        self.set_mouse_position(position);
-    }
-
-    pub fn handle_mouse_wheel(&mut self, delta: MouseScrollDelta) {
-        match delta {
-            MouseScrollDelta::LineDelta(x, y) => {
-                self.add_mouse_wheel_delta(x, y);
-            }
-            MouseScrollDelta::PixelDelta(delta) => {
-                self.add_mouse_wheel_delta(delta.y as f32, delta.x as f32);
-            }
-        }
     }
 }

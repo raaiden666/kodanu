@@ -4,7 +4,7 @@ use {
     editor::{Scene, SceneCamera},
     graphics::RenderItem,
     input::Input,
-    math::Vec3,
+    math::{Quat, Vec3},
     time::Time,
 };
 
@@ -56,6 +56,7 @@ impl Editor {
         let mut tranform = Transform::default();
 
         tranform.set_position(Vec3::new(-2.0, 0.0, -1.0));
+        tranform.set_rotation(Quat::from_rotation_y(45.0));
 
         self.scene.world_mut().spawn((
             tranform,

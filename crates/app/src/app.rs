@@ -1,5 +1,7 @@
 use crate::{Editor, Engine};
 
+use input::{handle_cursor_move, handle_keyboard_input, handle_mouse_input, handle_mouse_wheel};
+
 use {
     anyhow::{Ok, Result},
     input::KeyCode,
@@ -99,18 +101,16 @@ impl ApplicationHandler for App {
                     .set_viewport_size(size.width, size.height);
             }
             WindowEvent::KeyboardInput { event, .. } => {
-                engine.input_mut().handle_keyboard_input(event);
+                handle_keyboard_input(engine.input_mut(), event);
             }
             WindowEvent::MouseInput { state, button, .. } => {
-                engine.input_mut().handle_mouse_input(*state, *button);
+                handle_mouse_input(engine.input_mut(), *state, *button);
             }
             WindowEvent::CursorMoved { position, .. } => {
-                engine
-                    .input_mut()
-                    .handle_cursor_move(DVec2::new(position.x, position.y));
+                handle_cursor_move(engine.input_mut(), DVec2::new(position.x, position.y));
             }
             WindowEvent::MouseWheel { delta, .. } => {
-                engine.input_mut().handle_mouse_wheel(*delta);
+                handle_mouse_wheel(engine.input_mut(), *delta);
             }
             _ => {}
         }
