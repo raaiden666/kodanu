@@ -51,7 +51,7 @@ pub fn handle_mouse_wheel(input: &mut Input, delta: MouseScrollDelta) {
             input.add_mouse_wheel_delta(x, y);
         }
         MouseScrollDelta::PixelDelta(delta) => {
-            input.add_mouse_wheel_delta(delta.y as f32, delta.x as f32);
+            input.add_mouse_wheel_delta(delta.x as f32, delta.y as f32);
         }
     }
 }

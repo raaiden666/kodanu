@@ -15,7 +15,7 @@ pub(crate) struct GpuMaterial {
 
 impl GpuMaterial {
     pub fn new(device: &Device, bind_group_layout: &BindGroupLayout, material: &Material) -> Self {
-        let uniform = MaterialUniform::new(material.base_color());
+        let uniform = MaterialUniform::from(material);
 
         let buffer = device.create_buffer_init(&BufferInitDescriptor {
             label: Some("Material Buffer"),

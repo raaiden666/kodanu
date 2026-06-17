@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use {
-    assets::{Material, Mesh},
+    assets::{Color, Material, Mesh},
     components::{MeshRenderer, Transform},
     editor::{Scene, SceneCamera},
     graphics::RenderItem,
@@ -52,7 +52,7 @@ impl Editor {
 
         self.scene.world_mut().spawn((
             Transform::default(),
-            MeshRenderer::new(Mesh::cube_2d(), Material::red_color()),
+            MeshRenderer::new(Mesh::cube_2d(), Material::new(Color::GREEN)),
         ));
 
         let mut tranform = Transform::default();
@@ -62,7 +62,7 @@ impl Editor {
 
         self.scene.world_mut().spawn((
             tranform,
-            MeshRenderer::new(Mesh::triangle_2d(), Material::green_color()),
+            MeshRenderer::new(Mesh::triangle_2d(), Material::new(Color::BLUE)),
         ));
     }
 }

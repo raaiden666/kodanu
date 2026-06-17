@@ -1,8 +1,8 @@
 #![allow(dead_code)]
 
 use {
+    assets::Material,
     bytemuck::{Pod, Zeroable},
-    math::Vec4,
 };
 
 #[repr(C)]
@@ -12,9 +12,9 @@ pub(crate) struct MaterialUniform {
 }
 
 impl MaterialUniform {
-    pub fn new(base_color: Vec4) -> Self {
+    pub fn new(base_color: [f32; 4]) -> Self {
         Self {
-            base_color: base_color.to_array(),
+            base_color: base_color,
         }
     }
 }
@@ -22,5 +22,13 @@ impl MaterialUniform {
 impl MaterialUniform {
     pub fn base_color(&self) -> [f32; 4] {
         self.base_color
+    }
+}
+
+impl From<&Material> for MaterialUniform {
+    fn from(maerial: &Material) -> Self {
+        Self {
+            base_color: maerial.color().value(),
+        }
     }
 }
