@@ -50,7 +50,7 @@ impl Editor {
             .transform_mut()
             .set_position(Vec3::new(0.0, 0.0, 5.0));
 
-        self.scene.world_mut().spawn((
+        self.scene.spawn((
             Transform::default(),
             MeshRenderer::new(Mesh::cube_2d(), Material::new(Color::GREEN)),
         ));
@@ -60,7 +60,7 @@ impl Editor {
         tranform.set_position(Vec3::new(-2.0, 0.0, -1.0));
         tranform.set_rotation(Quat::from_rotation_y(45.0));
 
-        self.scene.world_mut().spawn((
+        self.scene.spawn((
             tranform,
             MeshRenderer::new(Mesh::triangle_2d(), Material::new(Color::BLUE)),
         ));

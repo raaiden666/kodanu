@@ -15,7 +15,9 @@ impl MeshRenderer {
             material: Arc::new(material),
         }
     }
+}
 
+impl MeshRenderer {
     pub fn mesh(&self) -> &Mesh {
         &self.mesh.as_ref()
     }

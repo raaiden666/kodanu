@@ -5,7 +5,9 @@ mod mouse_key;
 mod winit_handler;
 mod winit_mapper;
 
-pub use {input::Input, key_code::KeyCode, mouse_key::MouseKey};
+pub use input::Input;
+pub use key_code::KeyCode;
+pub use mouse_key::MouseKey;
 
 pub use winit_handler::{
     handle_cursor_move, handle_keyboard_input, handle_mouse_input, handle_mouse_wheel,

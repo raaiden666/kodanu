@@ -6,14 +6,18 @@ pub struct Transform {
     scale: Vec3,
 }
 
+impl Transform {
+    pub const IDENTITY: Self = Self::new(Vec3::ZERO, Quat::IDENTITY, Vec3::ONE);
+}
+
 impl Default for Transform {
     fn default() -> Self {
-        Self::new(Vec3::ZERO, Quat::IDENTITY, Vec3::ONE)
+        Self::IDENTITY
     }
 }
 
 impl Transform {
-    pub fn new(position: Vec3, rotation: Quat, scale: Vec3) -> Self {
+    pub const fn new(position: Vec3, rotation: Quat, scale: Vec3) -> Self {
         Self {
             position,
             rotation,
@@ -23,15 +27,15 @@ impl Transform {
 }
 
 impl Transform {
-    pub fn position(&self) -> Vec3 {
+    pub const fn position(&self) -> Vec3 {
         self.position
     }
 
-    pub fn rotation(&self) -> Quat {
+    pub const fn rotation(&self) -> Quat {
         self.rotation
     }
 
-    pub fn scale(&self) -> Vec3 {
+    pub const fn scale(&self) -> Vec3 {
         self.scale
     }
 

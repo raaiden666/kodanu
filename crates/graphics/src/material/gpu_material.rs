@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+
 use crate::MaterialUniform;
 
 use wgpu::{
