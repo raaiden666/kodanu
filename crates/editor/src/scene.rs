@@ -1,4 +1,4 @@
-use ecs::{DynamicBundle, Entity, World};
+use ecs::World;
 
 #[derive(Default)]
 pub struct Scene {
@@ -6,20 +6,11 @@ pub struct Scene {
 }
 
 impl Scene {
-    pub fn spawn<B>(&mut self, bundle: B)
-    where
-        B: DynamicBundle,
-    {
-        self.world.spawn(bundle);
-    }
-
-    pub fn despawn(&mut self, entity: Entity) {
-        let _ = self.world.despawn(entity);
-    }
-}
-
-impl Scene {
     pub fn world(&self) -> &World {
         &self.world
+    }
+
+    pub fn world_mut(&mut self) -> &mut World {
+        &mut self.world
     }
 }

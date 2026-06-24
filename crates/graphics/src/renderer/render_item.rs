@@ -22,7 +22,7 @@ impl RenderItem {
 
 impl RenderItem {
     pub fn mesh(&self) -> &Mesh {
-        &self.mesh.as_ref()
+        self.mesh.as_ref()
     }
 
     pub fn mesh_handle(&self) -> Arc<Mesh> {

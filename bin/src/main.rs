@@ -9,7 +9,9 @@ fn main() -> Result<()> {
 
     fmt().with_env_filter(wgpu_hal_filter).init();
 
-    App::run()?;
+    let mut app = App::default();
+
+    app.run()?;
 
     Ok(())
 }

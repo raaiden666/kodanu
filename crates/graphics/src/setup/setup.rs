@@ -48,17 +48,17 @@ pub(crate) async fn create_device(adapter: &Adapter) -> (Device, Queue) {
 
 pub(crate) fn create_surface_configuration(
     size: UVec2,
-    format: TextureFormat,
-    alpha_mode: CompositeAlphaMode,
+    texture_format: TextureFormat,
+    composite_alpha_mode: CompositeAlphaMode,
 ) -> SurfaceConfiguration {
     SurfaceConfiguration {
         usage: TextureUsages::RENDER_ATTACHMENT,
-        format: format,
+        format: texture_format,
         width: size.x,
         height: size.y,
         present_mode: PresentMode::Fifo,
-        alpha_mode: alpha_mode,
-        view_formats: vec![format],
+        alpha_mode: composite_alpha_mode,
+        view_formats: vec![texture_format],
         desired_maximum_frame_latency: 2,
     }
 }

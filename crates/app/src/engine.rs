@@ -1,6 +1,6 @@
 use {
     graphics::{RenderItem, Renderer},
-    input::Input,
+    input::{ActionMap, Input},
     math::Mat4,
     time::Time,
     window::Window,
@@ -9,6 +9,7 @@ use {
 pub(crate) struct Engine {
     renderer: Renderer,
     input: Input,
+    action_map: ActionMap,
     time: Time,
 }
 
@@ -17,6 +18,7 @@ impl Engine {
         Self {
             renderer: Renderer::new(window),
             input: Input::default(),
+            action_map: ActionMap::default(),
             time: Time::default(),
         }
     }
@@ -52,6 +54,10 @@ impl Engine {
 
     pub fn input(&self) -> &Input {
         &self.input
+    }
+
+    pub fn action_map(&self) -> &ActionMap {
+        &self.action_map
     }
 
     pub fn input_mut(&mut self) -> &mut Input {

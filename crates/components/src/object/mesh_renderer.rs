@@ -19,7 +19,7 @@ impl MeshRenderer {
 
 impl MeshRenderer {
     pub fn mesh(&self) -> &Mesh {
-        &self.mesh.as_ref()
+        self.mesh.as_ref()
     }
 
     pub fn mesh_handle(&self) -> Arc<Mesh> {
@@ -27,10 +27,10 @@ impl MeshRenderer {
     }
 
     pub fn material(&self) -> &Material {
-        &self.material.as_ref()
+        self.material.as_ref()
     }
 
-    pub fn material_hanlde(&self) -> Arc<Material> {
+    pub fn material_handle(&self) -> Arc<Material> {
         Arc::clone(&self.material)
     }
 }

@@ -13,9 +13,7 @@ pub(crate) struct MaterialUniform {
 
 impl MaterialUniform {
     pub fn new(base_color: [f32; 4]) -> Self {
-        Self {
-            base_color: base_color,
-        }
+        Self { base_color }
     }
 }
 

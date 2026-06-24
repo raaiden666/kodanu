@@ -1,1 +1,1 @@
-pub use glam::{DVec2, Mat4, Quat, UVec2, Vec2, Vec3, Vec4};
+pub use glam::{DVec2, EulerRot, Mat4, Quat, UVec2, Vec2, Vec3, Vec4};

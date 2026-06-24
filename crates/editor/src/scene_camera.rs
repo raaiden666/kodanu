@@ -1,7 +1,7 @@
 use {
     components::{Camera, Transform},
-    input::{Input, KeyCode},
-    math::{Mat4, Quat, Vec3},
+    input::{ActionMap, Axis, Input},
+    math::{EulerRot, Mat4, Quat},
     time::Time,
 };
 
@@ -10,11 +10,13 @@ pub struct SceneCamera {
     transform: Transform,
     move_speed: f32,
     look_speed: f32,
+    yaw: f32,
+    pitch: f32,
 }
 
 impl SceneCamera {
-    pub const DEFAULT_MOVE_SPEED: f32 = 3.0;
-    pub const DEFAULT_LOOK_SPEED: f32 = 125.0;
+    pub const DEFAULT_MOVE_SPEED: f32 = 6.0;
+    pub const DEFAULT_LOOK_SPEED: f32 = 110.0;
 }
 
 impl Default for SceneCamera {
@@ -35,65 +37,26 @@ impl SceneCamera {
             transform,
             move_speed,
             look_speed: look_speed.to_radians(),
+            yaw: 0.0,
+            pitch: 0.0,
         }
     }
 }
 
 impl SceneCamera {
-    pub fn update(&mut self, input: &Input, time: &Time) {
-        let mut direction = Vec3::ZERO;
+    pub fn update(&mut self, input: &Input, action_map: &ActionMap, time: &Time) {
+        let direction = self.transform.forward() * action_map.axis(Axis::MoveY, input)
+            + -self.transform.right() * action_map.axis(Axis::MoveX, input)
+            + self.transform.up() * action_map.axis(Axis::MoveZ, input);
 
-        {
-            if input.key_pressed(KeyCode::W) {
-                direction += self.transform.forward();
-            }
-            if input.key_pressed(KeyCode::S) {
-                direction -= self.transform.forward();
-            }
+        self.transform
+            .translate(direction * self.move_speed * time.delta());
 
-            if input.key_pressed(KeyCode::A) {
-                direction -= self.transform.right();
-            }
-            if input.key_pressed(KeyCode::D) {
-                direction += self.transform.right();
-            }
+        self.yaw += action_map.axis(Axis::LookX, input) * self.look_speed * time.delta();
+        self.pitch += action_map.axis(Axis::LookY, input) * self.look_speed * time.delta();
 
-            if input.key_pressed(KeyCode::J) {
-                direction += self.transform.up()
-            }
-            if input.key_pressed(KeyCode::K) {
-                direction -= self.transform.up()
-            }
-        }
-
-        {
-            if input.key_pressed(KeyCode::H) {
-                self.transform.set_rotation(
-                    Quat::from_rotation_y(self.look_speed * time.delta())
-                        * self.transform.rotation(),
-                );
-            }
-            if input.key_pressed(KeyCode::L) {
-                self.transform.set_rotation(
-                    Quat::from_rotation_y(-self.look_speed * time.delta())
-                        * self.transform.rotation(),
-                );
-            }
-
-            if input.key_pressed(KeyCode::Q) {
-                self.transform
-                    .rotate(Quat::from_rotation_x(self.look_speed * time.delta()));
-            }
-            if input.key_pressed(KeyCode::E) {
-                self.transform
-                    .rotate(Quat::from_rotation_x(-self.look_speed * time.delta()));
-            }
-        }
-
-        if direction.length_squared() > 0.0 {
-            self.transform
-                .translate(direction.normalize() * self.move_speed * time.delta());
-        }
+        self.transform
+            .set_rotation(Quat::from_euler(EulerRot::YXZ, self.yaw, self.pitch, 0.0));
     }
 
     pub fn view_projection(&self) -> Mat4 {

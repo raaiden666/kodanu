@@ -5,41 +5,35 @@ use {
     components::{MeshRenderer, Transform},
     editor::{Scene, SceneCamera},
     graphics::RenderItem,
-    input::Input,
+    input::{ActionMap, Input},
     math::{Quat, Vec3},
     time::Time,
 };
 
+#[derive(Default)]
 pub(crate) struct Editor {
     scene: Scene,
     scene_camera: SceneCamera,
 }
 
-impl Default for Editor {
-    fn default() -> Self {
-        Self {
-            scene: Scene::default(),
-            scene_camera: SceneCamera::default(),
-        }
-    }
-}
-
 impl Editor {
-    pub fn update(&mut self, input: &Input, time: &Time) {
-        self.scene_camera.update(input, time);
+    pub fn update(&mut self, input: &Input, action_map: &ActionMap, time: &Time) {
+        self.scene_camera.update(input, action_map, time);
     }
 
-    pub fn collect_render_items(&self) -> Vec<RenderItem> {
-        let mut items = Vec::new();
+    pub fn collect_render_items(&mut self) -> Vec<RenderItem> {
+        let mut items = Vec::with_capacity(12);
 
         let mut query = self.scene.world().query::<(&Transform, &MeshRenderer)>();
 
         for (transform, mesh_renderer) in query.iter() {
-            items.push(RenderItem::new(
+            let (mesh, material, model) = (
                 mesh_renderer.mesh_handle(),
-                mesh_renderer.material_hanlde(),
+                mesh_renderer.material_handle(),
                 transform.matrix(),
-            ));
+            );
+
+            items.push(RenderItem::new(mesh, material, model));
         }
 
         items
@@ -50,7 +44,7 @@ impl Editor {
             .transform_mut()
             .set_position(Vec3::new(0.0, 0.0, 5.0));
 
-        self.scene.spawn((
+        self.scene.world_mut().spawn((
             Transform::default(),
             MeshRenderer::new(Mesh::cube_2d(), Material::new(Color::GREEN)),
         ));
@@ -60,7 +54,7 @@ impl Editor {
         tranform.set_position(Vec3::new(-2.0, 0.0, -1.0));
         tranform.set_rotation(Quat::from_rotation_y(45.0));
 
-        self.scene.spawn((
+        self.scene.world_mut().spawn((
             tranform,
             MeshRenderer::new(Mesh::triangle_2d(), Material::new(Color::BLUE)),
         ));

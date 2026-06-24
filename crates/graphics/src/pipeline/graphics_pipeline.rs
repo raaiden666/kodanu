@@ -1,8 +1,9 @@
 use crate::VertexLayout;
 
 use wgpu::{
-    BindGroupLayout, Device, FragmentState, PipelineLayoutDescriptor, RenderPipeline,
-    RenderPipelineDescriptor, ShaderModuleDescriptor, ShaderSource, TextureFormat, VertexState,
+    BindGroupLayout, Device, FragmentState, MultisampleState, PipelineCompilationOptions,
+    PipelineLayoutDescriptor, PrimitiveState, RenderPipeline, RenderPipelineDescriptor,
+    ShaderModuleDescriptor, ShaderSource, TextureFormat, VertexState,
 };
 
 pub(crate) struct GraphicsPipeline {
@@ -48,17 +49,17 @@ impl GraphicsPipeline {
                 module: &vs,
                 entry_point: Some("vs_main"),
                 buffers: &[VertexLayout::layout()],
-                compilation_options: Default::default(),
+                compilation_options: PipelineCompilationOptions::default(),
             },
             fragment: Some(FragmentState {
                 module: &fs,
                 entry_point: Some("fs_main"),
                 targets: &[Some(format.into())],
-                compilation_options: Default::default(),
+                compilation_options: PipelineCompilationOptions::default(),
             }),
-            primitive: Default::default(),
+            primitive: PrimitiveState::default(),
             depth_stencil: None,
-            multisample: Default::default(),
+            multisample: MultisampleState::default(),
             multiview_mask: None,
             cache: None,
         });

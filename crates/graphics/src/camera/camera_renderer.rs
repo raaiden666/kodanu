@@ -56,10 +56,14 @@ impl CameraRenderer {
         })
     }
 
-    fn create_bind_group(device: &Device, buffer: &Buffer, layout: &BindGroupLayout) -> BindGroup {
+    fn create_bind_group(
+        device: &Device,
+        buffer: &Buffer,
+        bind_group_layout: &BindGroupLayout,
+    ) -> BindGroup {
         device.create_bind_group(&BindGroupDescriptor {
             label: Some("Camera Bind Group"),
-            layout: layout,
+            layout: bind_group_layout,
             entries: &[BindGroupEntry {
                 binding: 0,
                 resource: buffer.as_entire_binding(),

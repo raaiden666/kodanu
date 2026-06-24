@@ -1,5 +1,6 @@
 use winit::{dpi::PhysicalSize, window::WindowAttributes};
 
+#[derive(Debug)]
 pub struct WindowConfig {
     title: String,
     width: u32,
@@ -23,7 +24,7 @@ impl WindowConfig {
 impl Default for WindowConfig {
     fn default() -> Self {
         Self {
-            title: Self::DEFAULT_TITLE_STR.into(),
+            title: Self::DEFAULT_TITLE_STR.to_string(),
             width: Self::DEFAULT_WIDTH,
             height: Self::DEFAULT_HEIGHT,
             min_width: Self::DEFAULT_MIN_WIDTH,

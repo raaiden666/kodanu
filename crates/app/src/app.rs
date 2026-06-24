@@ -18,6 +18,7 @@ use winit::{
     window::WindowId,
 };
 
+#[derive(Default)]
 pub struct App {
     window: Option<Window>,
     engine: Option<Engine>,
@@ -26,24 +27,14 @@ pub struct App {
 }
 
 impl App {
-    pub fn run() -> Result<()> {
+    pub fn run(&mut self) -> Result<()> {
         let event_loop = EventLoop::new()?;
-        let mut app = Self::new();
 
         info!(target: "App::Run()", "App started");
 
-        event_loop.run_app(&mut app)?;
+        event_loop.run_app(self)?;
 
         Ok(())
-    }
-
-    fn new() -> Self {
-        Self {
-            window: None,
-            engine: None,
-            editor: Editor::default(),
-            config: WindowConfig::default(),
-        }
     }
 }
 
@@ -86,7 +77,7 @@ impl ApplicationHandler for App {
 
                 if let Some(window) = &self.window {
                     window.request_redraw();
-                };
+                }
             }
             WindowEvent::Resized(size) => {
                 engine
@@ -123,11 +114,16 @@ impl App {
 
         engine.time_update();
 
-        self.editor.update(engine.input(), engine.time());
+        self.editor
+            .update(engine.input(), engine.action_map(), engine.time());
 
         if engine.input().key_just_pressed(KeyCode::Escape) {
             info!(target: "App::Frame()", "App closed");
             event_loop.exit();
+        }
+
+        if engine.input().key_just_pressed(KeyCode::Enter) {
+            info!(target: "App::Frame()", "{:#?}", self.config)
         }
 
         engine.render(

@@ -2,24 +2,13 @@ use crate::{KeyCode, MouseKey, button_state::ButtonState};
 
 use math::{DVec2, Vec2};
 
+#[derive(Default)]
 pub struct Input {
     keyboard: ButtonState<KeyCode>,
     mouse: ButtonState<MouseKey>,
 
     mouse_position: DVec2,
     mouse_wheel_delta: Vec2,
-}
-
-impl Default for Input {
-    fn default() -> Self {
-        Self {
-            keyboard: ButtonState::default(),
-            mouse: ButtonState::default(),
-
-            mouse_position: DVec2::ZERO,
-            mouse_wheel_delta: Vec2::ZERO,
-        }
-    }
 }
 
 impl Input {
