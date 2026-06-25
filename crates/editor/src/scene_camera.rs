@@ -1,5 +1,6 @@
 use {
-    components::{Camera, Transform},
+    codanu_transform::Transform,
+    components::Camera,
     input::{ActionMap, Axis, Input},
     math::{EulerRot, Mat4, Quat},
     time::Time,

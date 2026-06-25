@@ -19,3 +19,4 @@ time = { workspace = true }
 editor = { workspace = true }
 components = { workspace = true }
 assets = { workspace = true }
+codanu_transform = { workspace = true }

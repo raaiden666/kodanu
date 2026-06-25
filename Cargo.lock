@@ -92,6 +92,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "assets",
+ "codanu_transform",
  "components",
  "editor",
  "graphics",
@@ -288,6 +289,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "613afe47fcd5fac7ccf1db93babcb082c5994d996f20b8b159f2ad1658eb5724"
 
 [[package]]
+name = "codanu_transform"
+version = "0.1.0"
+dependencies = [
+ "math",
+]
+
+[[package]]
 name = "codespan-reporting"
 version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -440,6 +448,7 @@ dependencies = [
 name = "editor"
 version = "0.1.0"
 dependencies = [
+ "codanu_transform",
  "components",
  "ecs",
  "input",

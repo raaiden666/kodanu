@@ -10,6 +10,7 @@ members = [
     "crates/input",
     "crates/math",
     "crates/time",
+    "crates/codanu_transform",
     "crates/window"
 ]
 
@@ -38,3 +39,4 @@ window = { package = "window", path = "crates/window" }
 editor = { package = "editor", path = "crates/editor" }
 ecs = { package = "ecs", path = "crates/ecs" }
 assets = { package = "assets", path = "crates/assets" }
+codanu_transform = { package = "codanu_transform", path = "crates/codanu_transform" }

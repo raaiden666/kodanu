@@ -2,7 +2,8 @@
 
 use {
     assets::{Color, Material, Mesh},
-    components::{MeshRenderer, Transform},
+    codanu_transform::Transform,
+    components::MeshRenderer,
     editor::{Scene, SceneCamera},
     graphics::RenderItem,
     input::{ActionMap, Input},
