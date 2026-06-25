@@ -1,6 +1,6 @@
-use {anyhow::Result, app::App};
+use {anyhow::Result, tracing_subscriber::EnvFilter, tracing_subscriber::fmt};
 
-use tracing_subscriber::{EnvFilter, fmt};
+use {app::App, window::WindowConfig};
 
 fn main() -> Result<()> {
     let wgpu_hal_filter = EnvFilter::new("info")
@@ -9,9 +9,11 @@ fn main() -> Result<()> {
 
     fmt().with_env_filter(wgpu_hal_filter).init();
 
-    let mut app = App::default();
+    let window_config = WindowConfig::default()
+        .with_title("Engine")
+        .with_decorations(false);
 
-    app.run()?;
+    App::default().with_window_config(window_config).run()?;
 
     Ok(())
 }

@@ -10,7 +10,8 @@ members = [
     "crates/input",
     "crates/math",
     "crates/time",
-    "crates/window",
+    "crates/transform",
+    "crates/window"
 ]
 
 resolver = "3"
@@ -19,7 +20,7 @@ resolver = "3"
 winit = { version = "0.30.13" }
 wgpu = { version = "29.0.3" }
 hecs = { version = "0.11.0" }
-glam = { version = "0.33.0", features = ["bytemuck"] }
+glam = { version = "0.33.0"}
 anyhow = { version = "1.0.102" }
 rayon = { version = "1.12.0" }
 bytemuck = { version = "1.25.0", features = ["derive"] }

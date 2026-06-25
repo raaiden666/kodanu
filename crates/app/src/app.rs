@@ -38,6 +38,13 @@ impl App {
     }
 }
 
+impl App {
+    pub fn with_window_config(mut self, config: WindowConfig) -> Self {
+        self.config = config;
+        self
+    }
+}
+
 impl ApplicationHandler for App {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         let raw_window = event_loop
