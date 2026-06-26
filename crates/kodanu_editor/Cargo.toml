@@ -1,0 +1,15 @@
+[package]
+name = "kodanu_editor"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+path = "src/_lib.rs"
+
+[dependencies]
+kodanu_ecs = { workspace = true }
+kodanu_camera = { workspace = true }
+kodanu_input = { workspace = true }
+kodanu_time = { workspace = true }
+kodanu_math = { workspace = true }
+kodanu_transform = { workspace = true }

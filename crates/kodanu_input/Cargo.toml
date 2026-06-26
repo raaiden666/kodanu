@@ -1,0 +1,12 @@
+[package]
+name = "kodanu_input"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+path = "src/_lib.rs"
+
+[dependencies]
+winit = { workspace = true }
+
+kodanu_math = { workspace = true }

@@ -1,18 +1,18 @@
 [workspace]
 members = [
     "bin",
-    "crates/app",
-    "crates/assets",
-    "crates/components",
-    "crates/ecs",
-    "crates/editor",
-    "crates/graphics",
-    "crates/input",
-    "crates/math",
-    "crates/time",
-    "crates/codanu_transform",
-    "crates/window"
-]
+    "crates/kodanu_app",
+    "crates/kodanu_assets",
+    "crates/kodanu_scene",
+    "crates/kodanu_ecs",
+    "crates/kodanu_editor",
+    "crates/kodanu_graphics",
+    "crates/kodanu_input",
+    "crates/kodanu_math",
+    "crates/kodanu_time",
+    "crates/kodanu_transform",
+    "crates/kodanu_window",
+    "crates/kodanu_camera"]
 
 resolver = "3"
 
@@ -29,14 +29,15 @@ pollster = { version = "0.4.0" }
 tracing = { version = "0.1.44" }
 tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
 
-app = { package = "app", path = "crates/app" }
-graphics = { package = "graphics", path = "crates/graphics" }
-input = { package = "input", path = "crates/input" }
-math = { package = "math", path = "crates/math" }
-components = { package = "components", path = "crates/components" }
-time = { package = "time", path = "crates/time" }
-window = { package = "window", path = "crates/window" }
-editor = { package = "editor", path = "crates/editor" }
-ecs = { package = "ecs", path = "crates/ecs" }
-assets = { package = "assets", path = "crates/assets" }
-codanu_transform = { package = "codanu_transform", path = "crates/codanu_transform" }
+kodanu_app = { package = "kodanu_app", path = "crates/kodanu_app" }
+kodanu_graphics = { package = "kodanu_graphics", path = "crates/kodanu_graphics" }
+kodanu_input = { package = "kodanu_input", path = "crates/kodanu_input" }
+kodanu_math = { package = "kodanu_math", path = "crates/kodanu_math" }
+kodanu_scene = { package = "kodanu_scene", path = "crates/kodanu_scene" }
+kodanu_time = { package = "kodanu_time", path = "crates/kodanu_time" }
+kodanu_window = { package = "kodanu_window", path = "crates/kodanu_window" }
+kodanu_editor = { package = "kodanu_editor", path = "crates/kodanu_editor" }
+kodanu_ecs = { package = "kodanu_ecs", path = "crates/kodanu_ecs" }
+kodanu_assets = { package = "kodanu_assets", path = "crates/kodanu_assets" }
+kodanu_transform = { package = "kodanu_transform", path = "crates/kodanu_transform" }
+kodanu_camera = { package = "kodanu_camera", path = "crates/kodanu_camera" }

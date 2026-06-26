@@ -87,24 +87,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f202df86484c868dbad7eaa557ef785d5c66295e41b460ef922eca0723b842c"
 
 [[package]]
-name = "app"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "assets",
- "codanu_transform",
- "components",
- "editor",
- "graphics",
- "input",
- "math",
- "time",
- "tracing",
- "window",
- "winit",
-]
-
-[[package]]
 name = "arrayref"
 version = "0.3.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -132,14 +114,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "assets"
-version = "0.1.0"
-dependencies = [
- "bytemuck",
- "math",
-]
-
-[[package]]
 name = "atomic-waker"
 version = "1.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -156,9 +130,9 @@ name = "bin"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "app",
+ "kodanu_app",
+ "kodanu_window",
  "tracing-subscriber",
- "window",
 ]
 
 [[package]]
@@ -289,13 +263,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "613afe47fcd5fac7ccf1db93babcb082c5994d996f20b8b159f2ad1658eb5724"
 
 [[package]]
-name = "codanu_transform"
-version = "0.1.0"
-dependencies = [
- "math",
-]
-
-[[package]]
 name = "codespan-reporting"
 version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -314,14 +281,6 @@ checksum = "ba5a308b75df32fe02788e748662718f03fde005016435c444eea572398219fd"
 dependencies = [
  "bytes",
  "memchr",
-]
-
-[[package]]
-name = "components"
-version = "0.1.0"
-dependencies = [
- "assets",
- "math",
 ]
 
 [[package]]
@@ -436,25 +395,6 @@ name = "dpi"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d8b14ccef22fc6f5a8f4d7d768562a182c04ce9a3b3157b91390b52ddfdf1a76"
-
-[[package]]
-name = "ecs"
-version = "0.1.0"
-dependencies = [
- "hecs",
-]
-
-[[package]]
-name = "editor"
-version = "0.1.0"
-dependencies = [
- "codanu_transform",
- "components",
- "ecs",
- "input",
- "math",
- "time",
-]
 
 [[package]]
 name = "equivalent"
@@ -636,18 +576,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "graphics"
-version = "0.1.0"
-dependencies = [
- "assets",
- "bytemuck",
- "math",
- "pollster",
- "wgpu",
- "window",
-]
-
-[[package]]
 name = "half"
 version = "2.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -716,14 +644,6 @@ checksum = "d466e9454f08e4a911e14806c24e16fba1b4c121d1ea474396f396069cf949d9"
 dependencies = [
  "equivalent",
  "hashbrown 0.17.1",
-]
-
-[[package]]
-name = "input"
-version = "0.1.0"
-dependencies = [
- "math",
- "winit",
 ]
 
 [[package]]
@@ -824,6 +744,113 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e2db585e1d738fc771bf08a151420d3ed193d9d895a36df7f6f8a9456b911ddc"
 
 [[package]]
+name = "kodanu_app"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "kodanu_assets",
+ "kodanu_editor",
+ "kodanu_graphics",
+ "kodanu_input",
+ "kodanu_math",
+ "kodanu_scene",
+ "kodanu_time",
+ "kodanu_transform",
+ "kodanu_window",
+ "tracing",
+ "winit",
+]
+
+[[package]]
+name = "kodanu_assets"
+version = "0.1.0"
+dependencies = [
+ "bytemuck",
+ "kodanu_math",
+]
+
+[[package]]
+name = "kodanu_camera"
+version = "0.1.0"
+dependencies = [
+ "kodanu_math",
+]
+
+[[package]]
+name = "kodanu_ecs"
+version = "0.1.0"
+dependencies = [
+ "hecs",
+]
+
+[[package]]
+name = "kodanu_editor"
+version = "0.1.0"
+dependencies = [
+ "kodanu_camera",
+ "kodanu_ecs",
+ "kodanu_input",
+ "kodanu_math",
+ "kodanu_time",
+ "kodanu_transform",
+]
+
+[[package]]
+name = "kodanu_graphics"
+version = "0.1.0"
+dependencies = [
+ "bytemuck",
+ "kodanu_assets",
+ "kodanu_math",
+ "kodanu_window",
+ "pollster",
+ "wgpu",
+]
+
+[[package]]
+name = "kodanu_input"
+version = "0.1.0"
+dependencies = [
+ "kodanu_math",
+ "winit",
+]
+
+[[package]]
+name = "kodanu_math"
+version = "0.1.0"
+dependencies = [
+ "glam",
+]
+
+[[package]]
+name = "kodanu_scene"
+version = "0.1.0"
+dependencies = [
+ "kodanu_assets",
+ "kodanu_math",
+]
+
+[[package]]
+name = "kodanu_time"
+version = "0.1.0"
+
+[[package]]
+name = "kodanu_transform"
+version = "0.1.0"
+dependencies = [
+ "kodanu_math",
+]
+
+[[package]]
+name = "kodanu_window"
+version = "0.1.0"
+dependencies = [
+ "kodanu_math",
+ "wgpu",
+ "winit",
+]
+
+[[package]]
 name = "lazy_static"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -903,13 +930,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d1525a2a28c7f4fa0fc98bb91ae755d1e2d1505079e05539e35bc876b5d65ae9"
 dependencies = [
  "regex-automata",
-]
-
-[[package]]
-name = "math"
-version = "0.1.0"
-dependencies = [
- "glam",
 ]
 
 [[package]]
@@ -1847,10 +1867,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "time"
-version = "0.1.0"
-
-[[package]]
 name = "tiny-skia"
 version = "0.11.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2380,15 +2396,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2a7b1c03c876122aa43f3020e6c3c3ee5c05081c9a00739faf7503aeba10d22"
 dependencies = [
  "windows-sys 0.61.2",
-]
-
-[[package]]
-name = "window"
-version = "0.1.0"
-dependencies = [
- "math",
- "wgpu",
- "winit",
 ]
 
 [[package]]

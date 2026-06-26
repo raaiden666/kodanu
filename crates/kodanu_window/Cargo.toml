@@ -1,0 +1,13 @@
+[package]
+name = "kodanu_window"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+path = "src/_lib.rs"
+
+[dependencies]
+winit = { workspace = true }
+wgpu = { workspace = true }
+
+kodanu_math = { workspace = true }

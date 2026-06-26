@@ -1,0 +1,22 @@
+[package]
+name = "kodanu_app"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+path = "src/_lib.rs"
+
+[dependencies]
+winit = { workspace = true }
+anyhow = { workspace = true }
+tracing = { workspace = true }
+
+kodanu_window = { workspace = true }
+kodanu_graphics = { workspace = true }
+kodanu_input = { workspace = true }
+kodanu_math = { workspace = true }
+kodanu_time = { workspace = true }
+kodanu_editor = { workspace = true }
+kodanu_scene = { workspace = true }
+kodanu_assets = { workspace = true }
+kodanu_transform = { workspace = true }

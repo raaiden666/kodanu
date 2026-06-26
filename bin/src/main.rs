@@ -1,6 +1,6 @@
 use {anyhow::Result, tracing_subscriber::EnvFilter, tracing_subscriber::fmt};
 
-use {app::App, window::WindowConfig};
+use {kodanu_app::App, kodanu_window::WindowConfig};
 
 fn main() -> Result<()> {
     let wgpu_hal_filter = EnvFilter::new("info")
@@ -10,7 +10,7 @@ fn main() -> Result<()> {
     fmt().with_env_filter(wgpu_hal_filter).init();
 
     let window_config = WindowConfig::default()
-        .with_title("Engine")
+        .with_title("Kodanu")
         .with_decorations(false);
 
     App::default().with_window_config(window_config).run()?;
