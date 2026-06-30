@@ -7,7 +7,7 @@ use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
 };
 
-use {kodanu_assets::Material, bytemuck::bytes_of};
+use {bytemuck::bytes_of, kodanu_assets::Material};
 
 pub(crate) struct GpuMaterial {
     buffer: Buffer,

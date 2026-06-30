@@ -1,8 +1,8 @@
 #![allow(dead_code)]
 
 use {
-    kodanu_assets::Material,
     bytemuck::{Pod, Zeroable},
+    kodanu_assets::Material,
 };
 
 #[repr(C)]

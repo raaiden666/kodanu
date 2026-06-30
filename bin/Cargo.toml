@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 anyhow = { workspace = true }
-tracing-subscriber = { workspace = true }
 
 kodanu_app = { workspace = true }
 kodanu_window = { workspace = true }
+kodanu_log = { workspace = true }

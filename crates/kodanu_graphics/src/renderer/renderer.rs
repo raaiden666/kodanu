@@ -13,7 +13,10 @@ use wgpu::{
     StoreOp, SurfaceTexture, TextureViewDescriptor,
 };
 
-use {kodanu_math::Mat4, kodanu_math::UVec2, pollster::block_on, std::iter::once, kodanu_window::Window};
+use {
+    kodanu_math::Mat4, kodanu_math::UVec2, kodanu_window::Window, pollster::block_on,
+    std::iter::once,
+};
 
 pub struct Renderer {
     graphics_device: GraphicsDevice,

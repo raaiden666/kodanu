@@ -10,9 +10,11 @@ use {
 use {
     anyhow::{Ok, Result},
     kodanu_input::KeyCode,
+    kodanu_log::LogConfig,
     kodanu_math::{DVec2, UVec2},
-    std::sync::Arc,
     kodanu_window::{Window, WindowConfig},
+    std::sync::Arc,
+    tracing_subscriber::fmt,
 };
 
 use winit::{
@@ -27,7 +29,8 @@ pub struct App {
     window: Option<Window>,
     engine: Option<Engine>,
     editor: Editor,
-    config: WindowConfig,
+    window_config: WindowConfig,
+    log_config: LogConfig,
 }
 
 impl App {
@@ -44,15 +47,22 @@ impl App {
 
 impl App {
     pub fn with_window_config(mut self, config: WindowConfig) -> Self {
-        self.config = config;
+        self.window_config = config;
+        self
+    }
+
+    pub fn with_log_config(mut self, config: LogConfig) -> Self {
+        self.log_config = config;
         self
     }
 }
 
 impl ApplicationHandler for App {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
+        fmt().with_env_filter(self.log_config.env_filter()).init();
+
         let raw_window = event_loop
-            .create_window(self.config.to_attributes())
+            .create_window(self.window_config.to_attributes())
             .expect("Failed to create native window");
 
         let window = Window::new(Arc::new(raw_window));
@@ -134,7 +144,7 @@ impl App {
         }
 
         if engine.input().key_just_pressed(KeyCode::Enter) {
-            info!(target: "App::Frame()", "{:#?}", self.config)
+            info!(target: "App::Frame()", "{:#?}", self.window_config)
         }
 
         engine.render(

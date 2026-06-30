@@ -1,0 +1,32 @@
+use tracing_subscriber::EnvFilter;
+
+#[derive(Debug, Clone)]
+pub struct LogConfig {
+    filter: EnvFilter,
+}
+
+impl Default for LogConfig {
+    fn default() -> Self {
+        Self {
+            filter: EnvFilter::new("info"),
+        }
+    }
+}
+
+impl LogConfig {
+    pub fn with_level(mut self, level: &str) -> Self {
+        self.filter = EnvFilter::new(level);
+        self
+    }
+
+    pub fn with_directive(mut self, directive: impl AsRef<str>) -> Self {
+        self.filter = self
+            .filter
+            .add_directive(directive.as_ref().parse().expect("Invalid Log Directive"));
+        self
+    }
+
+    pub fn env_filter(&self) -> EnvFilter {
+        self.filter.clone()
+    }
+}
