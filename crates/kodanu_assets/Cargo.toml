@@ -10,3 +10,4 @@ path = "src/_lib.rs"
 bytemuck = { workspace = true }
 
 kodanu_math = { workspace = true }
+kodanu_color = { workspace = true }

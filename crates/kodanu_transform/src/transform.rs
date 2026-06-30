@@ -27,15 +27,15 @@ impl Transform {
 }
 
 impl Transform {
-    pub const fn position(&self) -> Vec3 {
+    pub fn position(&self) -> Vec3 {
         self.position
     }
 
-    pub const fn rotation(&self) -> Quat {
+    pub fn rotation(&self) -> Quat {
         self.rotation
     }
 
-    pub const fn scale(&self) -> Vec3 {
+    pub fn scale(&self) -> Vec3 {
         self.scale
     }
 

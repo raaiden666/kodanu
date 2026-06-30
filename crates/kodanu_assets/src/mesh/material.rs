@@ -1,4 +1,4 @@
-use crate::Color;
+use kodanu_color::Color;
 
 pub struct Material {
     color: Color,

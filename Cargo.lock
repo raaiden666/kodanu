@@ -749,6 +749,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "kodanu_assets",
+ "kodanu_color",
  "kodanu_editor",
  "kodanu_graphics",
  "kodanu_input",
@@ -766,6 +767,7 @@ name = "kodanu_assets"
 version = "0.1.0"
 dependencies = [
  "bytemuck",
+ "kodanu_color",
  "kodanu_math",
 ]
 
@@ -775,6 +777,10 @@ version = "0.1.0"
 dependencies = [
  "kodanu_math",
 ]
+
+[[package]]
+name = "kodanu_color"
+version = "0.1.0"
 
 [[package]]
 name = "kodanu_ecs"

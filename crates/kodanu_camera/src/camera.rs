@@ -2,14 +2,9 @@ use crate::Projection;
 
 use kodanu_math::Mat4;
 
+#[derive(Default)]
 pub struct Camera {
     projection: Projection,
-}
-
-impl Default for Camera {
-    fn default() -> Self {
-        Self::new(Projection::default())
-    }
 }
 
 impl Camera {

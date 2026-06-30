@@ -20,3 +20,4 @@ kodanu_editor = { workspace = true }
 kodanu_scene = { workspace = true }
 kodanu_assets = { workspace = true }
 kodanu_transform = { workspace = true }
+kodanu_color = { workspace = true }

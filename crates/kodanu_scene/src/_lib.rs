@@ -1,3 +1,3 @@
-mod components;
+mod mesh_renderer;
 
-pub use components::MeshRenderer;
+pub use mesh_renderer::MeshRenderer;

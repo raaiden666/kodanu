@@ -1,7 +1,8 @@
 #![allow(dead_code)]
 
 use {
-    kodanu_assets::{Color, Material, Mesh},
+    kodanu_assets::{Material, Mesh},
+    kodanu_color::Color,
     kodanu_editor::{Scene, SceneCamera},
     kodanu_graphics::RenderItem,
     kodanu_input::{ActionMap, Input},
