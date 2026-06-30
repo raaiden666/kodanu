@@ -1,6 +1,6 @@
 use {
-    kodanu_input::{ActionMap, Input},
     kodanu_graphics::{RenderItem, Renderer},
+    kodanu_input::{ActionMap, Input},
     kodanu_math::Mat4,
     kodanu_time::Time,
     kodanu_window::Window,

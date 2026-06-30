@@ -131,8 +131,8 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "kodanu_app",
+ "kodanu_log",
  "kodanu_window",
- "tracing-subscriber",
 ]
 
 [[package]]
@@ -753,12 +753,14 @@ dependencies = [
  "kodanu_editor",
  "kodanu_graphics",
  "kodanu_input",
+ "kodanu_log",
  "kodanu_math",
  "kodanu_scene",
  "kodanu_time",
  "kodanu_transform",
  "kodanu_window",
  "tracing",
+ "tracing-subscriber",
  "winit",
 ]
 
@@ -819,6 +821,13 @@ version = "0.1.0"
 dependencies = [
  "kodanu_math",
  "winit",
+]
+
+[[package]]
+name = "kodanu_log"
+version = "0.1.0"
+dependencies = [
+ "tracing-subscriber",
 ]
 
 [[package]]

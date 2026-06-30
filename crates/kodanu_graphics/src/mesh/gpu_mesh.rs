@@ -1,4 +1,4 @@
-use {kodanu_assets::Mesh, bytemuck::cast_slice};
+use {bytemuck::cast_slice, kodanu_assets::Mesh};
 
 use wgpu::{
     Buffer, BufferUsages, Device,

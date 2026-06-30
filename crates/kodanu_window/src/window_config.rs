@@ -13,13 +13,13 @@ pub struct WindowConfig {
 
 impl WindowConfig {
     pub const DEFAULT_TITLE_STR: &str = "Engine";
-    
+
     pub const DEFAULT_WIDTH: u32 = 1440;
     pub const DEFAULT_HEIGHT: u32 = 720;
-    
+
     pub const DEFAULT_MIN_WIDTH: u32 = 600;
     pub const DEFAULT_MIN_HEIGHT: u32 = 400;
-    
+
     pub const DEFAULT_MAXIMIZED: bool = false;
     pub const DEFAULT_DECORATIONS: bool = true;
 }
