@@ -1,5 +1,6 @@
-use wgpu::{Adapter, CommandEncoder, CommandEncoderDescriptor, Device, Queue};
+use wgpu::{Adapter, Device, Queue};
 
+#[derive(Debug)]
 pub(crate) struct GraphicsDevice {
     adapter: Adapter,
     device: Device,
@@ -17,21 +18,17 @@ impl GraphicsDevice {
 }
 
 impl GraphicsDevice {
-    pub fn create_encoder(&self, label: &str) -> CommandEncoder {
-        self.device
-            .create_command_encoder(&CommandEncoderDescriptor { label: Some(label) })
-    }
-}
-
-impl GraphicsDevice {
+    #[inline]
     pub fn adapter(&self) -> &Adapter {
         &self.adapter
     }
 
+    #[inline]
     pub fn device(&self) -> &Device {
         &self.device
     }
 
+    #[inline]
     pub fn queue(&self) -> &Queue {
         &self.queue
     }

@@ -2,6 +2,7 @@ use crate::{KeyCode, MouseKey};
 
 use winit::{event::MouseButton as WinitMouseButton, keyboard::KeyCode as WinitKeyCode};
 
+#[inline]
 pub(crate) fn map_key_code(key: WinitKeyCode) -> Option<KeyCode> {
     match key {
         WinitKeyCode::KeyW => Some(KeyCode::W),
@@ -26,6 +27,7 @@ pub(crate) fn map_key_code(key: WinitKeyCode) -> Option<KeyCode> {
     }
 }
 
+#[inline]
 pub(crate) fn map_mouse_button(button: WinitMouseButton) -> Option<MouseKey> {
     match button {
         WinitMouseButton::Left => Some(MouseKey::Left),

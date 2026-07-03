@@ -26,31 +26,37 @@ impl<T> ButtonState<T>
 where
     T: Eq + Hash + Copy,
 {
+    #[inline]
     pub fn begin_frame(&mut self) {
         self.just_pressed.clear();
         self.just_released.clear();
     }
 
+    #[inline]
     pub fn press(&mut self, button: T) {
         if self.pressed.insert(button) {
             self.just_pressed.insert(button);
         }
     }
 
+    #[inline]
     pub fn release(&mut self, button: T) {
         if self.pressed.remove(&button) {
             self.just_released.insert(button);
         }
     }
 
+    #[inline]
     pub fn is_pressed(&self, button: T) -> bool {
         self.pressed.contains(&button)
     }
 
+    #[inline]
     pub fn is_just_pressed(&self, button: T) -> bool {
         self.just_pressed.contains(&button)
     }
 
+    #[inline]
     pub fn is_just_released(&self, button: T) -> bool {
         self.just_released.contains(&button)
     }

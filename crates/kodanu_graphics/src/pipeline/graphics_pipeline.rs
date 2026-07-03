@@ -6,6 +6,7 @@ use wgpu::{
     ShaderModuleDescriptor, ShaderSource, TextureFormat, VertexState,
 };
 
+#[derive(Debug)]
 pub(crate) struct GraphicsPipeline {
     pipeline: RenderPipeline,
 }
@@ -69,6 +70,7 @@ impl GraphicsPipeline {
 }
 
 impl GraphicsPipeline {
+    #[inline]
     pub fn pipeline(&self) -> &RenderPipeline {
         &self.pipeline
     }

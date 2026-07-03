@@ -22,7 +22,7 @@ impl LogConfig {
     pub fn with_directive(mut self, directive: impl AsRef<str>) -> Self {
         self.filter = self
             .filter
-            .add_directive(directive.as_ref().parse().expect("Invalid Log Directive"));
+            .add_directive(directive.as_ref().parse().expect("Invalid log directive"));
         self
     }
 

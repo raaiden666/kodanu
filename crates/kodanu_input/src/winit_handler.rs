@@ -7,6 +7,7 @@ use winit::{
 
 use kodanu_math::DVec2;
 
+#[inline]
 pub fn handle_keyboard_input(input: &mut Input, event: &KeyEvent) {
     let PhysicalKey::Code(key_code) = event.physical_key else {
         return;
@@ -26,6 +27,7 @@ pub fn handle_keyboard_input(input: &mut Input, event: &KeyEvent) {
     }
 }
 
+#[inline]
 pub fn handle_mouse_input(input: &mut Input, state: ElementState, button: MouseButton) {
     let Some(button) = map_mouse_button(button) else {
         return;
@@ -41,10 +43,12 @@ pub fn handle_mouse_input(input: &mut Input, state: ElementState, button: MouseB
     }
 }
 
+#[inline]
 pub fn handle_cursor_move(input: &mut Input, position: DVec2) {
     input.set_mouse_position(position);
 }
 
+#[inline]
 pub fn handle_mouse_wheel(input: &mut Input, delta: MouseScrollDelta) {
     match delta {
         MouseScrollDelta::LineDelta(x, y) => {

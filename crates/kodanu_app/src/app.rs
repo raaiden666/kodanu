@@ -1,10 +1,7 @@
 use crate::{Editor, Engine};
 
-use {
-    kodanu_input::{
-        handle_cursor_move, handle_keyboard_input, handle_mouse_input, handle_mouse_wheel,
-    },
-    tracing::info,
+use kodanu_input::{
+    handle_cursor_move, handle_keyboard_input, handle_mouse_input, handle_mouse_wheel,
 };
 
 use {
@@ -35,9 +32,9 @@ pub struct App {
 
 impl App {
     pub fn run(&mut self) -> Result<()> {
-        let event_loop = EventLoop::new()?;
+        fmt().with_env_filter(self.log_config.env_filter()).init();
 
-        info!(target: "App::Run()", "App started");
+        let event_loop = EventLoop::new()?;
 
         event_loop.run_app(self)?;
 
@@ -59,8 +56,6 @@ impl App {
 
 impl ApplicationHandler for App {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        fmt().with_env_filter(self.log_config.env_filter()).init();
-
         let raw_window = event_loop
             .create_window(self.window_config.to_attributes())
             .expect("Failed to create native window");
@@ -74,8 +69,6 @@ impl ApplicationHandler for App {
         self.engine = Some(engine);
 
         self.editor.init_test_mesh();
-
-        info!(target: "App::Resumed()", "App resumed");
     }
 
     fn window_event(
@@ -90,7 +83,6 @@ impl ApplicationHandler for App {
 
         match &event {
             WindowEvent::CloseRequested => {
-                info!("App::Window_Event(), CloseRequested");
                 event_loop.exit();
             }
             WindowEvent::RedrawRequested => {
@@ -139,12 +131,7 @@ impl App {
             .update(engine.input(), engine.action_map(), engine.time());
 
         if engine.input().key_just_pressed(KeyCode::Escape) {
-            info!(target: "App::Frame()", "App closed");
             event_loop.exit();
-        }
-
-        if engine.input().key_just_pressed(KeyCode::Enter) {
-            info!(target: "App::Frame()", "{:#?}", self.window_config)
         }
 
         engine.render(

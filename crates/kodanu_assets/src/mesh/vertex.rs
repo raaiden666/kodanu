@@ -13,6 +13,7 @@ impl Vertex {
 }
 
 impl Vertex {
+    #[inline]
     pub fn position(&self) -> [f32; 3] {
         self.position
     }

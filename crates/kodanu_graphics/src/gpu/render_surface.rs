@@ -1,11 +1,10 @@
-#![allow(dead_code)]
-
 use crate::gpu::SurfaceFrame;
 
-use wgpu::{CurrentSurfaceTexture, Device, Surface, SurfaceConfiguration, TextureFormat};
+use wgpu::{CurrentSurfaceTexture, Device, Surface, SurfaceConfiguration};
 
 use kodanu_math::UVec2;
 
+#[derive(Debug)]
 pub(crate) struct RenderSurface {
     surface: Surface<'static>,
     config: SurfaceConfiguration,
@@ -23,10 +22,6 @@ impl RenderSurface {
 }
 
 impl RenderSurface {
-    pub fn surface(&self) -> &Surface<'static> {
-        &self.surface
-    }
-
     pub fn config(&self) -> &SurfaceConfiguration {
         &self.config
     }
@@ -61,9 +56,5 @@ impl RenderSurface {
             CurrentSurfaceTexture::Lost => SurfaceFrame::Lost,
             CurrentSurfaceTexture::Validation => SurfaceFrame::Validation,
         }
-    }
-
-    pub fn format(&self) -> TextureFormat {
-        self.config.format
     }
 }

@@ -37,33 +37,40 @@ impl Engine {
             panic!("Wgpu validation error");
         }
     }
+}
 
+impl Engine {
+    #[inline]
     pub fn time_update(&mut self) {
         self.time.update();
     }
 
+    #[inline]
     pub fn begin_frame(&mut self) {
         self.input.begin_frame();
     }
-}
 
-impl Engine {
+    #[inline]
     pub fn time(&self) -> &Time {
         &self.time
     }
 
+    #[inline]
     pub fn input(&self) -> &Input {
         &self.input
     }
 
+    #[inline]
     pub fn action_map(&self) -> &ActionMap {
         &self.action_map
     }
 
+    #[inline]
     pub fn input_mut(&mut self) -> &mut Input {
         &mut self.input
     }
 
+    #[inline]
     pub fn renderer_mut(&mut self) -> &mut Renderer {
         &mut self.renderer
     }

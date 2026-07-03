@@ -9,6 +9,7 @@ pub enum FrameStatus {
 }
 
 impl FrameStatus {
+    #[inline]
     pub fn requires_surface_recovery(&self) -> bool {
         matches!(
             self,
@@ -16,6 +17,7 @@ impl FrameStatus {
         )
     }
 
+    #[inline]
     pub fn is_fatal(&self) -> bool {
         matches!(self, Self::Validation)
     }

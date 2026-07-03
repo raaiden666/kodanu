@@ -10,8 +10,8 @@ pub(crate) struct MeshCache {
     meshes: HashMap<usize, Arc<GpuMesh>>,
 }
 
-impl MeshCache {
-    pub fn new() -> Self {
+impl Default for MeshCache {
+    fn default() -> Self {
         Self {
             meshes: HashMap::with_capacity(128),
         }

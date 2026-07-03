@@ -2,7 +2,6 @@ use {anyhow::Result, kodanu_app::App, kodanu_log::LogConfig, kodanu_window::Wind
 
 fn main() -> Result<()> {
     let log_config = LogConfig::default()
-        .with_level("info")
         .with_directive("wgpu_hal=error")
         .with_directive("calloop=off");
 

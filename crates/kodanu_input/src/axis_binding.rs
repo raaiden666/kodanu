@@ -12,10 +12,12 @@ impl AxisBinding {
 }
 
 impl AxisBinding {
+    #[inline]
     pub fn positive(&self) -> KeyCode {
         self.positive
     }
 
+    #[inline]
     pub fn negative(&self) -> KeyCode {
         self.negative
     }

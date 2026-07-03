@@ -17,12 +17,6 @@ impl MaterialUniform {
     }
 }
 
-impl MaterialUniform {
-    pub fn base_color(&self) -> [f32; 4] {
-        self.base_color
-    }
-}
-
 impl From<&Material> for MaterialUniform {
     fn from(maerial: &Material) -> Self {
         Self {

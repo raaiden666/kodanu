@@ -1,5 +1,6 @@
 use crate::Vertex;
 
+#[derive(Debug)]
 pub struct Mesh {
     vertices: Vec<Vertex>,
     indices: Vec<u32>,
@@ -12,18 +13,22 @@ impl Mesh {
 }
 
 impl Mesh {
+    #[inline]
     pub fn vertices(&self) -> &[Vertex] {
         &self.vertices
     }
 
+    #[inline]
     pub fn indices(&self) -> &[u32] {
         &self.indices
     }
 
+    #[inline]
     pub fn vertex_count(&self) -> usize {
         self.vertices.len()
     }
 
+    #[inline]
     pub fn index_count(&self) -> usize {
         self.indices.len()
     }

@@ -2,6 +2,7 @@ use crate::PerspectiveProjection;
 
 use kodanu_math::Mat4;
 
+#[derive(Debug)]
 pub enum Projection {
     Perspective(PerspectiveProjection),
 }
@@ -13,6 +14,7 @@ impl Default for Projection {
 }
 
 impl Projection {
+    #[inline]
     pub fn matrix(&self) -> Mat4 {
         match self {
             Projection::Perspective(projection) => projection.matrix(),

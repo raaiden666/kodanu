@@ -9,6 +9,7 @@ use wgpu::{
 
 use {bytemuck::bytes_of, kodanu_assets::Material};
 
+#[derive(Debug)]
 pub(crate) struct GpuMaterial {
     buffer: Buffer,
     bind_group: BindGroup,
@@ -42,6 +43,7 @@ impl GpuMaterial {
         &self.buffer
     }
 
+    #[inline]
     pub fn bind_group(&self) -> &BindGroup {
         &self.bind_group
     }

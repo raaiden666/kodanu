@@ -18,18 +18,22 @@ impl MeshRenderer {
 }
 
 impl MeshRenderer {
+    #[inline]
     pub fn mesh(&self) -> &Mesh {
         self.mesh.as_ref()
     }
 
+    #[inline]
     pub fn mesh_handle(&self) -> Arc<Mesh> {
         Arc::clone(&self.mesh)
     }
 
+    #[inline]
     pub fn material(&self) -> &Material {
         self.material.as_ref()
     }
 
+    #[inline]
     pub fn material_handle(&self) -> Arc<Material> {
         Arc::clone(&self.material)
     }

@@ -11,8 +11,8 @@ pub(crate) struct MaterialCache {
     materials: HashMap<usize, Arc<GpuMaterial>>,
 }
 
-impl MaterialCache {
-    pub fn new() -> Self {
+impl Default for MaterialCache {
+    fn default() -> Self {
         Self {
             materials: HashMap::with_capacity(128),
         }

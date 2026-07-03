@@ -9,8 +9,8 @@ use crate::{
 };
 
 use wgpu::{
-    Color, IndexFormat, LoadOp, Operations, RenderPassColorAttachment, RenderPassDescriptor,
-    StoreOp, SurfaceTexture, TextureViewDescriptor,
+    Color, CommandEncoderDescriptor, IndexFormat, LoadOp, Operations, RenderPassColorAttachment,
+    RenderPassDescriptor, StoreOp, SurfaceTexture, TextureViewDescriptor,
 };
 
 use {
@@ -52,8 +52,8 @@ impl Renderer {
             material_layout.bind_group_layout(),
         );
 
-        let mesh_cache = MeshCache::new();
-        let material_cache = MaterialCache::new();
+        let mesh_cache = MeshCache::default();
+        let material_cache = MaterialCache::default();
 
         Self {
             graphics_device,
@@ -99,7 +99,12 @@ impl Renderer {
     fn draw_frame(&mut self, frame: SurfaceTexture, items: &[RenderItem]) {
         let view = frame.texture.create_view(&TextureViewDescriptor::default());
 
-        let mut encoder = self.graphics_device.create_encoder("Command Encoder");
+        let mut encoder =
+            self.graphics_device
+                .device()
+                .create_command_encoder(&CommandEncoderDescriptor {
+                    label: Some("Command Encoder"),
+                });
 
         {
             let mut render_pass = encoder.begin_render_pass(&RenderPassDescriptor {

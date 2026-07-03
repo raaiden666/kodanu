@@ -9,6 +9,7 @@ use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
 };
 
+#[derive(Debug)]
 pub(crate) struct CameraRenderer {
     buffer: Buffer,
     bind_group: BindGroup,
@@ -61,6 +62,7 @@ impl CameraRenderer {
         queue.write_buffer(&self.buffer, 0, bytes_of(&uniform));
     }
 
+    #[inline]
     pub fn bind_group(&self) -> &BindGroup {
         &self.bind_group
     }

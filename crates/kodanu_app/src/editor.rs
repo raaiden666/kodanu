@@ -64,14 +64,22 @@ impl Editor {
 }
 
 impl Editor {
+    #[inline]
     pub fn scene(&self) -> &Scene {
         &self.scene
     }
 
+    #[inline]
+    pub fn scene_mut(&mut self) -> &mut Scene {
+        &mut self.scene
+    }
+
+    #[inline]
     pub fn scene_camera(&self) -> &SceneCamera {
         &self.scene_camera
     }
 
+    #[inline]
     pub fn scene_camera_mut(&mut self) -> &mut SceneCamera {
         &mut self.scene_camera
     }

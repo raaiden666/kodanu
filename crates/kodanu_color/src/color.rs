@@ -4,21 +4,11 @@ pub struct Color {
 }
 
 impl Color {
-    pub const WHITE: Self = Self {
-        value: [1.0, 1.0, 1.0, 1.0],
-    };
-    pub const BLACK: Self = Self {
-        value: [0.0, 0.0, 0.0, 1.0],
-    };
-    pub const RED: Self = Self {
-        value: [1.0, 0.0, 0.0, 1.0],
-    };
-    pub const GREEN: Self = Self {
-        value: [0.0, 1.0, 0.0, 1.0],
-    };
-    pub const BLUE: Self = Self {
-        value: [0.0, 0.0, 1.0, 1.0],
-    };
+    pub const WHITE: Self = Self::rgba(1.0, 1.0, 1.0, 1.0);
+    pub const BLACK: Self = Self::rgba(0.0, 0.0, 0.0, 1.0);
+    pub const RED: Self = Self::rgba(1.0, 0.0, 0.0, 1.0);
+    pub const GREEN: Self = Self::rgba(0.0, 1.0, 0.0, 1.0);
+    pub const BLUE: Self = Self::rgba(0.0, 0.0, 1.0, 1.0);
 }
 
 impl Color {

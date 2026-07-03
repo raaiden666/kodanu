@@ -6,6 +6,7 @@ use {
     kodanu_transform::Transform,
 };
 
+#[derive(Debug)]
 pub struct SceneCamera {
     camera: Camera,
     transform: Transform,
@@ -59,25 +60,30 @@ impl SceneCamera {
         self.transform
             .set_rotation(Quat::from_euler(EulerRot::YXZ, self.yaw, self.pitch, 0.0));
     }
-
-    pub fn view_projection(&self) -> Mat4 {
-        self.camera.projection_matrix() * self.transform().view_matrix()
-    }
 }
 
 impl SceneCamera {
+    #[inline]
+    pub fn view_projection(&self) -> Mat4 {
+        self.camera.projection_matrix() * self.transform().view_matrix()
+    }
+
+    #[inline]
     pub fn camera(&self) -> &Camera {
         &self.camera
     }
 
+    #[inline]
     pub fn camera_mut(&mut self) -> &mut Camera {
         &mut self.camera
     }
 
+    #[inline]
     pub fn transform(&self) -> &Transform {
         &self.transform
     }
 
+    #[inline]
     pub fn transform_mut(&mut self) -> &mut Transform {
         &mut self.transform
     }

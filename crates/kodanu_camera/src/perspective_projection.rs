@@ -1,5 +1,6 @@
 use kodanu_math::Mat4;
 
+#[derive(Debug)]
 pub struct PerspectiveProjection {
     fov: f32,
     aspect_ratio: f32,
@@ -37,29 +38,33 @@ impl PerspectiveProjection {
 }
 
 impl PerspectiveProjection {
-    pub fn fov(&self) -> f32 {
-        self.fov.to_radians()
-    }
-
-    pub fn aspect_ratio(&self) -> f32 {
-        self.aspect_ratio
-    }
-
-    pub fn near(&self) -> f32 {
-        self.near
-    }
-
-    pub fn far(&self) -> f32 {
-        self.far
-    }
-}
-
-impl PerspectiveProjection {
+    #[inline]
     pub fn set_aspect_ratio(&mut self, aspect_ratio: f32) {
         self.aspect_ratio = aspect_ratio;
     }
 
+    #[inline]
     pub fn matrix(&self) -> Mat4 {
         Mat4::perspective_rh(self.fov, self.aspect_ratio, self.near, self.far)
+    }
+
+    #[inline]
+    pub fn fov(&self) -> f32 {
+        self.fov.to_radians()
+    }
+
+    #[inline]
+    pub fn aspect_ratio(&self) -> f32 {
+        self.aspect_ratio
+    }
+
+    #[inline]
+    pub fn near(&self) -> f32 {
+        self.near
+    }
+
+    #[inline]
+    pub fn far(&self) -> f32 {
+        self.far
     }
 }

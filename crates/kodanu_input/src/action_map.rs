@@ -12,14 +12,14 @@ impl Default for ActionMap {
         let mut actions = HashMap::with_capacity(128);
         let mut axis = HashMap::with_capacity(128);
 
-        actions.insert(Action::MoveForward, [KeyCode::W].to_vec());
-        actions.insert(Action::MoveBackward, [KeyCode::S].to_vec());
+        actions.insert(Action::MoveForward, vec![KeyCode::W]);
+        actions.insert(Action::MoveBackward, vec![KeyCode::S]);
 
-        actions.insert(Action::MoveLeft, [KeyCode::A].to_vec());
-        actions.insert(Action::MoveRight, [KeyCode::D].to_vec());
+        actions.insert(Action::MoveLeft, vec![KeyCode::A]);
+        actions.insert(Action::MoveRight, vec![KeyCode::D]);
 
-        actions.insert(Action::MoveUp, [KeyCode::Space].to_vec());
-        actions.insert(Action::MoveDown, [KeyCode::LeftCtrl].to_vec());
+        actions.insert(Action::MoveUp, vec![KeyCode::Space]);
+        actions.insert(Action::MoveDown, vec![KeyCode::LeftCtrl]);
 
         axis.insert(Axis::MoveX, AxisBinding::new(KeyCode::A, KeyCode::D));
         axis.insert(Axis::MoveY, AxisBinding::new(KeyCode::W, KeyCode::S));
@@ -32,18 +32,21 @@ impl Default for ActionMap {
     }
 }
 impl ActionMap {
+    #[inline]
     pub fn pressed(&self, action: &Action, input: &Input) -> bool {
         self.actions
             .get(action)
             .is_some_and(|keys| keys.iter().copied().any(|key| input.key_pressed(key)))
     }
 
+    #[inline]
     pub fn just_pressed(&self, action: &Action, input: &Input) -> bool {
         self.actions
             .get(action)
             .is_some_and(|keys| keys.iter().copied().any(|key| input.key_just_pressed(key)))
     }
 
+    #[inline]
     pub fn axis(&self, axis: Axis, input: &Input) -> f32 {
         let Some(binding) = self.axis.get(&axis) else {
             return 0.0;

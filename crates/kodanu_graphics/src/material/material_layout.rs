@@ -3,6 +3,7 @@ use wgpu::{
     BufferBindingType, Device, ShaderStages,
 };
 
+#[derive(Debug)]
 pub(crate) struct MaterialLayout {
     bind_group_layout: BindGroupLayout,
 }

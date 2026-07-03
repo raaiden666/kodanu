@@ -1,5 +1,6 @@
 use kodanu_math::{Mat4, Quat, Vec3};
 
+#[derive(Debug, Clone)]
 pub struct Transform {
     position: Vec3,
     rotation: Quat,
@@ -27,58 +28,71 @@ impl Transform {
 }
 
 impl Transform {
-    pub fn position(&self) -> Vec3 {
-        self.position
-    }
-
-    pub fn rotation(&self) -> Quat {
-        self.rotation
-    }
-
-    pub fn scale(&self) -> Vec3 {
-        self.scale
-    }
-
-    pub fn set_position(&mut self, position: Vec3) {
-        self.position = position;
-    }
-
-    pub fn set_rotation(&mut self, rotation: Quat) {
-        self.rotation = rotation;
-    }
-
-    pub fn set_scale(&mut self, scale: Vec3) {
-        self.scale = scale;
-    }
-
+    #[inline]
     pub fn matrix(&self) -> Mat4 {
         Mat4::from_scale_rotation_translation(self.scale, self.rotation, self.position)
     }
 
+    #[inline]
     pub fn view_matrix(&self) -> Mat4 {
         self.matrix().inverse()
+    }
+
+    #[inline]
+    pub fn set_position(&mut self, position: Vec3) {
+        self.position = position;
+    }
+
+    #[inline]
+    pub fn set_rotation(&mut self, rotation: Quat) {
+        self.rotation = rotation;
+    }
+
+    #[inline]
+    pub fn set_scale(&mut self, scale: Vec3) {
+        self.scale = scale;
+    }
+
+    #[inline]
+    pub fn position(&self) -> Vec3 {
+        self.position
+    }
+
+    #[inline]
+    pub fn rotation(&self) -> Quat {
+        self.rotation
+    }
+
+    #[inline]
+    pub fn scale(&self) -> Vec3 {
+        self.scale
     }
 }
 
 impl Transform {
+    #[inline]
     pub fn forward(&self) -> Vec3 {
         self.rotation * Vec3::NEG_Z
     }
 
+    #[inline]
     pub fn right(&self) -> Vec3 {
         self.rotation * Vec3::X
     }
 
+    #[inline]
     pub fn up(&self) -> Vec3 {
         self.rotation * Vec3::Y
     }
 }
 
 impl Transform {
+    #[inline]
     pub fn translate(&mut self, translation: Vec3) {
         self.position += translation;
     }
 
+    #[inline]
     pub fn rotate(&mut self, rotation: Quat) {
         self.rotation *= rotation;
     }

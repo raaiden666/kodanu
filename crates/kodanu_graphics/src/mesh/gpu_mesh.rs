@@ -5,6 +5,7 @@ use wgpu::{
     util::{BufferInitDescriptor, DeviceExt},
 };
 
+#[derive(Debug)]
 pub(crate) struct GpuMesh {
     vertex_buffer: Buffer,
     index_buffer: Buffer,
@@ -36,14 +37,17 @@ impl GpuMesh {
 }
 
 impl GpuMesh {
+    #[inline]
     pub fn vertex_buffer(&self) -> &Buffer {
         &self.vertex_buffer
     }
 
+    #[inline]
     pub fn index_buffer(&self) -> &Buffer {
         &self.index_buffer
     }
 
+    #[inline]
     pub fn index_count(&self) -> u32 {
         self.index_count
     }
