@@ -1,6 +1,6 @@
-use {anyhow::Result, kodanu_app::App, kodanu_log::LogConfig, kodanu_window::WindowConfig};
+use {kodanu_app::App, kodanu_log::LogConfig, kodanu_window::WindowConfig};
 
-fn main() -> Result<()> {
+fn main() {
     let log_config = LogConfig::default()
         .with_directive("wgpu_hal=error")
         .with_directive("calloop=off");
@@ -12,7 +12,5 @@ fn main() -> Result<()> {
     App::default()
         .with_window_config(window_config)
         .with_log_config(log_config)
-        .run()?;
-
-    Ok(())
+        .run();
 }

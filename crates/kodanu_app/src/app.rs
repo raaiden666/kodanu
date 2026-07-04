@@ -1,21 +1,20 @@
-use crate::{Editor, Engine};
+use crate::{AppConfig, AppRuntime, Editor};
+
+use {
+    kodanu_input::KeyCode,
+    kodanu_log::LogConfig,
+    kodanu_math::{DVec2, UVec2},
+    kodanu_window::WindowConfig,
+    tracing_subscriber::fmt,
+};
 
 use kodanu_input::{
     handle_cursor_move, handle_keyboard_input, handle_mouse_input, handle_mouse_wheel,
 };
 
-use {
-    anyhow::{Ok, Result},
-    kodanu_input::KeyCode,
-    kodanu_log::LogConfig,
-    kodanu_math::{DVec2, UVec2},
-    kodanu_window::{Window, WindowConfig},
-    std::sync::Arc,
-    tracing_subscriber::fmt,
-};
-
 use winit::{
     application::ApplicationHandler,
+    dpi::PhysicalSize,
     event::WindowEvent,
     event_loop::{ActiveEventLoop, EventLoop},
     window::WindowId,
@@ -23,52 +22,42 @@ use winit::{
 
 #[derive(Default)]
 pub struct App {
-    window: Option<Window>,
-    engine: Option<Engine>,
+    runtime: Option<AppRuntime>,
+    config: AppConfig,
     editor: Editor,
-    window_config: WindowConfig,
-    log_config: LogConfig,
 }
 
 impl App {
-    pub fn run(&mut self) -> Result<()> {
-        fmt().with_env_filter(self.log_config.env_filter()).init();
+    pub fn run(&mut self) {
+        let log_config = self.config.log_config();
+        let event_loop = EventLoop::new().expect("Failed to create event loop");
 
-        let event_loop = EventLoop::new()?;
+        fmt().with_env_filter(log_config.env_filter()).init();
 
-        event_loop.run_app(self)?;
+        self.editor.init_test_mesh();
 
-        Ok(())
+        event_loop.run_app(self).expect("Failed to run app");
     }
-}
 
-impl App {
     pub fn with_window_config(mut self, config: WindowConfig) -> Self {
-        self.window_config = config;
+        self.config.set_window_config(config);
         self
     }
 
     pub fn with_log_config(mut self, config: LogConfig) -> Self {
-        self.log_config = config;
+        self.config.set_log_config(config);
         self
     }
 }
 
 impl ApplicationHandler for App {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        let raw_window = event_loop
-            .create_window(self.window_config.to_attributes())
-            .expect("Failed to create native window");
+        if self.runtime.is_some() {
+            return;
+        }
 
-        let window = Window::new(Arc::new(raw_window));
-        let engine = Engine::new(&window);
-
-        window.request_redraw();
-
-        self.window = Some(window);
-        self.engine = Some(engine);
-
-        self.editor.init_test_mesh();
+        self.runtime =
+            Some(AppRuntime::new(event_loop, &self.config).expect("Failed to create app"));
     }
 
     fn window_event(
@@ -77,53 +66,24 @@ impl ApplicationHandler for App {
         _window_id: WindowId,
         event: WindowEvent,
     ) {
-        let Some(engine) = &mut self.engine else {
-            return;
-        };
-
-        match &event {
-            WindowEvent::CloseRequested => {
-                event_loop.exit();
-            }
-            WindowEvent::RedrawRequested => {
-                self.frame(event_loop);
-
-                if let Some(window) = &self.window {
-                    window.request_redraw();
-                }
-            }
-            WindowEvent::Resized(size) => {
-                engine
-                    .renderer_mut()
-                    .surface_resize(UVec2::new(size.width, size.height));
-
-                self.editor
-                    .scene_camera_mut()
-                    .camera_mut()
-                    .set_viewport_size(size.width, size.height);
-            }
-            WindowEvent::KeyboardInput { event, .. } => {
-                handle_keyboard_input(engine.input_mut(), event);
-            }
-            WindowEvent::MouseInput { state, button, .. } => {
-                handle_mouse_input(engine.input_mut(), *state, *button);
-            }
-            WindowEvent::CursorMoved { position, .. } => {
-                handle_cursor_move(engine.input_mut(), DVec2::new(position.x, position.y));
-            }
-            WindowEvent::MouseWheel { delta, .. } => {
-                handle_mouse_wheel(engine.input_mut(), *delta);
-            }
-            _ => {}
+        match event {
+            WindowEvent::CloseRequested => event_loop.exit(),
+            WindowEvent::RedrawRequested => self.handle_redraw(event_loop),
+            WindowEvent::Resized(size) => self.handle_resize(size),
+            _ => self.handle_input(event),
         }
     }
 }
 
 impl App {
-    fn frame(&mut self, event_loop: &ActiveEventLoop) {
-        let Some(engine) = &mut self.engine else {
+    fn handle_redraw(&mut self, event_loop: &ActiveEventLoop) {
+        let Some(runtime) = &mut self.runtime else {
             return;
         };
+
+        runtime.window_mut().request_redraw();
+
+        let engine = runtime.engine_mut();
 
         engine.time_update();
 
@@ -140,5 +100,46 @@ impl App {
         );
 
         engine.begin_frame();
+    }
+
+    fn handle_resize(&mut self, size: PhysicalSize<u32>) {
+        let Some(runtime) = &mut self.runtime else {
+            return;
+        };
+
+        let engine = runtime.engine_mut();
+
+        engine
+            .renderer_mut()
+            .surface_resize(UVec2::new(size.width, size.height));
+
+        self.editor
+            .scene_camera_mut()
+            .camera_mut()
+            .set_viewport_size(size.width, size.height);
+    }
+
+    fn handle_input(&mut self, event: WindowEvent) {
+        let Some(runtime) = &mut self.runtime else {
+            return;
+        };
+
+        let engine = runtime.engine_mut();
+
+        match event {
+            WindowEvent::KeyboardInput { event, .. } => {
+                handle_keyboard_input(engine.input_mut(), &event);
+            }
+            WindowEvent::MouseInput { state, button, .. } => {
+                handle_mouse_input(engine.input_mut(), state, button);
+            }
+            WindowEvent::CursorMoved { position, .. } => {
+                handle_cursor_move(engine.input_mut(), DVec2::new(position.x, position.y));
+            }
+            WindowEvent::MouseWheel { delta, .. } => {
+                handle_mouse_wheel(engine.input_mut(), delta);
+            }
+            _ => {}
+        }
     }
 }

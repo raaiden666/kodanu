@@ -26,9 +26,12 @@ impl Editor {
     pub fn collect_render_items(&mut self) -> Vec<RenderItem> {
         let mut items = Vec::with_capacity(12);
 
-        let mut query = self.scene.world().query::<(&Transform, &MeshRenderer)>();
-
-        for (transform, mesh_renderer) in query.iter() {
+        for (transform, mesh_renderer) in self
+            .scene
+            .world()
+            .query::<(&Transform, &MeshRenderer)>()
+            .iter()
+        {
             let (mesh, material, model) = (
                 mesh_renderer.mesh_handle(),
                 mesh_renderer.material_handle(),

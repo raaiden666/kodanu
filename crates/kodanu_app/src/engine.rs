@@ -61,13 +61,13 @@ impl Engine {
     }
 
     #[inline]
-    pub fn action_map(&self) -> &ActionMap {
-        &self.action_map
+    pub fn input_mut(&mut self) -> &mut Input {
+        &mut self.input
     }
 
     #[inline]
-    pub fn input_mut(&mut self) -> &mut Input {
-        &mut self.input
+    pub fn action_map(&self) -> &ActionMap {
+        &self.action_map
     }
 
     #[inline]
