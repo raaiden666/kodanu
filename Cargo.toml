@@ -14,7 +14,8 @@ members = [
     "crates/kodanu_window",
     "crates/kodanu_camera",
     "crates/kodanu_color",
-    "crates/kodanu_log",
+    "crates/kodanu_log", 
+    "crates/kodanu",
 ]
 
 resolver = "3"
@@ -46,3 +47,4 @@ kodanu_transform = { package = "kodanu_transform", path = "crates/kodanu_transfo
 kodanu_camera = { package = "kodanu_camera", path = "crates/kodanu_camera" }
 kodanu_color = { package = "kodanu_color", path = "crates/kodanu_color" }
 kodanu_log = { package = "kodanu_log", path = "crates/kodanu_log" }
+kodanu = { package = "kodanu", path = "crates/kodanu" }

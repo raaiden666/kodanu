@@ -1,0 +1,15 @@
+[package]
+name = "kodanu"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+kodanu_app = { workspace = true }
+kodanu_log = { workspace = true }
+kodanu_window = { workspace = true }
+kodanu_assets = { workspace = true }
+kodanu_color = { workspace = true }
+kodanu_math = { workspace = true }
+kodanu_transform = { workspace = true }
+kodanu_scene = { workspace = true }
+kodanu_editor = { workspace = true }

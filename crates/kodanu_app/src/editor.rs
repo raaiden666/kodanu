@@ -1,12 +1,10 @@
 #![allow(dead_code)]
 
 use {
-    kodanu_assets::{Material, Mesh},
-    kodanu_color::Color,
     kodanu_editor::{Scene, SceneCamera},
     kodanu_graphics::RenderItem,
     kodanu_input::{ActionMap, Input},
-    kodanu_math::{Quat, Vec3},
+    kodanu_math::Vec3,
     kodanu_scene::MeshRenderer,
     kodanu_time::Time,
     kodanu_transform::Transform,
@@ -19,6 +17,12 @@ pub(crate) struct Editor {
 }
 
 impl Editor {
+    pub fn init(&mut self) {
+        self.scene_camera
+            .transform_mut()
+            .set_position(Vec3::new(0.0, 0.0, 5.0));
+    }
+
     pub fn update(&mut self, input: &Input, action_map: &ActionMap, time: &Time) {
         self.scene_camera.update(input, action_map, time);
     }
@@ -42,27 +46,6 @@ impl Editor {
         }
 
         items
-    }
-
-    pub(crate) fn init_test_mesh(&mut self) {
-        self.scene_camera
-            .transform_mut()
-            .set_position(Vec3::new(0.0, 0.0, 5.0));
-
-        self.scene.world_mut().spawn((
-            Transform::default(),
-            MeshRenderer::new(Mesh::cube_2d(), Material::new(Color::GREEN)),
-        ));
-
-        let mut tranform = Transform::default();
-
-        tranform.set_position(Vec3::new(-2.0, 0.0, -1.0));
-        tranform.set_rotation(Quat::from_rotation_y(45.0));
-
-        self.scene.world_mut().spawn((
-            tranform,
-            MeshRenderer::new(Mesh::triangle_2d(), Material::new(Color::BLUE)),
-        ));
     }
 }
 

@@ -1,6 +1,7 @@
 use crate::{AppConfig, AppRuntime, Editor};
 
 use {
+    kodanu_editor::Scene,
     kodanu_input::KeyCode,
     kodanu_log::LogConfig,
     kodanu_math::{DVec2, UVec2},
@@ -34,7 +35,7 @@ impl App {
 
         fmt().with_env_filter(log_config.env_filter()).init();
 
-        self.editor.init_test_mesh();
+        self.editor.init();
 
         event_loop.run_app(self).expect("Failed to run app");
     }
@@ -47,6 +48,10 @@ impl App {
     pub fn with_log_config(mut self, config: LogConfig) -> Self {
         self.config.set_log_config(config);
         self
+    }
+
+    pub fn scene_mut(&mut self) -> &mut Scene {
+        self.editor.scene_mut()
     }
 }
 
