@@ -161,7 +161,7 @@ impl Renderer {
 
         self.graphics_device.queue().submit(once(encoder.finish()));
 
-        frame.present();
+        self.graphics_device.queue().present(frame);
     }
 
     pub fn reconfigure_surface(&mut self) {

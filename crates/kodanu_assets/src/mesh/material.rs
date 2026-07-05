@@ -12,6 +12,7 @@ impl Material {
 }
 
 impl Material {
+    #[inline]
     pub fn color(&self) -> Color {
         self.color
     }

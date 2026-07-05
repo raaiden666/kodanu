@@ -6,7 +6,8 @@ use wgpu::{
     Adapter, BackendOptions, Backends, CompositeAlphaMode, Device, DeviceDescriptor,
     ExperimentalFeatures, Features, Instance, InstanceDescriptor, InstanceFlags, Limits,
     MemoryBudgetThresholds, MemoryHints, PowerPreference, PresentMode, Queue,
-    RequestAdapterOptions, Surface, SurfaceConfiguration, TextureFormat, TextureUsages, Trace,
+    RequestAdapterOptions, Surface, SurfaceColorSpace, SurfaceConfiguration, TextureFormat,
+    TextureUsages, Trace,
 };
 
 pub(crate) fn create_instance() -> Instance {
@@ -27,6 +28,7 @@ pub(crate) async fn create_adapter(instance: &Instance, surface: &Surface<'_>) -
             power_preference: PowerPreference::HighPerformance,
             compatible_surface: Some(surface),
             force_fallback_adapter: false,
+            apply_limit_buckets: false,
         })
         .await
         .expect("Failed to create adapter")
@@ -60,6 +62,7 @@ pub(crate) fn create_surface_configuration(
         alpha_mode: composite_alpha_mode,
         view_formats: vec![texture_format],
         desired_maximum_frame_latency: 2,
+        color_space: SurfaceColorSpace::Srgb,
     }
 }
 

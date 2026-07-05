@@ -31,6 +31,7 @@ impl Default for ActionMap {
         Self { actions, axis }
     }
 }
+
 impl ActionMap {
     #[inline]
     pub fn pressed(&self, action: &Action, input: &Input) -> bool {

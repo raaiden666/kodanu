@@ -49,7 +49,7 @@ impl GraphicsPipeline {
             vertex: VertexState {
                 module: &vs,
                 entry_point: Some("vs_main"),
-                buffers: &[VertexLayout::layout()],
+                buffers: &[Some(VertexLayout::layout())],
                 compilation_options: PipelineCompilationOptions::default(),
             },
             fragment: Some(FragmentState {

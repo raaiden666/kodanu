@@ -13,12 +13,12 @@ fn main() {
         .with_window_config(window_config)
         .with_log_config(log_config);
 
-    init_test_mesh(&mut app.scene_mut());
+    init_test_mesh(app.scene_mut());
 
     app.run();
 }
 
-pub fn init_test_mesh(scene: &mut Scene) {
+fn init_test_mesh(scene: &mut Scene) {
     scene.world_mut().spawn((
         Transform::default(),
         MeshRenderer::new(Mesh::cube_2d(), Material::new(Color::GREEN)),

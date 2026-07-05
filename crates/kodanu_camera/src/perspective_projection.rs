@@ -1,4 +1,4 @@
-use kodanu_math::Mat4;
+use kodanu_math::{Mat4, perspective};
 
 #[derive(Debug)]
 pub struct PerspectiveProjection {
@@ -45,7 +45,7 @@ impl PerspectiveProjection {
 
     #[inline]
     pub fn matrix(&self) -> Mat4 {
-        Mat4::perspective_rh(self.fov, self.aspect_ratio, self.near, self.far)
+        perspective(self.fov, self.aspect_ratio, self.near, self.far)
     }
 
     #[inline]
