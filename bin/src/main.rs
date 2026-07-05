@@ -2,6 +2,7 @@ use kodanu::prelude::*;
 
 fn main() {
     let log_config = LogConfig::default()
+        .with_level(Level::Info)
         .with_directive("wgpu_hal=error")
         .with_directive("calloop=off");
 

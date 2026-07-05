@@ -1,3 +1,5 @@
+use crate::Level;
+
 use tracing_subscriber::EnvFilter;
 
 #[derive(Debug, Clone)]
@@ -14,9 +16,18 @@ impl Default for LogConfig {
 }
 
 impl LogConfig {
-    pub fn with_level(mut self, level: &str) -> Self {
-        self.filter = EnvFilter::new(level);
-        self
+    pub fn with_level(self, level: Level) -> Self {
+        let level = match level {
+            Level::Trace => "trace",
+            Level::Debug => "debug",
+            Level::Info => "info",
+            Level::Warn => "warn",
+            Level::Error => "error",
+        };
+
+        Self {
+            filter: EnvFilter::new(level),
+        }
     }
 
     pub fn with_directive(mut self, directive: impl AsRef<str>) -> Self {
