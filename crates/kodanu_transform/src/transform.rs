@@ -97,3 +97,25 @@ impl Transform {
         self.rotation *= rotation;
     }
 }
+
+impl Transform {
+    #[inline]
+    pub fn from_position(position: Vec3) -> Self {
+        Self::new(position, Quat::IDENTITY, Vec3::ONE)
+    }
+
+    #[inline]
+    pub fn from_rotation(rotation: Quat) -> Self {
+        Self::new(Vec3::ZERO, rotation, Vec3::ONE)
+    }
+
+    #[inline]
+    pub fn from_scale(scale: Vec3) -> Self {
+        Self::new(Vec3::ZERO, Quat::IDENTITY, scale)
+    }
+
+    #[inline]
+    pub fn from_position_rotation(position: Vec3, rotation: Quat) -> Self {
+        Self::new(position, rotation, Vec3::ONE)
+    }
+}

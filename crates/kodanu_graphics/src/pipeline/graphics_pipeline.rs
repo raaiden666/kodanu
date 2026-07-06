@@ -1,12 +1,13 @@
-use crate::VertexLayout;
-
-use wgpu::{
-    BindGroupLayout, Device, FragmentState, MultisampleState, PipelineCompilationOptions,
-    PipelineLayoutDescriptor, PrimitiveState, RenderPipeline, RenderPipelineDescriptor,
-    ShaderModuleDescriptor, ShaderSource, TextureFormat, VertexState,
+use crate::{
+    CameraRenderer, ModelSrorageBuffer, fragment_shader, material::MaterialLayout,
+    pipeline::vertex_layout::vertex_layout, vertex_shader,
 };
 
-#[derive(Debug)]
+use wgpu::{
+    Device, FragmentState, MultisampleState, PipelineCompilationOptions, PipelineLayoutDescriptor,
+    PrimitiveState, RenderPipeline, RenderPipelineDescriptor, TextureFormat, VertexState,
+};
+
 pub(crate) struct GraphicsPipeline {
     pipeline: RenderPipeline,
 }
@@ -15,30 +16,16 @@ impl GraphicsPipeline {
     pub fn new(
         device: &Device,
         format: TextureFormat,
-        camera_bind_group_layout: &BindGroupLayout,
-        model_bind_group_layout: &BindGroupLayout,
-        material_bind_group_layout: &BindGroupLayout,
+        camera_renderer: &CameraRenderer,
+        model_storage_buffer: &ModelSrorageBuffer,
+        material_layout: &MaterialLayout,
     ) -> Self {
-        let vs = device.create_shader_module(ShaderModuleDescriptor {
-            label: Some("Mesh VS"),
-            source: ShaderSource::Wgsl(
-                include_str!("../../../../resources/shaders/wgsl/mesh.vert.wgsl").into(),
-            ),
-        });
-
-        let fs = device.create_shader_module(ShaderModuleDescriptor {
-            label: Some("Mesh FS"),
-            source: ShaderSource::Wgsl(
-                include_str!("../../../../resources/shaders/wgsl/mesh.frag.wgsl").into(),
-            ),
-        });
-
         let layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label: Some("Render Pipeline Layout"),
             bind_group_layouts: &[
-                Some(camera_bind_group_layout),
-                Some(model_bind_group_layout),
-                Some(material_bind_group_layout),
+                Some(camera_renderer.bind_group_layout()),
+                Some(model_storage_buffer.bind_group_layout()),
+                Some(material_layout.bind_group_layout()),
             ],
             immediate_size: 0,
         });
@@ -47,13 +34,13 @@ impl GraphicsPipeline {
             label: Some("Render Pipeline"),
             layout: Some(&layout),
             vertex: VertexState {
-                module: &vs,
+                module: &vertex_shader(device),
                 entry_point: Some("vs_main"),
-                buffers: &[Some(VertexLayout::layout())],
+                buffers: &[Some(vertex_layout())],
                 compilation_options: PipelineCompilationOptions::default(),
             },
             fragment: Some(FragmentState {
-                module: &fs,
+                module: &fragment_shader(device),
                 entry_point: Some("fs_main"),
                 targets: &[Some(format.into())],
                 compilation_options: PipelineCompilationOptions::default(),

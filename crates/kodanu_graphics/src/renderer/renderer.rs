@@ -1,10 +1,9 @@
 use crate::{
-    CameraRenderer, MaterialCache, ModelSrorageBuffer, ModelUniform, RenderItem,
+    AssetResources, ModelUniform, RenderItem,
     gpu::{GraphicsDevice, RenderSurface, SurfaceFrame},
-    material::MaterialLayout,
-    mesh::MeshCache,
     pipeline::GraphicsPipeline,
     renderer::FrameStatus,
+    resources::FrameResources,
     setup::{create_device_and_surface, create_render_surface},
 };
 
@@ -23,13 +22,8 @@ pub struct Renderer {
     render_surface: RenderSurface,
     graphics_pipeline: GraphicsPipeline,
 
-    camera_renderer: CameraRenderer,
-    model_storage: ModelSrorageBuffer,
-
-    material_layout: MaterialLayout,
-
-    mesh_cache: MeshCache,
-    material_cache: MaterialCache,
+    asset_resources: AssetResources,
+    frame_resources: FrameResources,
 }
 
 impl Renderer {
@@ -38,32 +32,24 @@ impl Renderer {
 
         let render_surface = create_render_surface(window, &graphics_device, surface);
 
-        let camera_renderer = CameraRenderer::new(graphics_device.device());
-
-        let model_storage = ModelSrorageBuffer::new(graphics_device.device(), 10_000);
-
-        let material_layout = MaterialLayout::new(graphics_device.device());
+        let frame_resources = FrameResources::new(graphics_device.device());
 
         let graphics_pipeline = GraphicsPipeline::new(
             graphics_device.device(),
             render_surface.config().format,
-            camera_renderer.bind_group_layout(),
-            model_storage.bind_group_layout(),
-            material_layout.bind_group_layout(),
+            frame_resources.camera_renderer(),
+            frame_resources.model_storage(),
+            frame_resources.material_layout(),
         );
 
-        let mesh_cache = MeshCache::default();
-        let material_cache = MaterialCache::default();
+        let asset_resources = AssetResources::default();
 
         Self {
             graphics_device,
             render_surface,
             graphics_pipeline,
-            camera_renderer,
-            model_storage,
-            material_layout,
-            mesh_cache,
-            material_cache,
+            frame_resources,
+            asset_resources,
         }
     }
 }
@@ -85,10 +71,12 @@ impl Renderer {
             .map(|item| ModelUniform::new(item.model()))
             .collect();
 
-        self.camera_renderer
+        self.frame_resources
+            .camera_renderer()
             .update(self.graphics_device.queue(), view_projection);
 
-        self.model_storage
+        self.frame_resources
+            .model_storage()
             .update(self.graphics_device.queue(), &models);
 
         self.draw_frame(frame, items);
@@ -131,18 +119,19 @@ impl Renderer {
 
             render_pass.set_pipeline(self.graphics_pipeline.pipeline());
 
-            render_pass.set_bind_group(0, self.camera_renderer.bind_group(), &[]);
+            render_pass.set_bind_group(0, self.frame_resources.camera_renderer().bind_group(), &[]);
 
-            render_pass.set_bind_group(1, self.model_storage.bind_group(), &[]);
+            render_pass.set_bind_group(1, self.frame_resources.model_storage().bind_group(), &[]);
 
             for (index, item) in items.iter().enumerate() {
                 let gpu_mesh = self
-                    .mesh_cache
+                    .asset_resources
+                    .mesh_cache()
                     .get_or_create(self.graphics_device.device(), &item.mesh_handle());
 
-                let gpu_material = self.material_cache.get_or_create(
+                let gpu_material = self.asset_resources.material_cache().get_or_create(
                     self.graphics_device.device(),
-                    self.material_layout.bind_group_layout(),
+                    self.frame_resources.material_layout().bind_group_layout(),
                     &item.material_handle(),
                 );
 

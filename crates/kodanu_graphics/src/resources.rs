@@ -1,3 +1,4 @@
-mod vertex_layout;
+mod asset_resources;
+mod render_resources;
 
-pub(crate) use vertex_layout::VertexLayout;
+pub(crate) use {asset_resources::AssetResources, render_resources::FrameResources};

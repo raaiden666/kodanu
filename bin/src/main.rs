@@ -2,7 +2,6 @@ use kodanu::prelude::*;
 
 fn main() {
     let log_config = LogConfig::default()
-        .with_level(Level::Info)
         .with_directive("wgpu_hal=error")
         .with_directive("calloop=off");
 
@@ -26,7 +25,7 @@ fn init_test_mesh(scene: &mut Scene) {
     ));
 
     scene.world_mut().spawn((
-        Transform::default(),
+        Transform::from_position(Vec3::new(-2.5, 0.0, 0.0)),
         MeshRenderer::new(Mesh::triangle_2d(), Material::new(Color::BLUE)),
     ));
 }

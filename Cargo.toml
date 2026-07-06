@@ -14,7 +14,7 @@ members = [
     "crates/kodanu_window",
     "crates/kodanu_camera",
     "crates/kodanu_color",
-    "crates/kodanu_log", 
+    "crates/kodanu_log",
     "crates/kodanu",
 ]
 
