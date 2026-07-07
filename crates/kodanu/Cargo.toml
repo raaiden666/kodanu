@@ -13,3 +13,4 @@ kodanu_math = { workspace = true }
 kodanu_transform = { workspace = true }
 kodanu_scene = { workspace = true }
 kodanu_editor = { workspace = true }
+kodanu_graphics = { workspace = true }

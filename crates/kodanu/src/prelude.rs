@@ -2,6 +2,7 @@ pub use kodanu_app::*;
 pub use kodanu_assets::*;
 pub use kodanu_color::*;
 pub use kodanu_editor::*;
+pub use kodanu_graphics::*;
 pub use kodanu_log::*;
 pub use kodanu_math::*;
 pub use kodanu_scene::*;

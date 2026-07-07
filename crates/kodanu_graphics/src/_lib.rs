@@ -1,4 +1,5 @@
 mod camera;
+mod config;
 mod gpu;
 mod material;
 mod mesh;
@@ -9,6 +10,7 @@ mod resources;
 mod setup;
 mod shader;
 
+pub use config::{Backend, RendererConfig};
 pub use renderer::{FrameStatus, RenderItem, Renderer};
 
 pub(crate) use camera::{CameraRenderer, CameraUniform};

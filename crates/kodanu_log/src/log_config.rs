@@ -30,10 +30,10 @@ impl LogConfig {
         }
     }
 
-    pub fn with_directive(mut self, directive: impl AsRef<str>) -> Self {
+    pub fn with_directive(mut self, directive: &str) -> Self {
         self.filter = self
             .filter
-            .add_directive(directive.as_ref().parse().expect("Invalid log directive"));
+            .add_directive(directive.parse().expect("Invalid log directive"));
         self
     }
 

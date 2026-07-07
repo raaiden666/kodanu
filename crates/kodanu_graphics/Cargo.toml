@@ -10,6 +10,7 @@ path = "src/_lib.rs"
 wgpu = { workspace = true }
 bytemuck = { workspace = true }
 pollster = { workspace = true }
+bitflags = { workspace = true }
 
 kodanu_window = { workspace = true }
 kodanu_math = { workspace = true }

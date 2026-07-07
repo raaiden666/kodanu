@@ -2,6 +2,7 @@ use crate::{AppConfig, AppRuntime, Editor};
 
 use {
     kodanu_editor::Scene,
+    kodanu_graphics::RendererConfig,
     kodanu_input::KeyCode,
     kodanu_log::LogConfig,
     kodanu_math::{DVec2, UVec2},
@@ -42,6 +43,11 @@ impl App {
 
     pub fn with_window_config(mut self, config: WindowConfig) -> Self {
         self.config.set_window_config(config);
+        self
+    }
+
+    pub fn with_renderer_config(mut self, config: RendererConfig) -> Self {
+        self.config.set_renderer_config(config);
         self
     }
 

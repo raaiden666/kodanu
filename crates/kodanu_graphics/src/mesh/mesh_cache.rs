@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use crate::mesh::GpuMesh;
 
 use {
@@ -14,6 +16,14 @@ impl Default for MeshCache {
     fn default() -> Self {
         Self {
             meshes: HashMap::with_capacity(128),
+        }
+    }
+}
+
+impl MeshCache {
+    pub fn new(size: usize) -> Self {
+        Self {
+            meshes: HashMap::with_capacity(size),
         }
     }
 }

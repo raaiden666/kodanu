@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use crate::GpuMaterial;
 
 use {
@@ -15,6 +17,14 @@ impl Default for MaterialCache {
     fn default() -> Self {
         Self {
             materials: HashMap::with_capacity(128),
+        }
+    }
+}
+
+impl MaterialCache {
+    pub fn new(size: usize) -> Self {
+        Self {
+            materials: HashMap::with_capacity(size),
         }
     }
 }

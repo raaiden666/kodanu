@@ -1,5 +1,5 @@
 use crate::{
-    AssetResources, ModelUniform, RenderItem,
+    AssetResources, ModelUniform, RenderItem, RendererConfig,
     gpu::{GraphicsDevice, RenderSurface, SurfaceFrame},
     pipeline::GraphicsPipeline,
     renderer::FrameStatus,
@@ -27,20 +27,15 @@ pub struct Renderer {
 }
 
 impl Renderer {
-    pub fn new(window: &Window) -> Self {
-        let (graphics_device, surface) = block_on(create_device_and_surface(window));
+    pub fn new(window: &Window, config: &RendererConfig) -> Self {
+        let (graphics_device, surface) = block_on(create_device_and_surface(window, config));
 
         let render_surface = create_render_surface(window, &graphics_device, surface);
 
-        let frame_resources = FrameResources::new(graphics_device.device());
+        let frame_resources = FrameResources::new(&graphics_device);
 
-        let graphics_pipeline = GraphicsPipeline::new(
-            graphics_device.device(),
-            render_surface.config().format,
-            frame_resources.camera_renderer(),
-            frame_resources.model_storage(),
-            frame_resources.material_layout(),
-        );
+        let graphics_pipeline =
+            GraphicsPipeline::new(&graphics_device, &render_surface, &frame_resources);
 
         let asset_resources = AssetResources::default();
 

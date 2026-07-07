@@ -1,19 +1,21 @@
-use crate::gpu::{GraphicsDevice, RenderSurface};
+use crate::{
+    RendererConfig,
+    gpu::{GraphicsDevice, RenderSurface},
+};
 
 use {kodanu_math::UVec2, kodanu_window::Window};
 
 use wgpu::{
-    Adapter, BackendOptions, Backends, CompositeAlphaMode, Device, DeviceDescriptor,
-    ExperimentalFeatures, Features, Instance, InstanceDescriptor, InstanceFlags, Limits,
-    MemoryBudgetThresholds, MemoryHints, PowerPreference, PresentMode, Queue,
-    RequestAdapterOptions, Surface, SurfaceColorSpace, SurfaceConfiguration, TextureFormat,
-    TextureUsages, Trace,
+    Adapter, BackendOptions, CompositeAlphaMode, Device, DeviceDescriptor, ExperimentalFeatures,
+    Features, Instance, InstanceDescriptor, InstanceFlags, Limits, MemoryBudgetThresholds,
+    MemoryHints, PowerPreference, PresentMode, Queue, RequestAdapterOptions, Surface,
+    SurfaceColorSpace, SurfaceConfiguration, TextureFormat, TextureUsages, Trace,
 };
 
-pub(crate) fn create_instance() -> Instance {
+pub(crate) fn create_instance(config: &RendererConfig) -> Instance {
     Instance::new({
         InstanceDescriptor {
-            backends: Backends::VULKAN | Backends::METAL | Backends::DX12,
+            backends: config.backends().into(),
             flags: InstanceFlags::default(),
             memory_budget_thresholds: MemoryBudgetThresholds::default(),
             backend_options: BackendOptions::default(),
@@ -68,8 +70,9 @@ pub(crate) fn create_surface_configuration(
 
 pub(crate) async fn create_device_and_surface(
     window: &Window,
+    config: &RendererConfig,
 ) -> (GraphicsDevice, Surface<'static>) {
-    let instance = create_instance();
+    let instance = create_instance(config);
 
     let surface = window.create_surface(&instance);
 

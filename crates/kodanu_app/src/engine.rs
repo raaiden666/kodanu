@@ -1,5 +1,5 @@
 use {
-    kodanu_graphics::{RenderItem, Renderer},
+    kodanu_graphics::{RenderItem, Renderer, RendererConfig},
     kodanu_input::{ActionMap, Input},
     kodanu_math::Mat4,
     kodanu_time::Time,
@@ -14,9 +14,9 @@ pub(crate) struct Engine {
 }
 
 impl Engine {
-    pub fn new(window: &Window) -> Self {
+    pub fn new(window: &Window, config: &RendererConfig) -> Self {
         Self {
-            renderer: Renderer::new(window),
+            renderer: Renderer::new(window, config),
             input: Input::default(),
             action_map: ActionMap::default(),
             time: Time::default(),

@@ -1,12 +1,13 @@
-use crate::CameraUniform;
+use crate::{CameraUniform, gpu::GraphicsDevice};
 
 use {bytemuck::bytes_of, kodanu_math::Mat4};
 
+use wgpu::util::{BufferInitDescriptor, DeviceExt};
+
 use wgpu::{
     BindGroup, BindGroupDescriptor, BindGroupEntry, BindGroupLayout, BindGroupLayoutDescriptor,
-    BindGroupLayoutEntry, BindingType, Buffer, BufferBindingType, BufferUsages, Device, Queue,
+    BindGroupLayoutEntry, BindingType, Buffer, BufferBindingType, BufferUsages, Queue,
     ShaderStages,
-    util::{BufferInitDescriptor, DeviceExt},
 };
 
 #[derive(Debug)]
@@ -17,37 +18,44 @@ pub(crate) struct CameraRenderer {
 }
 
 impl CameraRenderer {
-    pub fn new(device: &Device) -> Self {
+    pub fn new(graphics_device: &GraphicsDevice) -> Self {
         let uniform = CameraUniform::new(Mat4::IDENTITY);
 
-        let buffer = device.create_buffer_init(&BufferInitDescriptor {
-            label: Some("Camera Buffer"),
-            contents: bytes_of(&uniform),
-            usage: BufferUsages::UNIFORM | BufferUsages::COPY_DST,
-        });
+        let buffer = graphics_device
+            .device()
+            .create_buffer_init(&BufferInitDescriptor {
+                label: Some("Camera Buffer"),
+                contents: bytes_of(&uniform),
+                usage: BufferUsages::UNIFORM | BufferUsages::COPY_DST,
+            });
 
-        let bind_group_layout = device.create_bind_group_layout(&BindGroupLayoutDescriptor {
-            label: Some("Camera Bind Group Layout"),
-            entries: &[BindGroupLayoutEntry {
-                binding: 0,
-                visibility: ShaderStages::VERTEX,
-                ty: BindingType::Buffer {
-                    ty: BufferBindingType::Uniform,
-                    has_dynamic_offset: false,
-                    min_binding_size: None,
-                },
-                count: None,
-            }],
-        });
+        let bind_group_layout =
+            graphics_device
+                .device()
+                .create_bind_group_layout(&BindGroupLayoutDescriptor {
+                    label: Some("Camera Bind Group Layout"),
+                    entries: &[BindGroupLayoutEntry {
+                        binding: 0,
+                        visibility: ShaderStages::VERTEX,
+                        ty: BindingType::Buffer {
+                            ty: BufferBindingType::Uniform,
+                            has_dynamic_offset: false,
+                            min_binding_size: None,
+                        },
+                        count: None,
+                    }],
+                });
 
-        let bind_group = device.create_bind_group(&BindGroupDescriptor {
-            label: Some("Camera Bind Group"),
-            layout: &bind_group_layout,
-            entries: &[BindGroupEntry {
-                binding: 0,
-                resource: buffer.as_entire_binding(),
-            }],
-        });
+        let bind_group = graphics_device
+            .device()
+            .create_bind_group(&BindGroupDescriptor {
+                label: Some("Camera Bind Group"),
+                layout: &bind_group_layout,
+                entries: &[BindGroupEntry {
+                    binding: 0,
+                    resource: buffer.as_entire_binding(),
+                }],
+            });
 
         Self {
             buffer,
@@ -56,6 +64,7 @@ impl CameraRenderer {
         }
     }
 }
+
 impl CameraRenderer {
     pub fn update(&self, queue: &Queue, view_projection: Mat4) {
         let uniform = CameraUniform::new(view_projection);

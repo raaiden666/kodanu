@@ -1,11 +1,14 @@
 use crate::{
-    CameraRenderer, ModelSrorageBuffer, fragment_shader, material::MaterialLayout,
-    pipeline::vertex_layout::vertex_layout, vertex_shader,
+    fragment_shader,
+    gpu::{GraphicsDevice, RenderSurface},
+    pipeline::vertex_layout::vertex_layout,
+    resources::FrameResources,
+    vertex_shader,
 };
 
 use wgpu::{
-    Device, FragmentState, MultisampleState, PipelineCompilationOptions, PipelineLayoutDescriptor,
-    PrimitiveState, RenderPipeline, RenderPipelineDescriptor, TextureFormat, VertexState,
+    FragmentState, MultisampleState, PipelineCompilationOptions, PipelineLayoutDescriptor,
+    PrimitiveState, RenderPipeline, RenderPipelineDescriptor, VertexState,
 };
 
 pub(crate) struct GraphicsPipeline {
@@ -14,43 +17,45 @@ pub(crate) struct GraphicsPipeline {
 
 impl GraphicsPipeline {
     pub fn new(
-        device: &Device,
-        format: TextureFormat,
-        camera_renderer: &CameraRenderer,
-        model_storage_buffer: &ModelSrorageBuffer,
-        material_layout: &MaterialLayout,
+        graphics_device: &GraphicsDevice,
+        render_surface: &RenderSurface,
+        frame_resources: &FrameResources,
     ) -> Self {
-        let layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
-            label: Some("Render Pipeline Layout"),
-            bind_group_layouts: &[
-                Some(camera_renderer.bind_group_layout()),
-                Some(model_storage_buffer.bind_group_layout()),
-                Some(material_layout.bind_group_layout()),
-            ],
-            immediate_size: 0,
-        });
+        let layout = graphics_device
+            .device()
+            .create_pipeline_layout(&PipelineLayoutDescriptor {
+                label: Some("Render Pipeline Layout"),
+                bind_group_layouts: &[
+                    Some(frame_resources.camera_renderer().bind_group_layout()),
+                    Some(frame_resources.model_storage().bind_group_layout()),
+                    Some(frame_resources.material_layout().bind_group_layout()),
+                ],
+                immediate_size: 0,
+            });
 
-        let pipeline = device.create_render_pipeline(&RenderPipelineDescriptor {
-            label: Some("Render Pipeline"),
-            layout: Some(&layout),
-            vertex: VertexState {
-                module: &vertex_shader(device),
-                entry_point: Some("vs_main"),
-                buffers: &[Some(vertex_layout())],
-                compilation_options: PipelineCompilationOptions::default(),
-            },
-            fragment: Some(FragmentState {
-                module: &fragment_shader(device),
-                entry_point: Some("fs_main"),
-                targets: &[Some(format.into())],
-                compilation_options: PipelineCompilationOptions::default(),
-            }),
-            primitive: PrimitiveState::default(),
-            depth_stencil: None,
-            multisample: MultisampleState::default(),
-            multiview_mask: None,
-            cache: None,
-        });
+        let pipeline = graphics_device
+            .device()
+            .create_render_pipeline(&RenderPipelineDescriptor {
+                label: Some("Render Pipeline"),
+                layout: Some(&layout),
+                vertex: VertexState {
+                    module: &vertex_shader(graphics_device.device()),
+                    entry_point: Some("vs_main"),
+                    buffers: &[Some(vertex_layout())],
+                    compilation_options: PipelineCompilationOptions::default(),
+                },
+                fragment: Some(FragmentState {
+                    module: &fragment_shader(graphics_device.device()),
+                    entry_point: Some("fs_main"),
+                    targets: &[Some(render_surface.config().format.into())],
+                    compilation_options: PipelineCompilationOptions::default(),
+                }),
+                primitive: PrimitiveState::default(),
+                depth_stencil: None,
+                multisample: MultisampleState::default(),
+                multiview_mask: None,
+                cache: None,
+            });
 
         Self { pipeline }
     }

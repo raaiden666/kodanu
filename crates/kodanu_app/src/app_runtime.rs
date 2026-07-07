@@ -22,7 +22,7 @@ impl AppRuntime {
             .expect("Failed to create window");
 
         let window = Window::new(Arc::new(window));
-        let engine = Engine::new(&window);
+        let engine = Engine::new(&window, config.renderer_config());
 
         window.request_redraw();
 

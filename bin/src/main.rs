@@ -1,16 +1,20 @@
 use kodanu::prelude::*;
 
 fn main() {
-    let log_config = LogConfig::default()
-        .with_directive("wgpu_hal=error")
-        .with_directive("calloop=off");
-
     let window_config = WindowConfig::default()
         .with_title("Kodanu")
         .with_decorations(false);
 
+    let renderer_config =
+        RendererConfig::default().with_backends(Backend::VULKAN | Backend::DX12 | Backend::METAL);
+
+    let log_config = LogConfig::default()
+        .with_directive("wgpu_hal=error")
+        .with_directive("calloop=off");
+
     let mut app = App::default()
         .with_window_config(window_config)
+        .with_renderer_config(renderer_config)
         .with_log_config(log_config);
 
     init_test_mesh(app.scene_mut());
