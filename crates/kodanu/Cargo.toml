@@ -5,12 +5,15 @@ edition = "2024"
 
 [dependencies]
 kodanu_app = { workspace = true }
-kodanu_log = { workspace = true }
-kodanu_window = { workspace = true }
 kodanu_assets = { workspace = true }
+kodanu_camera = { workspace = true }
 kodanu_color = { workspace = true }
-kodanu_math = { workspace = true }
-kodanu_transform = { workspace = true }
-kodanu_scene = { workspace = true }
+kodanu_ecs = { workspace = true }
 kodanu_editor = { workspace = true }
 kodanu_graphics = { workspace = true }
+kodanu_input = { workspace = true }
+kodanu_log = { workspace = true }
+kodanu_math = { workspace = true }
+kodanu_scene = { workspace = true }
+kodanu_transform = { workspace = true }
+kodanu_window = { workspace = true }
