@@ -1,4 +1,6 @@
-use wgpu::{Adapter, Device, Queue};
+use std::iter::once;
+
+use wgpu::{Adapter, CommandEncoder, CommandEncoderDescriptor, Device, Queue, SurfaceTexture};
 
 #[derive(Debug)]
 pub(crate) struct GraphicsDevice {
@@ -14,6 +16,23 @@ impl GraphicsDevice {
             device,
             queue,
         }
+    }
+}
+
+impl GraphicsDevice {
+    pub fn create_encoder(&self) -> CommandEncoder {
+        self.device
+            .create_command_encoder(&CommandEncoderDescriptor {
+                label: Some("Command Encoder"),
+            })
+    }
+
+    pub fn submit(&self, encoder: CommandEncoder) {
+        self.queue.submit(once(encoder.finish()));
+    }
+
+    pub fn present(&self, surface_texture: SurfaceTexture) {
+        self.queue.present(surface_texture);
     }
 }
 
