@@ -1,5 +1,5 @@
 use crate::{
-    CameraRenderer, ModelSrorageBuffer, ModelUniform, gpu::GraphicsDevice, material::MaterialLayout,
+    CameraRenderer, ModelSrorageBuffer, RenderItem, gpu::GraphicsDevice, material::MaterialLayout,
 };
 
 use {kodanu_math::Mat4, wgpu::Queue};
@@ -27,7 +27,7 @@ impl FrameResources {
 }
 
 impl FrameResources {
-    pub fn update(&self, queue: &Queue, view_projection: Mat4, models: &[ModelUniform]) {
+    pub fn update(&mut self, queue: &Queue, view_projection: Mat4, models: &[RenderItem]) {
         self.camera_renderer.update(queue, view_projection);
         self.model_storage.update(queue, models);
     }

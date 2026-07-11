@@ -1,5 +1,5 @@
 use crate::{
-    AssetResources, ModelUniform, RenderItem, RendererConfig,
+    AssetResources, RenderItem, RendererConfig,
     gpu::{GraphicsDevice, RenderSurface, SurfaceFrame},
     pipeline::GraphicsPipeline,
     renderer::FrameStatus,
@@ -58,14 +58,8 @@ impl Renderer {
             SurfaceFrame::Validation => return FrameStatus::Validation,
         };
 
-        let mut models = Vec::with_capacity(items.len());
-
-        for item in items {
-            models.push(ModelUniform::new(item.model()));
-        }
-
         self.frame_resources
-            .update(self.graphics_device.queue(), view_projection, &models);
+            .update(self.graphics_device.queue(), view_projection, items);
 
         self.draw_frame(frame, items);
 
@@ -96,7 +90,7 @@ impl Renderer {
         self.graphics_device.present(frame);
     }
 
-    fn draw_item(&mut self, render_pass: &mut RenderPass<'_>, index: u32, item: &RenderItem) {
+    fn draw_item(&mut self, render_pass: &mut RenderPass<'_>, instance: u32, item: &RenderItem) {
         let gpu_mesh = self
             .asset_resources
             .gpu_mesh(self.graphics_device.device(), item);
@@ -110,7 +104,7 @@ impl Renderer {
         render_pass.set_bind_group(2, gpu_material.bind_group(), &[]);
         render_pass.set_vertex_buffer(0, gpu_mesh.vertex_buffer().slice(..));
         render_pass.set_index_buffer(gpu_mesh.index_buffer().slice(..), IndexFormat::Uint32);
-        render_pass.draw_indexed(0..gpu_mesh.index_count(), 0, index..index + 1);
+        render_pass.draw_indexed(0..gpu_mesh.index_count(), 0, instance..instance + 1);
     }
 
     fn create_render_pass<'a>(

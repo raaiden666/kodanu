@@ -1,4 +1,4 @@
-use crate::{ModelUniform, gpu::GraphicsDevice};
+use crate::{ModelUniform, RenderItem, gpu::GraphicsDevice};
 
 use wgpu::{
     BindGroup, BindGroupDescriptor, BindGroupEntry, BindGroupLayout, BindGroupLayoutDescriptor,
@@ -8,12 +8,11 @@ use wgpu::{
 
 use bytemuck::cast_slice;
 
-#[derive(Debug)]
 pub(crate) struct ModelSrorageBuffer {
+    uniforms: Vec<ModelUniform>,
     buffer: Buffer,
     bind_group: BindGroup,
     bind_group_layout: BindGroupLayout,
-    capacity: usize,
 }
 
 impl ModelSrorageBuffer {
@@ -54,19 +53,25 @@ impl ModelSrorageBuffer {
             });
 
         Self {
+            uniforms: Vec::with_capacity(capacity),
             buffer,
             bind_group,
             bind_group_layout,
-            capacity,
         }
     }
 }
 
 impl ModelSrorageBuffer {
-    pub fn update(&self, queue: &Queue, models: &[ModelUniform]) {
-        assert!(models.len() <= self.capacity);
+    pub fn update(&mut self, queue: &Queue, items: &[RenderItem]) {
+        self.uniforms.clear();
 
-        queue.write_buffer(&self.buffer, 0, cast_slice(models));
+        assert!(items.len() <= self.uniforms.capacity());
+
+        for item in items {
+            self.uniforms.push(ModelUniform::new(item.model()));
+        }
+
+        queue.write_buffer(&self.buffer, 0, cast_slice(&self.uniforms));
     }
 
     #[inline]

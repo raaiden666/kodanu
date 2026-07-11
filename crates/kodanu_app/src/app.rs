@@ -107,7 +107,7 @@ impl App {
 
         engine.render(
             self.editor.scene_camera().view_projection(),
-            &self.editor.collect_render_items(),
+            self.editor.collect_render_items(),
         );
 
         engine.begin_frame();

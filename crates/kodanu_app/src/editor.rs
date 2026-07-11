@@ -14,6 +14,7 @@ use {
 pub(crate) struct Editor {
     scene: Scene,
     scene_camera: SceneCamera,
+    items: Vec<RenderItem>,
 }
 
 impl Editor {
@@ -27,8 +28,8 @@ impl Editor {
         self.scene_camera.update(input, action_map, time);
     }
 
-    pub fn collect_render_items(&mut self) -> Vec<RenderItem> {
-        let mut items = Vec::with_capacity(12);
+    pub fn collect_render_items(&mut self) -> &[RenderItem] {
+        self.items.clear();
 
         for (transform, mesh_renderer) in self
             .scene
@@ -42,10 +43,10 @@ impl Editor {
                 transform.matrix(),
             );
 
-            items.push(RenderItem::new(mesh, material, model));
+            self.items.push(RenderItem::new(mesh, material, model));
         }
 
-        items
+        &self.items
     }
 }
 
