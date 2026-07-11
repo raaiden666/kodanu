@@ -2,17 +2,9 @@ use crate::Level;
 
 use tracing_subscriber::EnvFilter;
 
-#[derive(Debug, Clone)]
+#[derive(Default, Debug, Clone)]
 pub struct LogConfig {
     filter: EnvFilter,
-}
-
-impl Default for LogConfig {
-    fn default() -> Self {
-        Self {
-            filter: EnvFilter::new("info"),
-        }
-    }
 }
 
 impl LogConfig {
