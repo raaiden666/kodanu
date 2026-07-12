@@ -1,6 +1,6 @@
 use crate::{
     AssetResources, RenderItem, RendererConfig,
-    gpu::{GraphicsDevice, RenderSurface, SurfaceFrame},
+    gpu::{DepthTexture, GraphicsDevice, RenderSurface, SurfaceFrame},
     pipeline::GraphicsPipeline,
     renderer::FrameStatus,
     resources::FrameResources,
@@ -9,7 +9,8 @@ use crate::{
 
 use wgpu::{
     Color, CommandEncoder, IndexFormat, LoadOp, Operations, RenderPass, RenderPassColorAttachment,
-    RenderPassDescriptor, StoreOp, SurfaceTexture, TextureView, TextureViewDescriptor,
+    RenderPassDepthStencilAttachment, RenderPassDescriptor, StoreOp, SurfaceTexture, TextureView,
+    TextureViewDescriptor,
 };
 
 use {kodanu_math::Mat4, kodanu_math::UVec2, kodanu_window::Window, pollster::block_on};
@@ -18,6 +19,7 @@ pub struct Renderer {
     graphics_device: GraphicsDevice,
     render_surface: RenderSurface,
     graphics_pipeline: GraphicsPipeline,
+    depth_texture: DepthTexture,
 
     asset_resources: AssetResources,
     frame_resources: FrameResources,
@@ -34,12 +36,15 @@ impl Renderer {
         let graphics_pipeline =
             GraphicsPipeline::new(&graphics_device, &render_surface, &frame_resources);
 
+        let depth_texture = DepthTexture::new(&graphics_device, window.size());
+
         let asset_resources = AssetResources::default();
 
         Self {
             graphics_device,
             render_surface,
             graphics_pipeline,
+            depth_texture,
             frame_resources,
             asset_resources,
         }
@@ -77,7 +82,6 @@ impl Renderer {
             render_pass.set_pipeline(self.graphics_pipeline.pipeline());
 
             render_pass.set_bind_group(0, self.frame_resources.camera_renderer().bind_group(), &[]);
-
             render_pass.set_bind_group(1, self.frame_resources.model_storage().bind_group(), &[]);
 
             for (instance, item) in items.iter().enumerate() {
@@ -86,11 +90,10 @@ impl Renderer {
         }
 
         self.graphics_device.submit(encoder);
-
         self.graphics_device.present(frame);
     }
 
-    fn draw_item(&mut self, render_pass: &mut RenderPass<'_>, instance: u32, item: &RenderItem) {
+    fn draw_item(&mut self, render_pass: &mut RenderPass, instance: u32, item: &RenderItem) {
         let gpu_mesh = self
             .asset_resources
             .gpu_mesh(self.graphics_device.device(), item);
@@ -107,11 +110,11 @@ impl Renderer {
         render_pass.draw_indexed(0..gpu_mesh.index_count(), 0, instance..instance + 1);
     }
 
-    fn create_render_pass<'a>(
+    fn create_render_pass<'r>(
         &self,
-        encoder: &'a mut CommandEncoder,
-        view: &'a TextureView,
-    ) -> RenderPass<'a> {
+        encoder: &'r mut CommandEncoder,
+        view: &'r TextureView,
+    ) -> RenderPass<'r> {
         encoder.begin_render_pass(&RenderPassDescriptor {
             label: Some("Render Pass"),
             color_attachments: &[Some(RenderPassColorAttachment {
@@ -128,7 +131,14 @@ impl Renderer {
                 },
                 depth_slice: None,
             })],
-            depth_stencil_attachment: None,
+            depth_stencil_attachment: Some(RenderPassDepthStencilAttachment {
+                view: self.depth_texture.view(),
+                depth_ops: Some(Operations {
+                    load: LoadOp::Clear(1.0),
+                    store: StoreOp::Store,
+                }),
+                stencil_ops: None,
+            }),
             occlusion_query_set: None,
             timestamp_writes: None,
             multiview_mask: None,
@@ -147,6 +157,9 @@ impl Renderer {
 
     pub fn surface_resize(&mut self, size: UVec2) {
         self.render_surface
+            .resize(self.graphics_device.device(), size);
+
+        self.depth_texture
             .resize(self.graphics_device.device(), size);
     }
 }

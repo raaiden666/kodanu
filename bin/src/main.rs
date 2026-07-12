@@ -29,7 +29,12 @@ fn init_test_mesh(scene: &mut Scene) {
     ));
 
     scene.world_mut().spawn((
-        Transform::from_position(Vec3::new(-2.5, 0.0, 0.0)),
+        Transform::from_position(Vec3::new(-1.0, 0.0, -5.0)),
         MeshRenderer::new(Mesh::triangle_2d(), Material::new(Color::BLUE)),
+    ));
+
+    scene.world_mut().spawn((
+        Transform::from_position(Vec3::new(-2.5, 0.0, 0.0)),
+        MeshRenderer::new(Mesh::cube_2d(), Material::new(Color::RED)),
     ));
 }
