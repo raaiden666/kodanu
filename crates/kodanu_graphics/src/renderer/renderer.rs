@@ -1,6 +1,6 @@
 use crate::{
-    AssetResources, RenderItem, RendererConfig,
-    gpu::{DepthTexture, GraphicsDevice, RenderSurface, SurfaceFrame},
+    AssetResources, RenderItem, RendererConfig, SampleCount,
+    gpu::{GraphicsDevice, RenderSurface, RenderTexture, RenderTextureDescriptor, SurfaceFrame},
     pipeline::GraphicsPipeline,
     renderer::FrameStatus,
     resources::FrameResources,
@@ -19,10 +19,12 @@ pub struct Renderer {
     graphics_device: GraphicsDevice,
     render_surface: RenderSurface,
     graphics_pipeline: GraphicsPipeline,
-    depth_texture: DepthTexture,
 
     asset_resources: AssetResources,
     frame_resources: FrameResources,
+
+    depth_target: RenderTexture,
+    color_target: Option<RenderTexture>,
 }
 
 impl Renderer {
@@ -34,9 +36,26 @@ impl Renderer {
         let frame_resources = FrameResources::new(&graphics_device);
 
         let graphics_pipeline =
-            GraphicsPipeline::new(&graphics_device, &render_surface, &frame_resources);
+            GraphicsPipeline::new(config, &graphics_device, &render_surface, &frame_resources);
 
-        let depth_texture = DepthTexture::new(&graphics_device, window.size());
+        let depth_target = RenderTexture::new(
+            RenderTextureDescriptor::depth_texture(config.sample_count()),
+            &graphics_device,
+            window.size(),
+        );
+
+        let color_target = if config.sample_count() != SampleCount::Single {
+            Some(RenderTexture::new(
+                RenderTextureDescriptor::color_texture(
+                    render_surface.config().format,
+                    config.sample_count(),
+                ),
+                &graphics_device,
+                window.size(),
+            ))
+        } else {
+            None
+        };
 
         let asset_resources = AssetResources::default();
 
@@ -44,9 +63,10 @@ impl Renderer {
             graphics_device,
             render_surface,
             graphics_pipeline,
-            depth_texture,
             frame_resources,
             asset_resources,
+            depth_target,
+            color_target,
         }
     }
 }
@@ -115,11 +135,16 @@ impl Renderer {
         encoder: &'r mut CommandEncoder,
         view: &'r TextureView,
     ) -> RenderPass<'r> {
+        let (view, resolve_target) = match &self.color_target {
+            Some(color_target) => (color_target.view(), Some(view)),
+            None => (view, None),
+        };
+
         encoder.begin_render_pass(&RenderPassDescriptor {
             label: Some("Render Pass"),
             color_attachments: &[Some(RenderPassColorAttachment {
                 view,
-                resolve_target: None,
+                resolve_target,
                 ops: Operations {
                     load: LoadOp::Clear(Color {
                         r: (0.01),
@@ -132,7 +157,7 @@ impl Renderer {
                 depth_slice: None,
             })],
             depth_stencil_attachment: Some(RenderPassDepthStencilAttachment {
-                view: self.depth_texture.view(),
+                view: self.depth_target.view(),
                 depth_ops: Some(Operations {
                     load: LoadOp::Clear(1.0),
                     store: StoreOp::Store,
@@ -159,7 +184,11 @@ impl Renderer {
         self.render_surface
             .resize(self.graphics_device.device(), size);
 
-        self.depth_texture
+        self.depth_target
             .resize(self.graphics_device.device(), size);
+
+        if let Some(color_target) = &mut self.color_target {
+            color_target.resize(self.graphics_device.device(), size);
+        }
     }
 }

@@ -5,8 +5,9 @@ fn main() {
         .with_title("Kodanu")
         .with_decorations(false);
 
-    let renderer_config =
-        RendererConfig::default().with_backends(Backend::VULKAN | Backend::DX12 | Backend::METAL);
+    let renderer_config = RendererConfig::default()
+        .with_backends(Backend::VULKAN | Backend::DX12 | Backend::METAL)
+        .with_sample_count(SampleCount::Quad);
 
     let log_config = LogConfig::default()
         .with_directive("wgpu_hal=error")

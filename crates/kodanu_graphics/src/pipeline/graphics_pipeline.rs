@@ -1,6 +1,6 @@
 use crate::{
-    fragment_shader,
-    gpu::{DepthTexture, GraphicsDevice, RenderSurface},
+    RendererConfig, fragment_shader,
+    gpu::{GraphicsDevice, RenderSurface, RenderTexture},
     pipeline::vertex_layout::vertex_layout,
     resources::FrameResources,
     vertex_shader,
@@ -17,6 +17,7 @@ pub(crate) struct GraphicsPipeline {
 
 impl GraphicsPipeline {
     pub fn new(
+        config: &RendererConfig,
         graphics_device: &GraphicsDevice,
         render_surface: &RenderSurface,
         frame_resources: &FrameResources,
@@ -50,9 +51,13 @@ impl GraphicsPipeline {
                     targets: &[Some(render_surface.config().format.into())],
                     compilation_options: PipelineCompilationOptions::default(),
                 }),
-                depth_stencil: Some(DepthTexture::create_depth_stencil_state()),
+                depth_stencil: Some(RenderTexture::create_depth_stencil_state()),
                 primitive: PrimitiveState::default(),
-                multisample: MultisampleState::default(),
+                multisample: MultisampleState {
+                    count: config.sample_count().as_u32(),
+                    mask: !0,
+                    alpha_to_coverage_enabled: false,
+                },
                 multiview_mask: None,
                 cache: None,
             });

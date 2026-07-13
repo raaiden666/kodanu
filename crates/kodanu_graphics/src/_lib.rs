@@ -10,7 +10,7 @@ mod resources;
 mod setup;
 mod shader;
 
-pub use config::{Backend, RendererConfig};
+pub use config::{Backend, RendererConfig, SampleCount};
 pub use renderer::{FrameStatus, RenderItem, Renderer};
 
 pub(crate) use camera::{CameraRenderer, CameraUniform};

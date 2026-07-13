@@ -4,7 +4,7 @@ pub use kodanu_camera::{Camera, PerspectiveProjection, Projection};
 pub use kodanu_color::Color;
 pub use kodanu_ecs::{DynamicBundle, Entity, World};
 pub use kodanu_editor::Scene;
-pub use kodanu_graphics::{Backend, RendererConfig};
+pub use kodanu_graphics::{Backend, RendererConfig, SampleCount};
 pub use kodanu_input::{Action, Axis, KeyCode, MouseKey};
 pub use kodanu_log::{Level, LogConfig};
 pub use kodanu_math::{DVec2, EulerRot, Mat4, Quat, UVec2, Vec2, Vec3, Vec4};
