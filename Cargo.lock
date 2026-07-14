@@ -747,6 +747,7 @@ version = "0.1.0"
 dependencies = [
  "bytemuck",
  "kodanu_color",
+ "kodanu_culling",
  "kodanu_math",
 ]
 
@@ -754,12 +755,21 @@ dependencies = [
 name = "kodanu_camera"
 version = "0.1.0"
 dependencies = [
+ "kodanu_culling",
  "kodanu_math",
 ]
 
 [[package]]
 name = "kodanu_color"
 version = "0.1.0"
+
+[[package]]
+name = "kodanu_culling"
+version = "0.1.0"
+dependencies = [
+ "kodanu_math",
+ "kodanu_transform",
+]
 
 [[package]]
 name = "kodanu_ecs"

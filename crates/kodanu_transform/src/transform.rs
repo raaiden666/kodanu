@@ -39,6 +39,11 @@ impl Transform {
     }
 
     #[inline]
+    pub fn point(&self, point: Vec3) -> Vec3 {
+        self.position + self.rotation * (point * self.scale)
+    }
+
+    #[inline]
     pub fn set_position(&mut self, position: Vec3) {
         self.position = position;
     }

@@ -1,11 +1,8 @@
 [package]
-name = "kodanu_camera"
+name = "kodanu_culling"
 version = "0.1.0"
 edition = "2024"
 
-[lib]
-path = "src/_lib.rs"
-
 [dependencies]
 kodanu_math = { workspace = true }
-kodanu_culling = { workspace = true }
+kodanu_transform = { workspace = true }
