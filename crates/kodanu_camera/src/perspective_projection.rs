@@ -44,7 +44,7 @@ impl PerspectiveProjection {
     }
 
     #[inline]
-    pub fn matrix(&self) -> Mat4 {
+    pub fn projection_matrix(&self) -> Mat4 {
         perspective(self.fov, self.aspect_ratio, self.near, self.far)
     }
 

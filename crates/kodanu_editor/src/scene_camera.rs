@@ -65,7 +65,12 @@ impl SceneCamera {
 impl SceneCamera {
     #[inline]
     pub fn view_projection(&self) -> Mat4 {
-        self.camera.projection_matrix() * self.transform().view_matrix()
+        self.camera.view_projection(&self.transform)
+    }
+
+    #[inline]
+    pub fn set_viewport_size(&mut self, width: u32, height: u32) {
+        self.camera.set_viewport_size(width, height);
     }
 
     #[inline]

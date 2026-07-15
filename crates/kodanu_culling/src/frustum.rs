@@ -49,7 +49,6 @@ impl Frustum {
 }
 
 impl Frustum {
-    #[inline]
     pub fn contains_sphere(&self, sphere: &BoundingSphere) -> bool {
         self.left.contains_sphere(sphere)
             && self.right.contains_sphere(sphere)

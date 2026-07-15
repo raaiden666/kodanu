@@ -15,9 +15,9 @@ impl Default for Projection {
 
 impl Projection {
     #[inline]
-    pub fn matrix(&self) -> Mat4 {
+    pub fn projection_matrix(&self) -> Mat4 {
         match self {
-            Projection::Perspective(projection) => projection.matrix(),
+            Projection::Perspective(projection) => projection.projection_matrix(),
         }
     }
 }

@@ -11,7 +11,7 @@ mod setup;
 mod shader;
 
 pub use config::{Backend, RendererConfig, SampleCount};
-pub use renderer::{FrameStatus, RenderItem, Renderer};
+pub use renderer::{FrameStatus, RenderItem, RenderQueue, Renderer};
 
 pub(crate) use camera::{CameraRenderer, CameraUniform};
 pub(crate) use material::{GpuMaterial, MaterialUniform};

@@ -107,7 +107,7 @@ impl App {
 
         engine.render(
             self.editor.scene_camera().view_projection(),
-            self.editor.collect_render_items(),
+            self.editor.scene(),
         );
 
         engine.begin_frame();
@@ -126,7 +126,6 @@ impl App {
 
         self.editor
             .scene_camera_mut()
-            .camera_mut()
             .set_viewport_size(size.width, size.height);
     }
 

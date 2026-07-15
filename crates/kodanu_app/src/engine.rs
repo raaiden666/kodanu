@@ -1,5 +1,6 @@
 use {
-    kodanu_graphics::{RenderItem, Renderer, RendererConfig},
+    kodanu_editor::Scene,
+    kodanu_graphics::{RenderQueue, Renderer, RendererConfig},
     kodanu_input::{ActionMap, Input},
     kodanu_math::Mat4,
     kodanu_time::Time,
@@ -8,6 +9,7 @@ use {
 
 pub(crate) struct Engine {
     renderer: Renderer,
+    render_queue: RenderQueue,
     input: Input,
     action_map: ActionMap,
     time: Time,
@@ -17,6 +19,7 @@ impl Engine {
     pub fn new(window: &Window, config: &RendererConfig) -> Self {
         Self {
             renderer: Renderer::new(window, config),
+            render_queue: RenderQueue::with_capacity(10_000),
             input: Input::default(),
             action_map: ActionMap::default(),
             time: Time::default(),
@@ -25,11 +28,15 @@ impl Engine {
 }
 
 impl Engine {
-    pub fn render(&mut self, view_projection: Mat4, items: &[RenderItem]) {
-        let result = self.renderer.render(view_projection, items);
-        let size = self.renderer.surface_size();
+    pub fn render(&mut self, view_projection: Mat4, scene: &Scene) {
+        self.render_queue.collect_render_items(scene);
+
+        let result = self
+            .renderer
+            .render(view_projection, self.render_queue.items());
 
         if result.requires_surface_recovery() {
+            let size = self.renderer.surface_size();
             self.renderer.surface_resize(size);
         }
 

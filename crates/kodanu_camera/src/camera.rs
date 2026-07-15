@@ -1,6 +1,6 @@
 use crate::Projection;
 
-use kodanu_math::Mat4;
+use {kodanu_math::Mat4, kodanu_transform::Transform};
 
 #[derive(Default, Debug)]
 pub struct Camera {
@@ -14,6 +14,11 @@ impl Camera {
 }
 
 impl Camera {
+    #[inline]
+    pub fn view_projection(&self, transform: &Transform) -> Mat4 {
+        self.projection.projection_matrix() * transform.view_matrix()
+    }
+
     #[inline]
     pub fn set_aspect_ratio(&mut self, aspect_ratio: f32) {
         match &mut self.projection {
@@ -32,7 +37,7 @@ impl Camera {
 
     #[inline]
     pub fn projection_matrix(&self) -> Mat4 {
-        self.projection.matrix()
+        self.projection.projection_matrix()
     }
 
     #[inline]

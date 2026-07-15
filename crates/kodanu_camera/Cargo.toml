@@ -8,4 +8,4 @@ path = "src/_lib.rs"
 
 [dependencies]
 kodanu_math = { workspace = true }
-kodanu_culling = { workspace = true }
+kodanu_transform = { workspace = true }
