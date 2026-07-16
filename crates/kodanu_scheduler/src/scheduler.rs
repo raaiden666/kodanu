@@ -3,44 +3,28 @@ use crate::{Schedule, Stage, SystemContext, schedule::System};
 #[derive(Default)]
 pub struct Scheduler {
     startup: Schedule,
-    begin: Schedule,
+    pre_update: Schedule,
     update: Schedule,
-    render: Schedule,
+    late_update: Schedule,
 }
 
 impl Scheduler {
     #[inline]
-    fn stage_mut(&mut self, stage: Stage) -> &mut Schedule {
+    pub fn run(&mut self, stage: Stage, context: &mut SystemContext) {
         match stage {
-            Stage::Begin => &mut self.begin,
-            Stage::Startup => &mut self.startup,
-            Stage::Update => &mut self.update,
-            Stage::Render => &mut self.render,
-        }
+            Stage::PreUpdate => &mut self.pre_update.run(context),
+            Stage::Startup => &mut self.startup.run(context),
+            Stage::Update => &mut self.update.run(context),
+            Stage::LateUpdate => &mut self.late_update.run(context),
+        };
     }
 
-    #[inline]
     pub fn add(&mut self, stage: Stage, system: System) {
-        self.stage_mut(stage).add(system);
-    }
-
-    #[inline]
-    pub fn adds(&mut self, stage: Stage, systems: impl IntoIterator<Item = System>) {
-        self.stage_mut(stage).adds(systems);
-    }
-
-    #[inline]
-    pub fn startup(&mut self, context: &mut SystemContext) {
-        self.startup.run(context);
-    }
-
-    #[inline]
-    pub fn update(&mut self, context: &mut SystemContext) {
-        self.update.run(context);
-    }
-
-    #[inline]
-    pub fn render(&mut self, context: &mut SystemContext) {
-        self.render.run(context);
+        match stage {
+            Stage::PreUpdate => &mut self.pre_update.add(system),
+            Stage::Startup => &mut self.startup.add(system),
+            Stage::Update => &mut self.update.add(system),
+            Stage::LateUpdate => &mut self.late_update.add(system),
+        };
     }
 }

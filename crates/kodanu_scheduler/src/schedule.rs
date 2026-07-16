@@ -15,19 +15,8 @@ impl Default for Schedule {
 }
 
 impl Schedule {
-    #[inline]
     pub fn add(&mut self, system: System) {
         self.systems.push(system);
-    }
-
-    #[inline]
-    pub fn adds<I>(&mut self, systems: I)
-    where
-        I: IntoIterator<Item = System>,
-    {
-        for system in systems {
-            self.systems.push(system);
-        }
     }
 
     #[inline]

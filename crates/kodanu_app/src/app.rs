@@ -46,10 +46,6 @@ impl App {
         self.scheduler.add(stage, system);
     }
 
-    pub fn add_systems(&mut self, stage: Stage, systems: impl IntoIterator<Item = System>) {
-        self.scheduler.adds(stage, systems);
-    }
-
     pub fn with_window_config(mut self, config: WindowConfig) -> Self {
         self.config.set_window_config(config);
         self
@@ -75,13 +71,7 @@ impl ApplicationHandler for App {
         self.runtime =
             Some(AppRuntime::new(event_loop, &self.config).expect("Failed to create app"));
 
-        if let Some(runtime) = self.runtime.as_ref() {
-            self.scheduler.startup(&mut SystemContext {
-                scene: self.editor.scene_mut(),
-                time: runtime.engine().time(),
-                input: runtime.engine().input(),
-            });
-        }
+        self.run_stage(Stage::Startup);
     }
 
     fn window_event(
@@ -100,38 +90,51 @@ impl ApplicationHandler for App {
 }
 
 impl App {
-    fn handle_redraw(&mut self, event_loop: &ActiveEventLoop) {
-        let Some(runtime) = &mut self.runtime else {
-            return;
+    fn run_stage(&mut self, stage: Stage) {
+        let runtime = self.runtime.as_mut().unwrap();
+
+        let mut context = SystemContext {
+            scene: self.editor.scene_mut(),
+            time: runtime.engine().time(),
+            input: runtime.engine().input(),
         };
 
-        runtime.window_mut().request_redraw();
+        self.scheduler.run(stage, &mut context);
+    }
 
-        let engine = runtime.engine_mut();
+    fn handle_redraw(&mut self, event_loop: &ActiveEventLoop) {
+        {
+            let engine = self.runtime.as_mut().unwrap().engine_mut();
 
-        engine.time_update();
+            engine.time_update();
 
-        self.editor
-            .update(engine.input(), engine.action_map(), engine.time());
+            if engine.input().key_just_pressed(KeyCode::Escape) {
+                event_loop.exit();
+            }
 
-        if engine.input().key_just_pressed(KeyCode::Escape) {
-            event_loop.exit();
+            self.editor
+                .update(engine.input(), engine.action_map(), engine.time());
+
+            engine.begin_frame();
         }
+
+        self.run_stage(Stage::PreUpdate);
+        self.run_stage(Stage::Update);
+        self.run_stage(Stage::LateUpdate);
+
+        let runtime = self.runtime.as_mut().unwrap();
+        let engine = runtime.engine_mut();
 
         engine.render(
             self.editor.scene_camera().view_projection(),
             self.editor.scene(),
         );
 
-        engine.begin_frame();
+        runtime.window_mut().request_redraw();
     }
 
     fn handle_resize(&mut self, size: PhysicalSize<u32>) {
-        let Some(runtime) = &mut self.runtime else {
-            return;
-        };
-
-        let engine = runtime.engine_mut();
+        let engine = self.runtime.as_mut().unwrap().engine_mut();
 
         engine
             .renderer_mut()
@@ -143,11 +146,7 @@ impl App {
     }
 
     fn handle_input(&mut self, event: WindowEvent) {
-        let Some(runtime) = &mut self.runtime else {
-            return;
-        };
-
-        let engine = runtime.engine_mut();
+        let engine = self.runtime.as_mut().unwrap().engine_mut();
 
         match event {
             WindowEvent::KeyboardInput { event, .. } => {
