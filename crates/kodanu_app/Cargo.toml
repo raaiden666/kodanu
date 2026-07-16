@@ -22,3 +22,4 @@ kodanu_assets = { workspace = true }
 kodanu_transform = { workspace = true }
 kodanu_color = { workspace = true }
 kodanu_log = { workspace = true }
+kodanu_scheduler = { workspace = true }

@@ -9,5 +9,6 @@ pub use kodanu_input::{Action, Axis, KeyCode, MouseKey};
 pub use kodanu_log::{Level, LogConfig};
 pub use kodanu_math::{DVec2, EulerRot, Mat4, Quat, UVec2, Vec2, Vec3, Vec4};
 pub use kodanu_scene::MeshRenderer;
+pub use kodanu_scheduler::{Stage, SystemContext};
 pub use kodanu_transform::Transform;
 pub use kodanu_window::WindowConfig;

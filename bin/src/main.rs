@@ -18,23 +18,23 @@ fn main() {
         .with_renderer_config(renderer_config)
         .with_log_config(log_config);
 
-    init_test_mesh(app.scene_mut());
+    app.add_system(Stage::Startup, init_test_mesh);
 
     app.run();
 }
 
-fn init_test_mesh(scene: &mut Scene) {
-    scene.world_mut().spawn((
+fn init_test_mesh(context: &mut SystemContext) {
+    context.scene.world_mut().spawn((
         Transform::default(),
         MeshRenderer::new(Mesh::cube_2d(), Material::new(Color::GREEN)),
     ));
 
-    scene.world_mut().spawn((
-        Transform::from_position(Vec3::new(-1.0, 0.0, -5.0)),
+    context.scene.world_mut().spawn((
+        Transform::from_position(Vec3::new(-2.5, 0.0, -5.0)),
         MeshRenderer::new(Mesh::triangle_2d(), Material::new(Color::BLUE)),
     ));
 
-    scene.world_mut().spawn((
+    context.scene.world_mut().spawn((
         Transform::from_position(Vec3::new(-2.5, 0.0, 0.0)),
         MeshRenderer::new(Mesh::cube_2d(), Material::new(Color::RED)),
     ));

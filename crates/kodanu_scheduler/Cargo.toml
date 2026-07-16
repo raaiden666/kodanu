@@ -1,0 +1,9 @@
+[package]
+name = "kodanu_scheduler"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+kodanu_input = { workspace = true }
+kodanu_time = { workspace = true }
+kodanu_editor = { workspace = true }

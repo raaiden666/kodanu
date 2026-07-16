@@ -1,11 +1,11 @@
 use crate::{AppConfig, AppRuntime, Editor};
 
 use {
-    kodanu_editor::Scene,
     kodanu_graphics::RendererConfig,
     kodanu_input::KeyCode,
     kodanu_log::LogConfig,
     kodanu_math::{DVec2, UVec2},
+    kodanu_scheduler::{Scheduler, Stage, System, SystemContext},
     kodanu_window::WindowConfig,
     tracing_subscriber::fmt,
 };
@@ -25,6 +25,7 @@ use winit::{
 #[derive(Default)]
 pub struct App {
     runtime: Option<AppRuntime>,
+    scheduler: Scheduler,
     config: AppConfig,
     editor: Editor,
 }
@@ -41,6 +42,14 @@ impl App {
         event_loop.run_app(self).expect("Failed to run app");
     }
 
+    pub fn add_system(&mut self, stage: Stage, system: System) {
+        self.scheduler.add(stage, system);
+    }
+
+    pub fn add_systems(&mut self, stage: Stage, systems: impl IntoIterator<Item = System>) {
+        self.scheduler.adds(stage, systems);
+    }
+
     pub fn with_window_config(mut self, config: WindowConfig) -> Self {
         self.config.set_window_config(config);
         self
@@ -55,10 +64,6 @@ impl App {
         self.config.set_log_config(config);
         self
     }
-
-    pub fn scene_mut(&mut self) -> &mut Scene {
-        self.editor.scene_mut()
-    }
 }
 
 impl ApplicationHandler for App {
@@ -69,6 +74,14 @@ impl ApplicationHandler for App {
 
         self.runtime =
             Some(AppRuntime::new(event_loop, &self.config).expect("Failed to create app"));
+
+        if let Some(runtime) = self.runtime.as_ref() {
+            self.scheduler.startup(&mut SystemContext {
+                scene: self.editor.scene_mut(),
+                time: runtime.engine().time(),
+                input: runtime.engine().input(),
+            });
+        }
     }
 
     fn window_event(

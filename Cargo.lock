@@ -717,6 +717,7 @@ dependencies = [
  "kodanu_log",
  "kodanu_math",
  "kodanu_scene",
+ "kodanu_scheduler",
  "kodanu_transform",
  "kodanu_window",
 ]
@@ -734,6 +735,7 @@ dependencies = [
  "kodanu_log",
  "kodanu_math",
  "kodanu_scene",
+ "kodanu_scheduler",
  "kodanu_time",
  "kodanu_transform",
  "kodanu_window",
@@ -833,6 +835,15 @@ name = "kodanu_scene"
 version = "0.1.0"
 dependencies = [
  "kodanu_assets",
+]
+
+[[package]]
+name = "kodanu_scheduler"
+version = "0.1.0"
+dependencies = [
+ "kodanu_editor",
+ "kodanu_input",
+ "kodanu_time",
 ]
 
 [[package]]
