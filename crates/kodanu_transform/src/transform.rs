@@ -101,6 +101,16 @@ impl Transform {
     pub fn rotate(&mut self, rotation: Quat) {
         self.rotation *= rotation;
     }
+
+    #[inline]
+    pub fn rotate_world(&mut self, rotation: Quat) {
+        self.rotation = rotation * self.rotation
+    }
+
+    #[inline]
+    pub fn rotate_local(&mut self, rotation: Quat) {
+        self.rotation *= rotation
+    }
 }
 
 impl Transform {

@@ -4,7 +4,7 @@ use {
     kodanu_graphics::RendererConfig,
     kodanu_input::KeyCode,
     kodanu_log::LogConfig,
-    kodanu_math::{DVec2, UVec2},
+    kodanu_math::{DVec2, Mat4, UVec2},
     kodanu_scheduler::{Scheduler, Stage, System, SystemContext},
     kodanu_window::WindowConfig,
     tracing_subscriber::fmt,
@@ -36,8 +36,6 @@ impl App {
         let event_loop = EventLoop::new().expect("Failed to create event loop");
 
         fmt().with_env_filter(log_config.env_filter()).init();
-
-        self.editor.init();
 
         event_loop.run_app(self).expect("Failed to run app");
     }
@@ -97,6 +95,7 @@ impl App {
             scene: self.editor.scene_mut(),
             time: runtime.engine().time(),
             input: runtime.engine().input(),
+            action_map: runtime.engine().action_map(),
         };
 
         self.scheduler.run(stage, &mut context);
@@ -112,9 +111,6 @@ impl App {
                 event_loop.exit();
             }
 
-            self.editor
-                .update(engine.input(), engine.action_map(), engine.time());
-
             engine.begin_frame();
         }
 
@@ -125,10 +121,11 @@ impl App {
         let runtime = self.runtime.as_mut().unwrap();
         let engine = runtime.engine_mut();
 
-        engine.render(
-            self.editor.scene_camera().view_projection(),
-            self.editor.scene(),
-        );
+        if let Some(view_projection) = self.editor.scene().view_projection() {
+            engine.render(view_projection, self.editor.scene());
+        } else {
+            engine.render(Mat4::ZERO, self.editor.scene());
+        }
 
         runtime.window_mut().request_redraw();
     }
@@ -141,7 +138,7 @@ impl App {
             .surface_resize(UVec2::new(size.width, size.height));
 
         self.editor
-            .scene_camera_mut()
+            .scene_mut()
             .set_viewport_size(size.width, size.height);
     }
 

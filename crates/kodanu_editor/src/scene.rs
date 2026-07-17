@@ -1,4 +1,4 @@
-use kodanu_ecs::World;
+use {kodanu_camera::Camera, kodanu_ecs::World, kodanu_math::Mat4, kodanu_transform::Transform};
 
 #[derive(Default)]
 pub struct Scene {
@@ -6,6 +6,23 @@ pub struct Scene {
 }
 
 impl Scene {
+    pub fn view_projection(&self) -> Option<Mat4> {
+        let mut query = self.world.query::<(&Transform, &Camera)>();
+
+        query
+            .iter()
+            .next()
+            .map(|(transform, camera)| camera.view_projection(transform))
+    }
+
+    pub fn set_viewport_size(&mut self, width: u32, height: u32) {
+        let mut query = self.world.query::<&mut Camera>();
+
+        if let Some(camera) = query.iter().next() {
+            camera.set_viewport_size(width, height);
+        }
+    }
+
     #[inline]
     pub fn world(&self) -> &World {
         &self.world
