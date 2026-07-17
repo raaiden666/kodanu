@@ -51,7 +51,7 @@ impl GraphicsPipeline {
                     targets: &[Some(render_surface.config().format.into())],
                     compilation_options: PipelineCompilationOptions::default(),
                 }),
-                depth_stencil: Some(RenderTexture::create_depth_stencil_state()),
+                depth_stencil: Some(RenderTexture::depth_stencil_state()),
                 primitive: PrimitiveState::default(),
                 multisample: MultisampleState {
                     count: config.sample_count().as_u32(),

@@ -1,6 +1,6 @@
 use crate::{
     AssetResources, RenderItem, RendererConfig, SampleCount,
-    gpu::{GraphicsDevice, RenderSurface, RenderTexture, RenderTextureDescriptor, SurfaceFrame},
+    gpu::{GraphicsDevice, RenderSurface, RenderTexture, SurfaceFrame},
     pipeline::GraphicsPipeline,
     renderer::FrameStatus,
     resources::FrameResources,
@@ -13,7 +13,11 @@ use wgpu::{
     TextureViewDescriptor,
 };
 
-use {kodanu_math::Mat4, kodanu_math::UVec2, kodanu_window::Window, pollster::block_on};
+use {
+    kodanu_math::{Mat4, UVec2},
+    kodanu_window::Window,
+    pollster::block_on,
+};
 
 pub struct Renderer {
     graphics_device: GraphicsDevice,
@@ -38,19 +42,17 @@ impl Renderer {
         let graphics_pipeline =
             GraphicsPipeline::new(config, &graphics_device, &render_surface, &frame_resources);
 
-        let depth_target = RenderTexture::new(
-            RenderTextureDescriptor::depth_texture(config.sample_count()),
-            &graphics_device,
+        let depth_target = RenderTexture::new_depth(
+            graphics_device.device(),
+            config.sample_count(),
             window.size(),
         );
 
         let color_target = if config.sample_count() != SampleCount::Single {
-            Some(RenderTexture::new(
-                RenderTextureDescriptor::color_texture(
-                    render_surface.config().format,
-                    config.sample_count(),
-                ),
-                &graphics_device,
+            Some(RenderTexture::new_color(
+                render_surface.config().format,
+                config.sample_count(),
+                graphics_device.device(),
                 window.size(),
             ))
         } else {
@@ -120,7 +122,7 @@ impl Renderer {
 
         let gpu_material = self.asset_resources.gpu_material(
             self.graphics_device.device(),
-            &self.frame_resources,
+            self.frame_resources.material_layout().bind_group_layout(),
             item,
         );
 

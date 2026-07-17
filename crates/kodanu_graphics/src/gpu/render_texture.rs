@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use crate::gpu::{GraphicsDevice, RenderTextureDescriptor};
+use crate::{SampleCount, gpu::RenderTextureDescriptor};
 
 use kodanu_math::UVec2;
 
@@ -17,12 +17,35 @@ pub(crate) struct RenderTexture {
 }
 
 impl RenderTexture {
-    pub fn new(
-        descriptor: RenderTextureDescriptor,
-        graphics_device: &GraphicsDevice,
+    pub fn new(device: &Device, size: UVec2, descriptor: RenderTextureDescriptor) -> Self {
+        let (texture, view) = Self::create_texture(&descriptor, device, size);
+
+        Self {
+            texture,
+            view,
+            descriptor,
+        }
+    }
+
+    pub fn new_depth(device: &Device, sample_count: SampleCount, size: UVec2) -> Self {
+        let descriptor = RenderTextureDescriptor::depth_texture(sample_count);
+        let (texture, view) = Self::create_texture(&descriptor, device, size);
+
+        Self {
+            texture,
+            view,
+            descriptor,
+        }
+    }
+
+    pub fn new_color(
+        format: TextureFormat,
+        sample_count: SampleCount,
+        device: &Device,
         size: UVec2,
     ) -> Self {
-        let (texture, view) = Self::create_texture(&descriptor, graphics_device.device(), size);
+        let descriptor = RenderTextureDescriptor::color_texture(format, sample_count);
+        let (texture, view) = Self::create_texture(&descriptor, device, size);
 
         Self {
             texture,
@@ -57,7 +80,7 @@ impl RenderTexture {
         (self.texture, self.view) = Self::create_texture(&self.descriptor, device, size);
     }
 
-    pub fn create_depth_stencil_state() -> DepthStencilState {
+    pub fn depth_stencil_state() -> DepthStencilState {
         DepthStencilState {
             format: TextureFormat::Depth32Float,
             depth_write_enabled: Some(true),

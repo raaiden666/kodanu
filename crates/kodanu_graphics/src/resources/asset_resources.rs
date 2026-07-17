@@ -1,10 +1,12 @@
 use crate::{
     GpuMaterial, MaterialCache, RenderItem,
     mesh::{GpuMesh, MeshCache},
-    resources::FrameResources,
 };
 
-use {std::sync::Arc, wgpu::Device};
+use {
+    std::sync::Arc,
+    wgpu::{BindGroupLayout, Device},
+};
 
 #[derive(Default)]
 pub(crate) struct AssetResources {
@@ -20,13 +22,10 @@ impl AssetResources {
     pub fn gpu_material(
         &mut self,
         device: &Device,
-        frame_resources: &FrameResources,
+        bind_group_layout: &BindGroupLayout,
         item: &RenderItem,
     ) -> Arc<GpuMaterial> {
-        self.material.get_or_create(
-            device,
-            frame_resources.material_layout().bind_group_layout(),
-            &item.material_handle(),
-        )
+        self.material
+            .get_or_create(device, bind_group_layout, &item.material_handle())
     }
 }

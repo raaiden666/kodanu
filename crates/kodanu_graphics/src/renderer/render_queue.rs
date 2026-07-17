@@ -1,6 +1,6 @@
-use {kodanu_editor::Scene, kodanu_scene::MeshRenderer, kodanu_transform::Transform};
-
 use crate::RenderItem;
+
+use {kodanu_editor::Scene, kodanu_scene::MeshRenderer, kodanu_transform::Transform};
 
 #[derive(Default)]
 pub struct RenderQueue {
@@ -13,6 +13,7 @@ impl RenderQueue {
             render_items: Vec::with_capacity(capacity),
         }
     }
+
     pub fn collect_render_items(&mut self, scene: &Scene) {
         self.render_items.clear();
 
