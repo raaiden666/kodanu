@@ -27,7 +27,10 @@ fn main() {
 fn test_scene_system(ctx: &mut SystemContext) {
     let world = ctx.scene.world_mut();
 
-    world.spawn((Transform::default(), Camera::default()));
+    world.spawn((
+        Transform::from_position(Vec3::new(0.0, 0.0, 5.0)),
+        Camera::default(),
+    ));
 
     world.spawn((
         Transform::default(),
@@ -46,12 +49,9 @@ fn test_scene_system(ctx: &mut SystemContext) {
 }
 
 fn perspective_camera_system(ctx: &mut SystemContext) {
-    for (transform, _) in ctx
-        .scene
-        .world()
-        .query::<(&mut Transform, &Camera)>()
-        .iter()
-    {
+    let world = ctx.scene.world();
+
+    for (transform, _) in world.query::<(&mut Transform, &Camera)>().iter() {
         let (input, action_map, time) = (ctx.input, ctx.action_map, ctx.time);
 
         let direction = transform.forward() * action_map.axis(Axis::MoveY, input)
