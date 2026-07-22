@@ -1,12 +1,21 @@
 use std::{any::Any, mem::replace};
 
-use crate::ComponentStorage;
+use crate::{Component, ComponentStorage};
 
-#[derive(Default)]
 pub struct SparseSet<T> {
     sparse: Vec<u32>,
     dense_indicies: Vec<u32>,
     dense_componenets: Vec<T>,
+}
+
+impl<T> Default for SparseSet<T> {
+    fn default() -> Self {
+        Self {
+            sparse: Vec::new(),
+            dense_indicies: Vec::new(),
+            dense_componenets: Vec::new(),
+        }
+    }
 }
 
 impl<T> SparseSet<T> {
@@ -122,7 +131,7 @@ impl<T> SparseSet<T> {
     }
 }
 
-impl<T: ComponentStorage> ComponentStorage for SparseSet<T> {
+impl<T: Component> ComponentStorage for SparseSet<T> {
     fn as_any(&self) -> &dyn Any {
         self
     }

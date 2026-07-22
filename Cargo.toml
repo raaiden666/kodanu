@@ -36,6 +36,8 @@ bitflags = { version = "2.13.0" }
 tracing = { version = "0.1.44" }
 tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
 
+hashbrown = { version = "0.17.1" }
+
 kodanu_app = { package = "kodanu_app", path = "crates/kodanu_app" }
 kodanu_graphics = { package = "kodanu_graphics", path = "crates/kodanu_graphics" }
 kodanu_input = { package = "kodanu_input", path = "crates/kodanu_input" }

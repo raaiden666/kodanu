@@ -1,8 +1,10 @@
-use {kodanu_camera::Camera, kodanu_ecs::World, kodanu_math::Mat4, kodanu_transform::Transform};
+use {
+    kodanu_camera::Camera, kodanu_ecs::HecsWorld, kodanu_math::Mat4, kodanu_transform::Transform,
+};
 
 #[derive(Default)]
 pub struct Scene {
-    world: World,
+    world: HecsWorld,
 }
 
 impl Scene {
@@ -24,12 +26,12 @@ impl Scene {
     }
 
     #[inline]
-    pub fn world(&self) -> &World {
+    pub fn world(&self) -> &HecsWorld {
         &self.world
     }
 
     #[inline]
-    pub fn world_mut(&mut self) -> &mut World {
+    pub fn world_mut(&mut self) -> &mut HecsWorld {
         &mut self.world
     }
 }
