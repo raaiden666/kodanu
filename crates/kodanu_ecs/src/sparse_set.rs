@@ -1,4 +1,6 @@
-use std::mem::replace;
+use std::{any::Any, mem::replace};
+
+use crate::ComponentStorage;
 
 #[derive(Default)]
 pub struct SparseSet<T> {
@@ -117,5 +119,19 @@ impl<T> SparseSet<T> {
         if self.sparse.len() < required {
             self.sparse.resize(required, u32::MAX);
         }
+    }
+}
+
+impl<T: ComponentStorage> ComponentStorage for SparseSet<T> {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
+    fn as_any_mut(&mut self) -> &mut dyn Any {
+        self
+    }
+
+    fn remove_entity(&mut self, entity_index: u32) {
+        let _ = self.remove(entity_index);
     }
 }
