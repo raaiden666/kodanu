@@ -1,6 +1,6 @@
 use crate::{
-    Component, ComponentStorage, EntityAllocator, Query, QueryIter, QueryMut, SparseSet,
-    entity::Entity,
+    Component, ComponentStorage, EntityAllocator, Query, QueryAccess, QueryIter, QueryMut,
+    SparseSet, entity::Entity, query_access::validate,
 };
 
 use {hashbrown::HashMap, std::any::TypeId};
@@ -118,8 +118,10 @@ impl World {
     #[inline]
     pub fn query<'w, Q>(&'w self) -> Option<QueryIter<'w, Q::Fetch<'w>>>
     where
-        Q: Query,
+        Q: Query + QueryAccess,
     {
+        validate::<Q>();
+
         let fetch = Q::create_fetch(self)?;
 
         Some(QueryIter::new(fetch))
@@ -128,8 +130,10 @@ impl World {
     #[inline]
     pub fn query_mut<'w, Q>(&'w mut self) -> Option<QueryIter<'w, Q::Fetch<'w>>>
     where
-        Q: QueryMut,
+        Q: QueryMut + QueryAccess,
     {
+        validate::<Q>();
+
         let fetch = Q::create_fetch_mut(self)?;
 
         Some(QueryIter::new(fetch))

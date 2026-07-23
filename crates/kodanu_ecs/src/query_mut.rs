@@ -1,7 +1,5 @@
 use crate::{Component, Fetch, ReadFetch, World, WriteFetch};
 
-use std::any::TypeId;
-
 pub trait QueryMut {
     type Item<'w>;
 
@@ -33,8 +31,6 @@ where
 
     #[inline]
     fn create_fetch_mut<'w>(world: &'w mut World) -> Option<Self::Fetch<'w>> {
-        assert_ne::<A, B>();
-
         let world_ptr = world as *mut World;
 
         let a = unsafe { (*world_ptr).storage_mut_ptr::<A>()? };
@@ -54,8 +50,6 @@ where
 
     #[inline]
     fn create_fetch_mut<'w>(world: &'w mut World) -> Option<Self::Fetch<'w>> {
-        assert_ne::<A, B>();
-
         let world_ptr = world as *mut World;
 
         let a = unsafe { (*world_ptr).storage_ptr::<A>()? };
@@ -63,17 +57,4 @@ where
 
         unsafe { Some((ReadFetch::from_ptr(a), WriteFetch::from_ptr(b))) }
     }
-}
-
-#[inline]
-pub fn assert_ne<A, B>()
-where
-    A: Component,
-    B: Component,
-{
-    assert_ne!(
-        TypeId::of::<A>(),
-        TypeId::of::<B>(),
-        "Query aliases the same component!"
-    );
 }

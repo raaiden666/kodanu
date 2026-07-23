@@ -92,20 +92,13 @@ impl<T> SparseSet<T> {
 
     pub fn remove(&mut self, entity_index: u32) -> Option<T> {
         let dense_index = self.dense_index(entity_index)?;
-        let last = self.dense.len() - 1;
-
         self.sparse[entity_index as usize] = u32::MAX;
 
-        self.indicies.swap(dense_index, last);
-        self.dense.swap(dense_index, last);
+        let component = self.dense.swap_remove(dense_index);
+        self.indicies.swap_remove(dense_index);
 
-        let component = self.dense.pop().unwrap();
-
-        self.indicies.pop();
-
-        if dense_index != last {
+        if dense_index < self.dense.len() {
             let moved_entity = self.indicies[dense_index];
-
             self.sparse[moved_entity as usize] = dense_index as u32;
         }
 
