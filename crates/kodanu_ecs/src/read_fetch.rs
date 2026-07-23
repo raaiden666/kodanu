@@ -19,16 +19,6 @@ impl<'w, T: Component> ReadFetch<'w, T> {
             marker: PhantomData,
         }
     }
-
-    #[inline]
-    pub(crate) unsafe fn from_ptr(storage: *const SparseSet<T>) -> Self {
-        Self {
-            sparse: unsafe { (*storage).sparse() },
-            dense: unsafe { (*storage).dense().as_ptr() },
-            entities: unsafe { (*storage).indices() },
-            marker: PhantomData,
-        }
-    }
 }
 
 impl<'w, T: Component> Fetch<'w> for ReadFetch<'w, T> {

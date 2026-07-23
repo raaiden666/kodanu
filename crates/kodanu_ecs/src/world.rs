@@ -1,14 +1,15 @@
 use crate::{
-    Component, ComponentStorage, EntityAllocator, Query, QueryAccess, QueryIter, QueryMut,
-    SparseSet, entity::Entity, query_access::validate,
+    Component, ComponentStorage, EntityAllocator, Query, QueryAccess, QueryIter, SparseSet,
+    UnsafeWorldCell, entity::Entity, query_access::validate,
 };
 
-use {hashbrown::HashMap, std::any::TypeId};
+use {hashbrown::HashMap, std::any::Any, std::any::TypeId};
 
 #[derive(Default)]
 pub struct World {
     entities: EntityAllocator,
     storages: HashMap<TypeId, Box<dyn ComponentStorage>>,
+    resources: HashMap<TypeId, Box<dyn Any>>,
 }
 
 impl World {
@@ -16,6 +17,7 @@ impl World {
         Self {
             entities: EntityAllocator::with_capacity(capacity),
             storages: HashMap::with_capacity(capacity),
+            resources: HashMap::with_capacity(capacity),
         }
     }
 
@@ -40,6 +42,10 @@ impl World {
         self.assert_alive(entity);
 
         self.storage_entry::<T>().insert(entity.index, component)
+    }
+
+    pub fn insert_res<T: Component>(&mut self, resource: T) {
+        self.resources.insert(TypeId::of::<T>(), Box::new(resource));
     }
 
     pub fn remove<T: Component>(&mut self, entity: Entity) -> Option<T> {
@@ -100,6 +106,18 @@ impl World {
     }
 
     #[inline]
+    pub fn res<T: Component>(&self) -> Option<&T> {
+        self.resources.get(&TypeId::of::<T>())?.downcast_ref::<T>()
+    }
+
+    #[inline]
+    pub fn res_mut<T: Component>(&mut self) -> Option<&mut T> {
+        self.resources
+            .get_mut(&TypeId::of::<T>())?
+            .downcast_mut::<T>()
+    }
+
+    #[inline]
     pub fn assert_alive(&self, entity: Entity) {
         assert!(self.entities.is_alive(entity), "Entity not found");
     }
@@ -122,7 +140,7 @@ impl World {
     {
         validate::<Q>();
 
-        let fetch = Q::create_fetch(self)?;
+        let fetch = Q::create_fetch(UnsafeWorldCell::from_world(self))?;
 
         Some(QueryIter::new(fetch))
     }
@@ -130,11 +148,11 @@ impl World {
     #[inline]
     pub fn query_mut<'w, Q>(&'w mut self) -> Option<QueryIter<'w, Q::Fetch<'w>>>
     where
-        Q: QueryMut + QueryAccess,
+        Q: Query + QueryAccess,
     {
         validate::<Q>();
 
-        let fetch = Q::create_fetch_mut(self)?;
+        let fetch = Q::create_fetch(UnsafeWorldCell::from_world_mut(self))?;
 
         Some(QueryIter::new(fetch))
     }

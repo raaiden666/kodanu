@@ -1,6 +1,6 @@
-use std::any::TypeId;
-
 use crate::Component;
+
+use std::any::TypeId;
 
 pub trait QueryAccess {
     fn read_types(types: &mut Vec<TypeId>);
@@ -48,8 +48,8 @@ pub(crate) fn validate<Q: QueryAccess>() {
     Q::write_types(&mut writes);
 
     for i in 0..writes.len() {
-        for j in 0..reads.len() {
-            assert_ne!(writes[i], reads[j], "Component mutably borrowed twice")
+        for j in i + 1..writes.len() {
+            assert_ne!(writes[i], writes[j], "Component mutably borrowed twice")
         }
     }
 
