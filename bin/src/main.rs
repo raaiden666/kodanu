@@ -27,31 +27,32 @@ fn main() {
 fn test_scene_system(ctx: &mut SystemContext) {
     let world = ctx.scene.world_mut();
 
-    world.spawn((
-        Transform::from_position(Vec3::new(0.0, 0.0, 5.0)),
-        Camera::default(),
-    ));
+    {
+        let camera = world.spawn();
 
-    world.spawn((
-        Transform::default(),
-        MeshRenderer::new(Mesh::cube_2d(), Material::new(Color::GREEN)),
-    ));
+        world.insert(camera, Transform::default());
+        world.insert(camera, Camera::default());
+    }
 
-    world.spawn((
-        Transform::from_position(Vec3::new(-2.5, 0.0, -5.0)),
-        MeshRenderer::new(Mesh::triangle_2d(), Material::new(Color::BLUE)),
-    ));
+    {
+        let cube = world.spawn();
 
-    world.spawn((
-        Transform::from_position(Vec3::new(-2.5, 0.0, 0.0)),
-        MeshRenderer::new(Mesh::cube_2d(), Material::new(Color::RED)),
-    ));
+        world.insert(cube, Transform::default());
+        world.insert(
+            cube,
+            MeshRenderer::new(Mesh::cube_2d(), Material::new(Color::GREEN)),
+        );
+    }
 }
 
 fn perspective_camera_system(ctx: &mut SystemContext) {
-    let world = ctx.scene.world();
+    let world = ctx.scene.world_mut();
 
-    for (transform, _) in world.query::<(&mut Transform, &Camera)>().iter() {
+    let Some(query) = world.query_mut::<(&mut Transform, &Camera)>() else {
+        return;
+    };
+
+    for (transform, _) in query {
         let (input, action_map, time) = (ctx.input, ctx.action_map, ctx.time);
 
         let direction = transform.forward() * action_map.axis(Axis::MoveY, input)

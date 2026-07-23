@@ -2,13 +2,24 @@ mod component;
 mod component_storage;
 mod entity;
 mod entity_allocator;
+mod fetch;
+mod query;
+mod query_iter;
+mod query_mut;
+mod read_fetch;
 mod sparse_set;
 mod world;
-
-pub use hecs::{DynamicBundle, Entity, World as HecsWorld};
+mod write_fetch;
 
 pub use component::Component;
 pub use component_storage::ComponentStorage;
+pub use entity::Entity;
 pub use entity_allocator::EntityAllocator;
+pub use fetch::Fetch;
+pub use query::Query;
+pub use query_iter::QueryIter;
+pub use query_mut::QueryMut;
+pub use read_fetch::ReadFetch;
 pub use sparse_set::SparseSet;
 pub use world::World;
+pub use write_fetch::WriteFetch;

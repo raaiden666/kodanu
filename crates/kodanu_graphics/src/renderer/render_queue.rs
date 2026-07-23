@@ -17,9 +17,11 @@ impl RenderQueue {
     pub fn collect_render_items(&mut self, scene: &Scene) {
         self.render_items.clear();
 
-        for (transform, mesh_renderer) in
-            scene.world().query::<(&Transform, &MeshRenderer)>().iter()
-        {
+        let Some(query) = scene.world().query::<(&Transform, &MeshRenderer)>() else {
+            return;
+        };
+
+        for (transform, mesh_renderer) in query {
             let (mesh, material, model) = (
                 mesh_renderer.mesh_handle(),
                 mesh_renderer.material_handle(),

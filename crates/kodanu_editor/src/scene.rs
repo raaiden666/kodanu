@@ -1,37 +1,36 @@
-use {
-    kodanu_camera::Camera, kodanu_ecs::HecsWorld, kodanu_math::Mat4, kodanu_transform::Transform,
-};
+use {kodanu_camera::Camera, kodanu_ecs::World, kodanu_math::Mat4, kodanu_transform::Transform};
 
 #[derive(Default)]
 pub struct Scene {
-    world: HecsWorld,
+    world: World,
 }
 
 impl Scene {
     pub fn view_projection(&self) -> Option<Mat4> {
-        let mut query = self.world.query::<(&Transform, &Camera)>();
+        let mut query = self.world.query::<(&Transform, &Camera)>()?;
 
-        query
-            .iter()
-            .next()
-            .map(|(transform, camera)| camera.view_projection(transform))
+        let (transform, camera) = query.next()?;
+
+        Some(camera.view_projection(transform))
     }
 
     pub fn set_viewport_size(&mut self, width: u32, height: u32) {
-        let mut query = self.world.query::<&mut Camera>();
+        let Some(mut query) = self.world.query_mut::<&mut Camera>() else {
+            return;
+        };
 
-        if let Some(camera) = query.iter().next() {
+        if let Some(camera) = query.next() {
             camera.set_viewport_size(width, height);
         }
     }
 
     #[inline]
-    pub fn world(&self) -> &HecsWorld {
+    pub fn world(&self) -> &World {
         &self.world
     }
 
     #[inline]
-    pub fn world_mut(&mut self) -> &mut HecsWorld {
+    pub fn world_mut(&mut self) -> &mut World {
         &mut self.world
     }
 }

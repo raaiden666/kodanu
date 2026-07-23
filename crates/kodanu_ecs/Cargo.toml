@@ -7,5 +7,4 @@ edition = "2024"
 path = "src/_lib.rs"
 
 [dependencies]
-hecs = { workspace = true }
 hashbrown = { workspace = true }

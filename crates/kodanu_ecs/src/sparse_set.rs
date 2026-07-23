@@ -1,19 +1,19 @@
-use std::{any::Any, mem::replace};
-
 use crate::{Component, ComponentStorage};
 
+use std::{any::Any, mem::replace};
+
 pub struct SparseSet<T> {
-    sparse: Vec<u32>,
-    dense_indicies: Vec<u32>,
-    dense_componenets: Vec<T>,
+    pub(crate) sparse: Vec<u32>,
+    pub(crate) indicies: Vec<u32>,
+    pub(crate) dense: Vec<T>,
 }
 
 impl<T> Default for SparseSet<T> {
     fn default() -> Self {
         Self {
             sparse: Vec::new(),
-            dense_indicies: Vec::new(),
-            dense_componenets: Vec::new(),
+            indicies: Vec::new(),
+            dense: Vec::new(),
         }
     }
 }
@@ -22,19 +22,39 @@ impl<T> SparseSet<T> {
     pub fn with_capacity(capacity: usize) -> Self {
         Self {
             sparse: Vec::with_capacity(capacity),
-            dense_indicies: Vec::with_capacity(capacity),
-            dense_componenets: Vec::with_capacity(capacity),
+            indicies: Vec::with_capacity(capacity),
+            dense: Vec::with_capacity(capacity),
         }
     }
 
     #[inline]
     pub fn len(&self) -> usize {
-        self.dense_componenets.len()
+        self.dense.len()
+    }
+
+    #[inline]
+    pub fn indices(&self) -> &[u32] {
+        &self.indicies
+    }
+
+    #[inline]
+    pub fn dense(&self) -> &[T] {
+        &self.dense
+    }
+
+    #[inline]
+    pub fn dense_mut(&mut self) -> &mut [T] {
+        &mut self.dense
+    }
+
+    #[inline]
+    pub fn sparse(&self) -> &[u32] {
+        &self.sparse
     }
 
     #[inline]
     pub fn is_empty(&self) -> bool {
-        self.dense_componenets.is_empty()
+        self.dense.is_empty()
     }
 
     #[inline]
@@ -45,46 +65,46 @@ impl<T> SparseSet<T> {
     #[inline]
     pub fn get(&self, entity_index: u32) -> Option<&T> {
         let dense_index = self.dense_index(entity_index)?;
-        Some(&self.dense_componenets[dense_index])
+        Some(&self.dense[dense_index])
     }
 
     #[inline]
     pub fn get_mut(&mut self, entity_index: u32) -> Option<&mut T> {
         let dense_index = self.dense_index(entity_index)?;
-        Some(&mut self.dense_componenets[dense_index])
+        Some(&mut self.dense[dense_index])
     }
 
     pub fn insert(&mut self, entity_index: u32, component: T) -> Option<T> {
         self.ensure_capacity(entity_index);
 
         if let Some(dense_index) = self.dense_index(entity_index) {
-            return Some(replace(&mut self.dense_componenets[dense_index], component));
+            return Some(replace(&mut self.dense[dense_index], component));
         }
 
-        let dense_index = self.dense_componenets.len() as u32;
+        let dense_index = self.dense.len() as u32;
 
         self.sparse[entity_index as usize] = dense_index;
-        self.dense_indicies.push(entity_index);
-        self.dense_componenets.push(component);
+        self.indicies.push(entity_index);
+        self.dense.push(component);
 
         None
     }
 
     pub fn remove(&mut self, entity_index: u32) -> Option<T> {
         let dense_index = self.dense_index(entity_index)?;
-        let last = self.dense_componenets.len() - 1;
+        let last = self.dense.len() - 1;
 
         self.sparse[entity_index as usize] = u32::MAX;
 
-        self.dense_indicies.swap(dense_index, last);
-        self.dense_componenets.swap(dense_index, last);
+        self.indicies.swap(dense_index, last);
+        self.dense.swap(dense_index, last);
 
-        let component = self.dense_componenets.pop().unwrap();
+        let component = self.dense.pop().unwrap();
 
-        self.dense_indicies.pop();
+        self.indicies.pop();
 
         if dense_index != last {
-            let moved_entity = self.dense_indicies[dense_index];
+            let moved_entity = self.indicies[dense_index];
 
             self.sparse[moved_entity as usize] = dense_index as u32;
         }
@@ -92,20 +112,10 @@ impl<T> SparseSet<T> {
         Some(component)
     }
 
-    #[inline]
-    pub fn entity_index_at(&self, dense_index: usize) -> u32 {
-        self.dense_indicies[dense_index]
-    }
-
-    #[inline]
-    pub fn component_at(&self, dense_index: usize) -> &T {
-        &self.dense_componenets[dense_index]
-    }
-
     pub fn clear(&mut self) {
         self.sparse.fill(u32::MAX);
-        self.dense_indicies.clear();
-        self.dense_componenets.clear();
+        self.indicies.clear();
+        self.dense.clear();
     }
 }
 
