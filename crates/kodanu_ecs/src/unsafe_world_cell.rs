@@ -72,6 +72,12 @@ impl<'w> UnsafeWorldCell<'w> {
 
     /// # SAFETY
     #[inline]
+    pub unsafe fn res<T: Component>(&self) -> Option<&'w T> {
+        unsafe { self.world.as_ref().res::<T>() }
+    }
+
+    /// # SAFETY
+    #[inline]
     pub unsafe fn res_mut<T: Component>(&self) -> Option<&'w mut T> {
         self.assert_mutable();
 

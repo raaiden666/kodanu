@@ -1,5 +1,7 @@
+use crate::{Fetch, all_tuples};
+
 #[macro_export]
-macro_rules! impl_fetch {
+macro_rules! impl_fetch_tuple {
     ($($name:ident : $index:tt),+) => {
         impl<'w, $($name),+> Fetch<'w> for ($($name,)+)
         where
@@ -21,3 +23,5 @@ macro_rules! impl_fetch {
         }
     };
 }
+
+all_tuples!(impl_fetch_tuple);
